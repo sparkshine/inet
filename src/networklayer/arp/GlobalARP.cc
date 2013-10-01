@@ -46,7 +46,7 @@ void GlobalARP::handleMessage(cMessage *msg)
     // if output interface is not broadcast, don't bother with ARP
     if (!ie->isBroadcast())
     {
-        EV << "output interface " << ie->getName() << " is not broadcast, skipping ARP\n";
+        EV_DEBUG << "output interface " << ie->getName() << " is not broadcast, skipping ARP\n";
         send(msg, nicOutBaseGateId + ie->getNetworkLayerGateIndex());
         return;
     }
@@ -58,7 +58,7 @@ void GlobalARP::handleMessage(cMessage *msg)
     if (nextHop.isMulticast())
     {
         MACAddress macAddr = mapMulticastAddress(nextHop);
-        EV << "destination address is multicast, sending packet to MAC address " << macAddr << "\n";
+        EV_DEBUG << "destination address is multicast, sending packet to MAC address " << macAddr << "\n";
         sendPacketToNIC(msg, ie, macAddr, ETHERTYPE_IPv4); // TODO:
         return;
     }

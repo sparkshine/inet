@@ -30,8 +30,9 @@
 #include "ICMPv6Message_m.h"
 #endif
 
+#include "IAddressType.h"
 #include "IPSocket.h"
-#include "IPv4ControlInfo.h"
+#include "INetworkProtocolControlInfo.h"
 #include "IPv6ControlInfo.h"
 
 #include "headers/tcp.h"
@@ -321,21 +322,17 @@ void TCP_NSC::handleIpInputMessage(TCPSegment* tcpsegP)
     // get src/dest addresses
     TCP_NSC_Connection::SockPair nscSockPair, inetSockPair, inetSockPairAny;
 
-    if (dynamic_cast<IPv4ControlInfo *>(tcpsegP->getControlInfo())!=NULL)
-    {
-        IPv4ControlInfo *controlInfo = (IPv4ControlInfo *)tcpsegP->removeControlInfo();
-        inetSockPair.remoteM.ipAddrM = controlInfo->getSrcAddr();
-        inetSockPair.localM.ipAddrM = controlInfo->getDestAddr();
-        delete controlInfo;
-    }
-    else
-    if (dynamic_cast<IPv6ControlInfo *>(tcpsegP->getControlInfo())!=NULL)
-    {
-        IPv6ControlInfo *controlInfo = (IPv6ControlInfo *)tcpsegP->removeControlInfo();
-        inetSockPair.remoteM.ipAddrM = controlInfo->getSrcAddr();
-        inetSockPair.localM.ipAddrM = controlInfo->getDestAddr();
-        delete controlInfo;
+    cObject *ctrl = tcpsegP->removeControlInfo();
+    if (!ctrl)
+        error("(%s)%s arrived without control info", tcpsegP->getClassName(), tcpsegP->getName());
 
+    INetworkProtocolControlInfo *controlInfo = check_and_cast<INetworkProtocolControlInfo *>(ctrl);
+    inetSockPair.remoteM.ipAddrM = controlInfo->getSourceAddress();
+    inetSockPair.localM.ipAddrM = controlInfo->getDestinationAddress();
+    //int interfaceId = controlInfo->getInterfaceId();
+
+    if (dynamic_cast<IPv6ControlInfo *>(ctrl) != NULL)
+    {
         {
             // HACK: when IPv6, then correcting the TCPOPTION_MAXIMUM_SEGMENT_SIZE option
             //       with IP header size difference
@@ -353,10 +350,7 @@ void TCP_NSC::handleIpInputMessage(TCPSegment* tcpsegP)
             }
         }
     }
-    else
-    {
-        error("(%s)%s arrived without control info", tcpsegP->getClassName(), tcpsegP->getName());
-    }
+    delete ctrl;
 
     // statistics:
     if (rcvSeqVector)
@@ -903,26 +897,12 @@ void TCP_NSC::sendToIP(const void *dataP, int lenP)
     tcpEV << this << ": Sending: conn=" << conn << ", data: " << dataP << " of len " << lenP << " from " << src
        << " to " << dest << "\n";
 
-    if (dest.getType() == Address::IPv4)
-    {
-        // send over IPv4
-        IPv4ControlInfo *controlInfo = new IPv4ControlInfo();
-        controlInfo->setProtocol(IP_PROT_TCP);
-        controlInfo->setSrcAddr(src.toIPv4());
-        controlInfo->setDestAddr(dest.toIPv4());
-        tcpseg->setControlInfo(controlInfo);
-    }
-    else if (dest.getType() == Address::IPv6)
-    {
-        // send over IPv6
-        IPv6ControlInfo *controlInfo = new IPv6ControlInfo();
-        controlInfo->setProtocol(IP_PROT_TCP);
-        controlInfo->setSrcAddr(src.toIPv6());
-        controlInfo->setDestAddr(dest.toIPv6());
-        tcpseg->setControlInfo(controlInfo);
-    }
-    else
-        throw cRuntimeError("Unknown address type");
+    IAddressType *addressType = dest.getAddressType();
+    INetworkProtocolControlInfo *controlInfo = addressType->createNetworkProtocolControlInfo();
+    controlInfo->setProtocol(IP_PROT_TCP);
+    controlInfo->setSourceAddress(src);
+    controlInfo->setDestinationAddress(dest);
+    tcpseg->setControlInfo(check_and_cast<cObject *>(controlInfo));
 
     if (conn)
     {

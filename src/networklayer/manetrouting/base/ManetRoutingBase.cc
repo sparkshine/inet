@@ -27,7 +27,7 @@
 #include "IPv4Datagram.h"
 #include "IPv4ControlInfo.h"
 #include "IPv4InterfaceData.h"
-#include "IPv6ControlInfo.h"
+#include "IPv6AddressType.h"
 #include "Ieee802Ctrl_m.h"
 #include "IPv4RoutingTableAccess.h"
 #include "InterfaceTableAccess.h"
@@ -490,14 +490,14 @@ void ManetRoutingBase::sendToIpOnIface(cPacket *msg, int srcPort, const ManetAdd
     {
         // send to IPv6
         EV << "Sending app packet " << msg->getName() << " over IPv6.\n";
-        IPv6ControlInfo *ipControlInfo = new IPv6ControlInfo();
+        INetworkProtocolControlInfo *ipControlInfo = IPv6AddressType::INSTANCE.createNetworkProtocolControlInfo();
         // ipControlInfo->setProtocol(IP_PROT_UDP);
         ipControlInfo->setProtocol(IP_PROT_MANET);
-        ipControlInfo->setSrcAddr(hostAddress.getIPv6());
-        ipControlInfo->setDestAddr(destAddr.getIPv6());
+        ipControlInfo->setSourceAddress(hostAddress.getIPvX());
+        ipControlInfo->setDestinationAddress(destAddr.getIPvX());
         ipControlInfo->setHopLimit(ttl);
-        // ipControlInfo->setInterfaceId(udpCtrl->InterfaceId()); FIXME extend IPv6 with this!!!
-        udpPacket->setControlInfo(ipControlInfo);
+        //ipControlInfo->setInterfaceId(udpCtrl->getInterfaceId()); FIXME extend IPv6 with this!!!
+        udpPacket->setControlInfo(check_and_cast<cObject *>(ipControlInfo));
         sendDelayed(udpPacket, delay, "to_ip");
     }
     else

@@ -61,7 +61,7 @@
 #include "Ieee80211Frame_m.h"
 #include "dymoum/dlist.h"
 #include "dymo_msg_struct.h"
-#include "IPv4Datagram.h"
+#include "INetworkDatagram.h"
 #include "ICMPAccess.h"
 #include <map>
 
@@ -158,7 +158,7 @@ class DYMOUM : public ManetRoutingBase
 
     // cMessage messageEvent;
 
-    typedef std::map<MACAddress, unsigned int> MacToIpAddress;
+    typedef std::map<MACAddress, Address> MacToIpAddress;
     typedef std::multimap<simtime_t, struct timer*> DymoTimerMap;
     typedef std::map<ManetAddress, rtable_entry_t *> DymoRoutingTable;
     typedef std::map<ManetAddress, pending_rreq_t * > DymoPendingRreq;
@@ -273,7 +273,7 @@ class DYMOUM : public ManetRoutingBase
     void recvDYMOUMPacket(cMessage * p);
     void processPacket(IPv4Datagram *, unsigned int);
     void processMacPacket(cPacket * p, const ManetAddress &, const ManetAddress &, int);
-    void getMacAddress(IPv4Datagram *);
+    void getMacAddress(INetworkDatagram *);
 
     cPacket * get_packet_queue(struct in_addr dest_addr);
 

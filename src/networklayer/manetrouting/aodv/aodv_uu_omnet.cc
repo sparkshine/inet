@@ -27,8 +27,7 @@
 
 
 #include "UDPPacket.h"
-#include "IPv4ControlInfo.h"
-#include "IPv6ControlInfo.h"
+#include "INetworkProtocolControlInfo.h"
 #include "ICMPMessage_m.h"
 #include "ICMPAccess.h"
 #include "NotifierConsts.h"
@@ -598,14 +597,14 @@ void NS_CLASS handleMessage (cMessage *msg)
         else
             msg_aux = msg;
 
-        if (dynamic_cast<AODV_msg  *>(msg_aux))
+        if (dynamic_cast<AODV_msg *>(msg_aux))
         {
-            aodvMsg = check_and_cast  <AODV_msg *>(msg_aux);
+            aodvMsg = check_and_cast<AODV_msg *>(msg_aux);
             if (!isInMacLayer())
             {
-                IPv4ControlInfo *controlInfo = check_and_cast<IPv4ControlInfo*>(udpPacket->removeControlInfo());
-                src_addr.s_addr = ManetAddress(controlInfo->getSrcAddr());
-                aodvMsg->setControlInfo(controlInfo);
+                INetworkProtocolControlInfo *controlInfo = check_and_cast<INetworkProtocolControlInfo*>(udpPacket->removeControlInfo());
+                src_addr.s_addr = ManetAddress(controlInfo->getSourceAddress());
+                aodvMsg->setControlInfo(check_and_cast<cObject *>(controlInfo));
             }
             else
             {
@@ -849,9 +848,9 @@ void NS_CLASS recvAODVUUPacket(cMessage * msg)
     ttl =  aodv_msg->ttl-1;
     if (!isInMacLayer())
     {
-        IPv4ControlInfo *ctrl = check_and_cast<IPv4ControlInfo *>(msg->getControlInfo());
-        Address srcAddr = ctrl->getSrcAddr();
-        Address destAddr = ctrl->getDestAddr();
+        INetworkProtocolControlInfo *ctrl = check_and_cast<INetworkProtocolControlInfo *>(msg->getControlInfo());
+        Address srcAddr = ctrl->getSourceAddress();
+        Address destAddr = ctrl->getDestinationAddress();
 
         src.s_addr = ManetAddress(srcAddr);
         dst.s_addr =  ManetAddress(destAddr);

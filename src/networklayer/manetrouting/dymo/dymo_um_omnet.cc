@@ -29,7 +29,6 @@
 
 #include "UDPPacket.h"
 #include "IPv4ControlInfo.h"
-#include "IPv6ControlInfo.h"
 #include "ICMPMessage_m.h"
 #include "ICMPAccess.h"
 #include "NotifierConsts.h"
@@ -435,9 +434,9 @@ void DYMOUM::handleMessage(cMessage *msg)
             dymoMsg = check_and_cast  <DYMO_element *>(msg_aux);
             if (!isInMacLayer())
             {
-                IPv4ControlInfo *controlInfo = check_and_cast<IPv4ControlInfo*>(udpPacket->removeControlInfo());
-                src_addr.s_addr = ManetAddress(controlInfo->getSrcAddr());
-                dymoMsg->setControlInfo(controlInfo);
+                INetworkProtocolControlInfo *controlInfo = check_and_cast<INetworkProtocolControlInfo*>(udpPacket->removeControlInfo());
+                src_addr.s_addr = ManetAddress(controlInfo->getSourceAddress());
+                dymoMsg->setControlInfo(check_and_cast<cObject *>(controlInfo));
             }
             else
             {
@@ -615,12 +614,12 @@ const char *DYMOUM::if_indextoname(int ifindex, char *ifname)
 }
 
 
-void DYMOUM::getMacAddress(IPv4Datagram *dgram)
+void DYMOUM::getMacAddress(INetworkDatagram *dgram)
 {
     if (dgram)
     {
         MACAddress macAddressConv;
-        cObject * ctrl = dgram->removeControlInfo();
+        cObject * ctrl = check_and_cast<cPacket *>(dgram)->removeControlInfo();
 
         if (ctrl!=NULL)
         {
@@ -631,7 +630,7 @@ void DYMOUM::getMacAddress(IPv4Datagram *dgram)
             MacToIpAddress::iterator it = macToIpAdress->find(macAddressConv);
             if (it==macToIpAdress->end())
             {
-                unsigned int ip_src = dgram->getSrcAddress().getInt();
+                Address ip_src = dgram->getSourceAddress();
                 macToIpAdress->insert(std::make_pair(macAddressConv, ip_src));
             }
         }
@@ -649,13 +648,13 @@ void DYMOUM::recvDYMOUMPacket(cMessage * msg)
 
     if (!isInMacLayer())
     {
-        IPv4ControlInfo *ctrl = check_and_cast<IPv4ControlInfo *>(msg->removeControlInfo());
-        Address srcAddr = ctrl->getSrcAddr();
-        Address destAddr = ctrl->getDestAddr();
+        INetworkProtocolControlInfo *ctrl = check_and_cast<INetworkProtocolControlInfo *>(msg->removeControlInfo());
+        Address srcAddr = ctrl->getSourceAddress();
+        Address destAddr = ctrl->getDestinationAddress();
         src.s_addr = ManetAddress(srcAddr);
         dst.s_addr = ManetAddress(destAddr);
         interfaceId = ctrl->getInterfaceId();
-        getMacAddress(ctrl->removeOrigDatagram());
+        getMacAddress(ctrl->removeOrigNetworkDatagram());
         delete ctrl;
     }
     else
@@ -675,9 +674,7 @@ void DYMOUM::recvDYMOUMPacket(cMessage * msg)
             dst.s_addr = ManetAddress(ctrl->getDest());
             if (ctrl)
                 delete ctrl;
-
         }
-
     }
 
     InterfaceEntry *   ie;
@@ -770,7 +767,7 @@ void DYMOUM::processPacket(IPv4Datagram * p, unsigned int ifindex )
                         MacToIpAddress::iterator it = macToIpAdress->find(macAddressConv);
                         if (it!=macToIpAdress->end())
                         {
-                            addr.s_addr = ManetAddress(IPv4Address((*it).second));
+                            addr.s_addr = ManetAddress(it->second);
                             rerr_send(dest_addr, 1, entry, addr);
                         }
                     }
@@ -982,13 +979,13 @@ void DYMOUM::processPromiscuous(const cObject *details)
 
             if (it!=macToIpAdress->end())
             {
-                gatewayAddr.s_addr = ManetAddress(IPv4Address((*it).second));
+                gatewayAddr.s_addr = ManetAddress(it->second);
             }
             else
             {
                 if (ip_msg && ip_msg->getTransportProtocol()==IP_PROT_MANET)
                 {
-                    unsigned int ip_src = ip_msg->getSrcAddress().getInt();
+                    Address ip_src = ip_msg->getSourceAddress();
                     macToIpAdress->insert(std::make_pair(macAddressConv, ip_src));
                     gatewayAddr.s_addr = ManetAddress(ip_msg->getSrcAddress());
                 }
@@ -1097,13 +1094,13 @@ void DYMOUM::processFullPromiscuous(const cObject *details)
             macAddressConv = twoAddressFrame->getTransmitterAddress();
             MacToIpAddress::iterator it = macToIpAdress->find(macAddressConv);
             if (it!=macToIpAdress->end())
-                addr.s_addr = ManetAddress(IPv4Address((*it).second));
+                addr.s_addr = ManetAddress(it->second);
             else
             {
                 IPv4Datagram * ip_msg = dynamic_cast<IPv4Datagram *>(twoAddressFrame->getEncapsulatedPacket());
                 if (ip_msg && ip_msg->getTransportProtocol()==IP_PROT_MANET)
                 {
-                    unsigned int ip_src = ip_msg->getSrcAddress().getInt();
+                    Address ip_src = ip_msg->getSourceAddress();
                     macToIpAdress->insert(std::make_pair(macAddressConv, ip_src));
                     //  gatewayAddr.s_addr = ip_msg->getSrcAddress().getInt();
                 }

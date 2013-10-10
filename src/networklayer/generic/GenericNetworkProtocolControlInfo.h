@@ -45,6 +45,10 @@ class INET_API GenericNetworkProtocolControlInfo : public GenericNetworkProtocol
     virtual void setInterfaceId(int interfaceId) { GenericNetworkProtocolControlInfo_Base::setInterfaceId(interfaceId); }
     virtual short getHopLimit() const { return GenericNetworkProtocolControlInfo_Base::getHopLimit(); }
     virtual void setHopLimit(short hopLimit) { GenericNetworkProtocolControlInfo_Base::setHopLimit(hopLimit); }
+    virtual bool getMulticastLoop() const {  EV_ERROR << "getMulticastLoop() not implemented\n"; return false; }
+    virtual void setMulticastLoop(bool multicastLoop) { EV_ERROR << "setMulticastLoop() not implemented, ignored\n"; }
+    virtual unsigned char getTrafficClass() const { EV_ERROR << "getTrafficClass() not implemented\n"; return 0; }
+    virtual void setTrafficClass(unsigned char trafficClass) { EV_ERROR << "setTrafficClass() not implemented, ignored\n"; }
 };
 
 #endif

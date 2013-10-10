@@ -33,6 +33,10 @@ class INET_API INetworkProtocolControlInfo {
     virtual void setInterfaceId(int interfaceId) = 0;
     virtual short getHopLimit() const = 0;
     virtual void setHopLimit(short hopLimit) = 0;
+    virtual bool getMulticastLoop() const = 0;
+    virtual void setMulticastLoop(bool multicastLoop) = 0;
+    virtual unsigned char getTrafficClass() const = 0;
+    virtual void setTrafficClass(unsigned char trafficClass) = 0;
 };
 
 #endif /* INETWORKPROTOCOLCONTROLINFO_H_ */

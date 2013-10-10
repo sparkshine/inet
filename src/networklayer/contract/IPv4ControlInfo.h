@@ -78,6 +78,10 @@ class INET_API IPv4ControlInfo : public IPv4ControlInfo_Base, public INetworkPro
     virtual void setInterfaceId(int interfaceId) { IPv4ControlInfo_Base::setInterfaceId(interfaceId); }
     virtual short getHopLimit() const { return getTimeToLive(); }
     virtual void setHopLimit(short hopLimit) { setTimeToLive(hopLimit); }
+    virtual bool getMulticastLoop() const { return IPv4ControlInfo_Base::getMulticastLoop(); }
+    virtual void setMulticastLoop(bool multicastLoop) { IPv4ControlInfo_Base::setMulticastLoop(multicastLoop); }
+    virtual unsigned char getTrafficClass() const { return IPv4ControlInfo_Base::getTypeOfService(); }
+    virtual void setTrafficClass(unsigned char trafficClass) { IPv4ControlInfo_Base::setTypeOfService(trafficClass); }
 };
 
 #endif

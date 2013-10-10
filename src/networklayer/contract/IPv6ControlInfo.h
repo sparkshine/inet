@@ -108,6 +108,10 @@ class INET_API IPv6ControlInfo : public IPv6ControlInfo_Base, public INetworkPro
     virtual void setInterfaceId(int interfaceId) { IPv6ControlInfo_Base::setInterfaceId(interfaceId); }
     virtual short getHopLimit() const { return IPv6ControlInfo_Base::getHopLimit(); }
     virtual void setHopLimit(short hopLimit) { IPv6ControlInfo_Base::setHopLimit(hopLimit); }
+    virtual bool getMulticastLoop() const { return IPv6ControlInfo_Base::getMulticastLoop(); }
+    virtual void setMulticastLoop(bool multicastLoop) { IPv6ControlInfo_Base::setMulticastLoop(multicastLoop); }
+    virtual unsigned char getTrafficClass() const { return IPv6ControlInfo_Base::getTrafficClass(); }
+    virtual void setTrafficClass(unsigned char trafficClass) { IPv6ControlInfo_Base::setTrafficClass(trafficClass); }
 };
 
 #endif

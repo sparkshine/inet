@@ -57,7 +57,7 @@ void Radio::initialize(int stage)
 {
     ChannelAccess::initialize(stage);
 
-    EV << "Initializing Radio, stage=" << stage << endl;
+    EV_TRACE << "Initializing Radio, stage=" << stage << endl;
 
     if (stage == INITSTAGE_LOCAL)
     {
@@ -90,7 +90,7 @@ void Radio::initialize(int stage)
             subscribe(changeLevelNoise, this); // the INoiseGenerator must send a signal to this module
         }
 
-        EV << "Initialized channel with noise: " << noiseLevel << " sensitivity: " << sensitivity <<
+        EV_DEBUG << "Initialized channel with noise: " << noiseLevel << " sensitivity: " << sensitivity <<
         endl;
 
         // initialize the pointer of the snrInfo with NULL to indicate
@@ -114,7 +114,7 @@ void Radio::initialize(int stage)
         WATCH(rs);
 
         obstacles = ObstacleControlAccess().getIfExists();
-        if (obstacles) EV << "Found ObstacleControl" << endl;
+        if (obstacles) EV_DEBUG << "Found ObstacleControl" << endl;
 
         // this is the parameter of the channel controller (global)
         std::string propModel = getChannelControlPar("propagationModel").stdstringValue();
@@ -259,7 +259,7 @@ void Radio::handleMessage(cMessage *msg)
         if (msg->getArrivalGateId() == upperLayerIn || msg->isSelfMessage())  //XXX can we ensure we don't receive pk from upper in OFF state?? (race condition)
             throw cRuntimeError("Radio is turned off");
         else {
-            EV << "Radio is turned off, dropping packet\n";
+            EV_ERROR << "Radio is turned off, dropping packet\n";
             delete msg;
             return;
         }
@@ -300,13 +300,13 @@ void Radio::handleMessage(cMessage *msg)
         }
         else
         {
-            EV << "Radio disabled. ignoring airframe" << endl;
+            EV_WARN << "Radio disabled. ignoring airframe" << endl;
             delete msg;
         }
     }
     else
     {
-        EV << "listening to different channel when receiving message -- dropping it\n";
+        EV_WARN << "listening to different channel when receiving message -- dropping it\n";
         delete msg;
     }
 }
@@ -348,8 +348,8 @@ AirFrame *Radio::encapsulatePacket(cPacket *frame)
     airframe->setCarrierFrequency(carrierFrequency);
     delete ctrl;
 
-    EV << "Frame (" << frame->getClassName() << ")" << frame->getName()
-    << " will be transmitted at " << (airframe->getBitrate()/1e6) << "Mbps\n";
+    EV_DEBUG << "Frame (" << frame->getClassName() << ")" << frame->getName()
+             << " will be transmitted at " << (airframe->getBitrate()/1e6) << "Mbps\n";
     return airframe;
 }
 
@@ -372,7 +372,7 @@ void Radio::sendUp(AirFrame *airframe)
     frame->setControlInfo(cinfo);
 
     delete airframe;
-    EV << "sending up frame " << frame->getName() << endl;
+    EV_DEBUG << "sending up frame " << frame->getName() << endl;
     send(frame, upperLayerOut);
 }
 
@@ -416,7 +416,7 @@ void Radio::handleUpperMsg(AirFrame *airframe)
     // if a packet was being received, it is corrupted now as should be treated as noise
     if (snrInfo.ptr != NULL)
     {
-        EV << "Sending a message while receiving another. The received one is now corrupted.\n";
+        EV_WARN << "Sending a message while receiving another. The received one is now corrupted.\n";
 
         // remove the snr information stored for the message currently being
         // received. This message is treated as noise now and the
@@ -434,7 +434,7 @@ void Radio::handleUpperMsg(AirFrame *airframe)
     // about the "real" stuff
 
     // change radio status
-    EV << "sending, changing RadioState to TRANSMIT\n";
+    EV_INFO << "sending, changing RadioState to TRANSMIT\n";
     setRadioState(RadioState::TRANSMIT);
 
     cMessage *timer = new cMessage(NULL, MK_TRANSMISSION_OVER);
@@ -454,14 +454,14 @@ void Radio::handleCommand(int msgkind, cObject *ctrl)
 
         if (newChannel!=-1)
         {
-            EV << "Command received: change to channel #" << newChannel << "\n";
+            EV_DEBUG << "Command received: change to channel #" << newChannel << "\n";
 
             // do it
             if (rs.getChannelNumber()==newChannel)
-                EV << "Right on that channel, nothing to do\n"; // fine, nothing to do
+                EV_DEBUG << "Right on that channel, nothing to do\n"; // fine, nothing to do
             else if (rs.getState()==RadioState::TRANSMIT)
             {
-                EV << "We're transmitting right now, remembering to change after it's completed\n";
+                EV_DEBUG << "We're transmitting right now, remembering to change after it's completed\n";
                 this->newChannel = newChannel;
             }
             else
@@ -469,14 +469,14 @@ void Radio::handleCommand(int msgkind, cObject *ctrl)
         }
         if (newBitrate!=-1)
         {
-            EV << "Command received: change bitrate to " << (newBitrate/1e6) << "Mbps\n";
+            EV_DEBUG << "Command received: change bitrate to " << (newBitrate/1e6) << "Mbps\n";
 
             // do it
             if (rs.getBitrate()==newBitrate)
-                EV << "Right at that bitrate, nothing to do\n"; // fine, nothing to do
+                EV_DEBUG << "Right at that bitrate, nothing to do\n"; // fine, nothing to do
             else if (rs.getState()==RadioState::TRANSMIT)
             {
-                EV << "We're transmitting right now, remembering to change after it's completed\n";
+                EV_DEBUG << "We're transmitting right now, remembering to change after it's completed\n";
                 this->newBitrate = newBitrate;
             }
             else
@@ -504,7 +504,7 @@ void Radio::handleSelfMsg(cMessage *msg)
     EV<<"Radio::handleSelfMsg"<<msg->getKind()<<endl;
     if (msg->getKind()==MK_RECEPTION_COMPLETE)
     {
-        EV << "frame is completely received now\n";
+        EV_INFO << "frame is completely received now\n";
 
         // unbuffer the message
         AirFrame *airframe = unbufferMsg(msg);
@@ -521,14 +521,14 @@ void Radio::handleSelfMsg(cMessage *msg)
         if (BASE_NOISE_LEVEL < sensitivity)
         {
             // set the RadioState to IDLE
-            EV << "transmission over, switch to idle mode (state:IDLE)\n";
+            EV_INFO << "transmission over, switch to idle mode (state:IDLE)\n";
             // setRadioState(RadioState::IDLE);
             newState = RadioState::IDLE;
         }
         else
         {
             // set the RadioState to RECV
-            EV << "transmission over but noise level too high, switch to recv mode (state:RECV)\n";
+            EV_INFO << "transmission over but noise level too high, switch to recv mode (state:RECV)\n";
             // setRadioState(RadioState::RECV);
             newState = RadioState::RECV;
         }
@@ -619,7 +619,7 @@ void Radio::handleLowerMsgStart(AirFrame* airframe)
     // processing ongoing transmissions during a channel change
     if (airframe->getArrivalTime() == simTime() && rcvdPower >= sensitivity && rs.getState() != RadioState::TRANSMIT && snrInfo.ptr == NULL)
     {
-        EV << "receiving frame " << airframe->getName() << endl;
+        EV_DEBUG << "receiving frame " << airframe->getName() << endl;
 
         // Put frame and related SnrList in receive buffer
         SnrList snrList;
@@ -633,14 +633,14 @@ void Radio::handleLowerMsgStart(AirFrame* airframe)
         if (rs.getState() != RadioState::RECV)
         {
             // publish new RadioState
-            EV << "publish new RadioState:RECV\n";
+            EV_DEBUG << "publish new RadioState:RECV\n";
             setRadioState(RadioState::RECV);
         }
     }
     // receive power is too low or another message is being sent or received
     else
     {
-        EV << "frame " << airframe->getName() << " is just noise\n";
+        EV_DEBUG << "frame " << airframe->getName() << " is just noise\n";
         //add receive power to the noise level
         noiseLevel += rcvdPower;
 
@@ -648,7 +648,7 @@ void Radio::handleLowerMsgStart(AirFrame* airframe)
         if (snrInfo.ptr != NULL)
         {
             // update snr info for currently being received message
-            EV << "adding new snr value to snr list of message being received\n";
+            EV_DEBUG << "adding new snr value to snr list of message being received\n";
             addNewSnr();
         }
 
@@ -656,7 +656,7 @@ void Radio::handleLowerMsgStart(AirFrame* airframe)
         // and the radio is currently not in receive or in send mode
         if (BASE_NOISE_LEVEL >= receptionThreshold && rs.getState() == RadioState::IDLE)
         {
-            EV << "setting radio state to RECV\n";
+            EV_DEBUG << "setting radio state to RECV\n";
             setRadioState(RadioState::RECV);
         }
     }
@@ -678,7 +678,7 @@ void Radio::handleLowerMsgEnd(AirFrame * airframe)
     // check if message has to be send to the decider
     if (snrInfo.ptr == airframe)
     {
-        EV << "reception of frame over, preparing to send packet to upper layer\n";
+        EV_DEBUG << "reception of frame over, preparing to send packet to upper layer\n";
         // get Packet and list out of the receive buffer:
         SnrList list;
         list = snrInfo.sList;
@@ -724,7 +724,7 @@ void Radio::handleLowerMsgEnd(AirFrame * airframe)
     // all other messages are noise
     else
     {
-        EV << "reception of noise message over, removing recvdPower from noiseLevel....\n";
+        EV_DEBUG << "reception of noise message over, removing recvdPower from noiseLevel....\n";
         // get the rcvdPower and subtract it from the noiseLevel
         noiseLevel -= recvBuff[airframe];
 
@@ -739,7 +739,7 @@ void Radio::handleLowerMsgEnd(AirFrame * airframe)
 
         // message should be deleted
         delete airframe;
-        EV << "message deleted\n";
+        EV_DEBUG << "message deleted\n";
     }
 
     // check the RadioState and update if necessary
@@ -749,7 +749,7 @@ void Radio::handleLowerMsgEnd(AirFrame * airframe)
     if (BASE_NOISE_LEVEL < receptionThreshold && rs.getState() == RadioState::RECV && snrInfo.ptr == NULL)
     {
         // publish the new RadioState:
-        EV << "new RadioState is IDLE\n";
+        EV_DEBUG << "new RadioState is IDLE\n";
         setRadioState(RadioState::IDLE);
     }
 }
@@ -790,7 +790,7 @@ void Radio::changeChannel(int channel)
         rs.setState(RadioState::IDLE); // Force radio to Idle
 
     // do channel switch
-    EV << "Changing to channel #" << channel << "\n";
+    EV_INFO << "Changing to channel #" << channel << "\n";
 
     emit(channelNumberSignal, channel);
     rs.setChannelNumber(channel);
@@ -803,10 +803,10 @@ void Radio::changeChannel(int channel)
 
     cGate* radioGate = this->gate("radioIn")->getPathStartGate();
 
-    EV << "RadioGate :" << radioGate->getFullPath() << " " << radioGate->getFullName() << endl;
+    EV_DEBUG << "RadioGate :" << radioGate->getFullPath() << " " << radioGate->getFullName() << endl;
 
     // pick up ongoing transmissions on the new channel
-    EV << "Picking up ongoing transmissions on new channel:\n";
+    EV_DEBUG << "Picking up ongoing transmissions on new channel:\n";
     IChannelControl::TransmissionList tlAux = cc->getOngoingTransmissions(channel);
     for (IChannelControl::TransmissionList::const_iterator it = tlAux.begin(); it != tlAux.end(); ++it)
     {
@@ -818,13 +818,13 @@ void Radio::changeChannel(int channel)
         // if this transmission is on our new channel and it would reach us in the future, then schedule it
         if (channel == airframe->getChannelNumber())
         {
-            EV << " - (" << airframe->getClassName() << ")" << airframe->getName() << ": ";
+            EV_DEBUG << " - (" << airframe->getClassName() << ")" << airframe->getName() << ": ";
         }
 
         // if there is a message on the air which will reach us in the future
         if (airframe->getTimestamp() + propagationDelay >= simTime())
         {
-            EV << "will arrive in the future, scheduling it\n";
+            EV_DEBUG << "will arrive in the future, scheduling it\n";
 
             // we need to send to each radioIn[] gate of this host
             //for (int i = 0; i < radioGate->size(); i++)
@@ -837,7 +837,7 @@ void Radio::changeChannel(int channel)
         // if we hear some part of the message
         else if (airframe->getTimestamp() + airframe->getDuration() + propagationDelay > simTime())
         {
-            EV << "missed beginning of frame, processing it as noise\n";
+            EV_DEBUG << "missed beginning of frame, processing it as noise\n";
 
             AirFrame *frameDup = airframe->dup();
             frameDup->setArrivalTime(airframe->getTimestamp() + propagationDelay);
@@ -846,7 +846,7 @@ void Radio::changeChannel(int channel)
         }
         else
         {
-            EV << "in the past\n";
+            EV_DEBUG << "in the past\n";
         }
     }
 
@@ -864,7 +864,7 @@ void Radio::setBitrate(double bitrate)
     if (rs.getState() == RadioState::TRANSMIT)
         error("changing the bitrate while transmitting is not allowed");
 
-    EV << "Setting bitrate to " << (bitrate/1e6) << "Mbps\n";
+    EV_INFO << "Setting bitrate to " << (bitrate/1e6) << "Mbps\n";
     emit(bitrateSignal, bitrate);
     rs.setBitrate(bitrate);
 
@@ -894,8 +894,8 @@ void Radio::setRadioState(RadioState::State newState)
 /*
 void Radio::updateSensitivity(double rate)
 {
-    EV<<"bitrate = "<<rate<<endl;
-    EV <<" sensitivity: "<<sensitivity<<endl;
+    EV_DEBUG << "bitrate = "<<rate<<endl;
+    EV_DEBUG << " sensitivity: "<<sensitivity<<endl;
     if (rate == 6E+6)
     {
         sensitivity = FWMath::dBm2mW(-82);
@@ -928,7 +928,7 @@ void Radio::updateSensitivity(double rate)
     {
         sensitivity = FWMath::dBm2mW(-65);
     }
-    EV <<" sensitivity after updateSensitivity: "<<sensitivity<<endl;
+    EV_DEBUG << " sensitivity after updateSensitivity: "<<sensitivity<<endl;
 }
 */
 
@@ -945,8 +945,8 @@ void Radio::updateSensitivity(double rate)
         sensitivity = sensitivityList[0.0];
     if (!par("setReceptionThreshold").boolValue())
         receptionThreshold = sensitivity;
-    EV<<"bitrate = "<<rate<<endl;
-    EV <<" sensitivity after updateSensitivity: "<<sensitivity<<endl;
+    EV_DEBUG << "bitrate = "<<rate<<endl;
+    EV_DEBUG << " sensitivity after updateSensitivity: "<<sensitivity<<endl;
 }
 
 void Radio::registerBattery()
@@ -1084,10 +1084,10 @@ void Radio::connectReceiver()
 
     cGate* radioGate = this->gate("radioIn")->getPathStartGate();
 
-    EV << "RadioGate :" << radioGate->getFullPath() << " " << radioGate->getFullName() << endl;
+    EV_DEBUG << "RadioGate :" << radioGate->getFullPath() << " " << radioGate->getFullName() << endl;
 
     // pick up ongoing transmissions on the new channel
-    EV << "Picking up ongoing transmissions on new channel:\n";
+    EV_DEBUG << "Picking up ongoing transmissions on new channel:\n";
     IChannelControl::TransmissionList tlAux = cc->getOngoingTransmissions(rs.getChannelNumber());
     for (IChannelControl::TransmissionList::const_iterator it = tlAux.begin(); it != tlAux.end(); ++it)
     {
@@ -1099,8 +1099,8 @@ void Radio::connectReceiver()
         // if there is a message on the air which will reach us in the future
         if (airframe->getTimestamp() + propagationDelay >= simTime())
         {
-            EV << " - (" << airframe->getClassName() << ")" << airframe->getName() << ": ";
-            EV << "will arrive in the future, scheduling it\n";
+            EV_DEBUG << " - (" << airframe->getClassName() << ")" << airframe->getName() << ": ";
+            EV_DEBUG << "will arrive in the future, scheduling it\n";
 
             // we need to send to each radioIn[] gate of this host
             //for (int i = 0; i < radioGate->size(); i++)
@@ -1113,7 +1113,7 @@ void Radio::connectReceiver()
         // if we hear some part of the message
         else if (airframe->getTimestamp() + airframe->getDuration() + propagationDelay > simTime())
         {
-            EV << "missed beginning of frame, processing it as noise\n";
+            EV_DEBUG << "missed beginning of frame, processing it as noise\n";
 
             AirFrame *frameDup = airframe->dup();
             frameDup->setArrivalTime(airframe->getTimestamp() + propagationDelay);

@@ -137,7 +137,7 @@ void MobilityBase::handleMessage(cMessage * message)
 
 void MobilityBase::updateVisualRepresentation()
 {
-    EV_INFO << "current position = " << lastPosition << endl;
+    EV_DEBUG << "current position = " << lastPosition << endl;
     if (ev.isGUI() && visualRepresentation)
     {
         visualRepresentation->getDisplayString().setTagArg("p", 0, (long)lastPosition.x);

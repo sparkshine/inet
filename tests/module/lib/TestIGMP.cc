@@ -223,8 +223,10 @@ void TestIGMP::processCommand(const cXMLElement &node)
     const char *what = node.getAttribute("what");
     if (!strcmp(what, "groups"))
     {
-        const IPv4AddressVector &joinedGroups = ie->ipv4Data()->getJoinedMulticastGroups();
-        dumpMulticastGroups(what, ifname, joinedGroups);
+        IPv4AddressVector joinedGroups;
+        for (int i = 0; i < ie->ipv4Data()->getNumOfJoinedMulticastGroups(); i++)
+            joinedGroups.push_back(ie->ipv4Data()->getJoinedMulticastGroup(i));
+        dumpMulticastGroups("groups", ifname, joinedGroups);
     }
     else if (!strcmp(what, "listeners"))
     {
@@ -330,7 +332,6 @@ void TestIGMP::printStates(int stateMask, InterfaceEntry *ie, const IPv4Address 
             out << " NON_MEMBER";
     }
 }
-
 
 void TestIGMP::dumpMulticastGroups(const char* name, const char *ifname, IPv4AddressVector groups)
 {

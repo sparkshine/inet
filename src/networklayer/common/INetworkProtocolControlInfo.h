@@ -19,24 +19,36 @@
 #define INETWORKPROTOCOLCONTROLINFO_H_
 
 #include "Address.h"
+#include "INetworkDatagram.h"
 
 class INET_API INetworkProtocolControlInfo {
   public:
     virtual ~INetworkProtocolControlInfo() { }
+
     virtual short getProtocol() const = 0;
     virtual void setProtocol(short protocol) = 0;
+
     virtual Address getSourceAddress() const = 0;
     virtual void setSourceAddress(const Address & address) = 0;
+
     virtual Address getDestinationAddress() const = 0;
     virtual void setDestinationAddress(const Address & address) = 0;
+
     virtual int getInterfaceId() const = 0;
     virtual void setInterfaceId(int interfaceId) = 0;
+
     virtual short getHopLimit() const = 0;
     virtual void setHopLimit(short hopLimit) = 0;
+
     virtual bool getMulticastLoop() const = 0;
     virtual void setMulticastLoop(bool multicastLoop) = 0;
+
     virtual unsigned char getTrafficClass() const = 0;
     virtual void setTrafficClass(unsigned char trafficClass) = 0;
+
+    virtual void setOrigNetworkDatagram(INetworkDatagram *d) = 0;
+    virtual const INetworkDatagram *getOrigNetworkDatagram() const = 0;
+    virtual INetworkDatagram *removeOrigNetworkDatagram() = 0;
 };
 
 #endif /* INETWORKPROTOCOLCONTROLINFO_H_ */

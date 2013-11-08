@@ -82,6 +82,10 @@ class INET_API IPv4ControlInfo : public IPv4ControlInfo_Base, public INetworkPro
     virtual void setMulticastLoop(bool multicastLoop) { IPv4ControlInfo_Base::setMulticastLoop(multicastLoop); }
     virtual unsigned char getTrafficClass() const { return IPv4ControlInfo_Base::getTypeOfService(); }
     virtual void setTrafficClass(unsigned char trafficClass) { IPv4ControlInfo_Base::setTypeOfService(trafficClass); }
+
+    virtual void setOrigNetworkDatagram(INetworkDatagram *d);
+    virtual const INetworkDatagram *getOrigNetworkDatagram() const;
+    virtual INetworkDatagram *removeOrigNetworkDatagram();
 };
 
 #endif

@@ -37,18 +37,28 @@ class INET_API GenericNetworkProtocolControlInfo : public GenericNetworkProtocol
 
     virtual short getProtocol() const { return GenericNetworkProtocolControlInfo_Base::getProtocol(); }
     virtual void setProtocol(short protocol) { GenericNetworkProtocolControlInfo_Base::setProtocol(protocol); }
+
     virtual Address getSourceAddress() const { return GenericNetworkProtocolControlInfo_Base::_getSourceAddress(); }
     virtual void setSourceAddress(const Address & address) { GenericNetworkProtocolControlInfo_Base::setSourceAddress(address); }
+
     virtual Address getDestinationAddress() const { return GenericNetworkProtocolControlInfo_Base::_getDestinationAddress(); }
     virtual void setDestinationAddress(const Address & address) { GenericNetworkProtocolControlInfo_Base::setDestinationAddress(address); }
+
     virtual int getInterfaceId() const { return GenericNetworkProtocolControlInfo_Base::getInterfaceId(); }
     virtual void setInterfaceId(int interfaceId) { GenericNetworkProtocolControlInfo_Base::setInterfaceId(interfaceId); }
+
     virtual short getHopLimit() const { return GenericNetworkProtocolControlInfo_Base::getHopLimit(); }
     virtual void setHopLimit(short hopLimit) { GenericNetworkProtocolControlInfo_Base::setHopLimit(hopLimit); }
+
     virtual bool getMulticastLoop() const {  EV_ERROR << "getMulticastLoop() not implemented\n"; return false; }
     virtual void setMulticastLoop(bool multicastLoop) { EV_ERROR << "setMulticastLoop() not implemented, ignored\n"; }
+
     virtual unsigned char getTrafficClass() const { EV_ERROR << "getTrafficClass() not implemented\n"; return 0; }
     virtual void setTrafficClass(unsigned char trafficClass) { EV_ERROR << "setTrafficClass() not implemented, ignored\n"; }
+
+    virtual void setOrigNetworkDatagram(INetworkDatagram *d) { EV_ERROR << "setOrigDatagram() not implemented, ignored\n"; }
+    virtual const INetworkDatagram *getOrigNetworkDatagram() const { return NULL; }
+    virtual INetworkDatagram *removeOrigNetworkDatagram() { return NULL; }
 };
 
 #endif

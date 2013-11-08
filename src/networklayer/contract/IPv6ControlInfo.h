@@ -112,6 +112,10 @@ class INET_API IPv6ControlInfo : public IPv6ControlInfo_Base, public INetworkPro
     virtual void setMulticastLoop(bool multicastLoop) { IPv6ControlInfo_Base::setMulticastLoop(multicastLoop); }
     virtual unsigned char getTrafficClass() const { return IPv6ControlInfo_Base::getTrafficClass(); }
     virtual void setTrafficClass(unsigned char trafficClass) { IPv6ControlInfo_Base::setTrafficClass(trafficClass); }
+
+    virtual void setOrigNetworkDatagram(INetworkDatagram *d);
+    virtual const INetworkDatagram *getOrigNetworkDatagram() const;
+    virtual INetworkDatagram *removeOrigNetworkDatagram();
 };
 
 #endif

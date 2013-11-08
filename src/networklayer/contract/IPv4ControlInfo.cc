@@ -89,3 +89,18 @@ IPv4Datagram *IPv4ControlInfo::removeOrigDatagram()
 #endif
 }
 
+void IPv4ControlInfo::setOrigNetworkDatagram(INetworkDatagram *d)
+{
+    setOrigDatagram(check_and_cast<IPv4Datagram *>(d));
+}
+
+const INetworkDatagram *IPv4ControlInfo::getOrigNetworkDatagram() const
+{
+    return getOrigDatagram();
+}
+
+INetworkDatagram *IPv4ControlInfo::removeOrigNetworkDatagram()
+{
+    return removeOrigDatagram();
+}
+

@@ -146,3 +146,19 @@ IPv6ExtensionHeader* IPv6ControlInfo::removeFirstExtensionHeader()
     throw cRuntimeError(this, "INET was compiled without IPv6 support");
 #endif
 }
+
+void IPv6ControlInfo::setOrigNetworkDatagram(INetworkDatagram *d)
+{
+    setOrigDatagram(check_and_cast<IPv6Datagram *>(d));
+}
+
+const INetworkDatagram *IPv6ControlInfo::getOrigNetworkDatagram() const
+{
+    return getOrigDatagram();
+}
+
+INetworkDatagram *IPv6ControlInfo::removeOrigNetworkDatagram()
+{
+    return removeOrigDatagram();
+}
+

@@ -634,7 +634,6 @@ void DYMOUM::getMacAddress(INetworkDatagram *dgram)
                 macToIpAdress->insert(std::make_pair(macAddressConv, ip_src));
             }
         }
-        delete dgram;
     }
 }
 
@@ -654,7 +653,9 @@ void DYMOUM::recvDYMOUMPacket(cMessage * msg)
         src.s_addr = ManetAddress(srcAddr);
         dst.s_addr = ManetAddress(destAddr);
         interfaceId = ctrl->getInterfaceId();
-        getMacAddress(ctrl->removeOrigNetworkDatagram());
+        INetworkDatagram *dgram = ctrl->removeOrigNetworkDatagram();
+        getMacAddress(dgram);
+        delete dgram;
         delete ctrl;
     }
     else

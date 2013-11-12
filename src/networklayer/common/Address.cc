@@ -225,7 +225,7 @@ bool Address::operator<(const Address& other) const
     else {
         switch (type) {
             case Address::NONE:
-                throw cRuntimeError("Address contains no value");
+                return false;
             case Address::IPv4:
                 return toIPv4() < other.toIPv4();
             case Address::IPv6:
@@ -270,6 +270,34 @@ bool Address::operator==(const Address& other) const
 bool Address::operator!=(const Address& other) const
 {
     return !operator==(other);
+}
+
+void Address::setPrefix(int prefixLength)
+{
+    switch (getType()) {
+        case Address::NONE:
+            throw cRuntimeError("Address contains no value");
+            break;
+        case Address::IPv4:
+            set(toIPv4().doAnd(IPv4Address::makeNetmask(prefixLength)));
+            break;
+        case Address::IPv6:
+            set(toIPv6().getPrefix(prefixLength));
+            break;
+        case Address::MAC:
+            if (prefixLength != 48)
+                throw cRuntimeError("Invalid prefix length for MAC address");
+            break;
+        case Address::MODULEID:
+            throw cRuntimeError("setPrefix() not implemented for MODULEID address");
+            break;
+        case Address::MODULEPATH:
+            throw cRuntimeError("setPrefix() not implemented for MODULEPATH address");
+            break;
+        default:
+            throw cRuntimeError("Unknown type");
+            break;
+    }
 }
 
 bool Address::matches(const Address& other, int prefixLength) const

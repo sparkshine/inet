@@ -89,10 +89,13 @@ class INET_API Address
         bool isLinkLocal() const;
 
         bool operator<(const Address& other) const;
+        bool operator>(const Address& other) const { return other < *this; }
         bool operator==(const Address& other) const;
         bool operator!=(const Address& other) const;
 
         bool matches(const Address& other, int prefixLength) const;
+
+        void setPrefix(int prefixLength);
 
         static const char *getTypeName(AddressType t);
 };

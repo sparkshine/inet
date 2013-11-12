@@ -124,8 +124,8 @@ void ManetNetfilterHook::sendRouteUpdateMessageToManet(INetworkDatagram *datagra
     {
         ControlManetRouting *control = new ControlManetRouting();
         control->setOptionCode(MANET_ROUTE_UPDATE);
-        control->setSrcAddress(ManetAddress(datagram->getSourceAddress()));
-        control->setDestAddress(ManetAddress(datagram->getDestinationAddress()));
+        control->setSrcAddress(Address(datagram->getSourceAddress()));
+        control->setDestAddress(Address(datagram->getDestinationAddress()));
         sendToManet(control);
     }
 }
@@ -140,8 +140,8 @@ void ManetNetfilterHook::sendNoRouteMessageToManet(INetworkDatagram *datagram)
     {
         ControlManetRouting *control = new ControlManetRouting();
         control->setOptionCode(MANET_ROUTE_NOROUTE);
-        control->setSrcAddress(ManetAddress(datagram->getSourceAddress()));
-        control->setDestAddress(ManetAddress(datagram->getDestinationAddress()));
+        control->setSrcAddress(Address(datagram->getSourceAddress()));
+        control->setDestAddress(Address(datagram->getDestinationAddress()));
         control->encapsulate(dynamic_cast<cPacket *>(datagram));
         sendToManet(control);
     }

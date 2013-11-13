@@ -52,7 +52,7 @@ void SCTP::printInfoAssocMap()
             assoc = i->second;
             key = i->first;
 
-                sctpEV3<<"assocId: "<<assoc->assocId<<"  assoc: "<<assoc<<" src: "<<Address(key.localAddr)<<" dst: "<<Address(key.remoteAddr)<<" lPort: "<<key.localPort<<" rPort: "<<key.remotePort<<"\n";
+                sctpEV3<<"assocId: "<<assoc->assocId<<"  assoc: "<<assoc<<" src: "<< key.localAddr <<" dst: "<< key.remoteAddr <<" lPort: "<<key.localPort<<" rPort: "<<key.remotePort<<"\n";
 
         }
 

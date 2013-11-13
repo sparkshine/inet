@@ -56,8 +56,8 @@ bool TCP::logverbose;
 
 static std::ostream& operator<<(std::ostream& os, const TCP::SockPair& sp)
 {
-    os << "loc=" << Address(sp.localAddr) << ":" << sp.localPort << " "
-       << "rem=" << Address(sp.remoteAddr) << ":" << sp.remotePort;
+    os << "loc=" << sp.localAddr << ":" << sp.localPort << " "
+       << "rem=" << sp.remoteAddr << ":" << sp.remotePort;
     return os;
 }
 

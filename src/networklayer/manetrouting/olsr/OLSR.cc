@@ -637,7 +637,7 @@ OLSR::check_packet(cPacket* msg, nsaddr_t &src_addr, int &index)
         return NULL;
     }
     INetworkProtocolControlInfo* controlInfo = check_and_cast<INetworkProtocolControlInfo*>(msg->removeControlInfo());
-    src_addr = Address(controlInfo->getSourceAddress());
+    src_addr = controlInfo->getSourceAddress();
     index = -1;
     InterfaceEntry * ie;
 

@@ -102,8 +102,6 @@ bool TCPBasicClientApp::handleOperationStage(LifecycleOperation *operation, int 
 
 void TCPBasicClientApp::sendRequest()
 {
-     EV << "sending request, " << numRequestsToSend-1 << " more to go\n";
-
      long requestLength = par("requestLength");
      long replyLength = par("replyLength");
      if (requestLength < 1)
@@ -111,12 +109,13 @@ void TCPBasicClientApp::sendRequest()
      if (replyLength < 1)
          replyLength = 1;
 
-     EV << "sending " << requestLength << " bytes, expecting " << replyLength << endl;
-
      GenericAppMsg *msg = new GenericAppMsg("data");
      msg->setByteLength(requestLength);
      msg->setExpectedReplyLength(replyLength);
      msg->setServerClose(false);
+
+     EV_INFO << "sending request with " << requestLength << " bytes, expected reply length " << replyLength << " bytes,"
+             << "remaining " << numRequestsToSend-1 << " request\n";
 
      sendPacket(msg);
 }
@@ -126,7 +125,6 @@ void TCPBasicClientApp::handleTimer(cMessage *msg)
     switch (msg->getKind())
     {
         case MSGKIND_CONNECT:
-            EV << "starting session\n";
             connect(); // active OPEN
 
             // significance of earlySend: if true, data will be sent already
@@ -153,7 +151,7 @@ void TCPBasicClientApp::socketEstablished(int connId, void *ptr)
     TCPAppBase::socketEstablished(connId, ptr);
 
     // determine number of requests in this session
-    numRequestsToSend = (long) par("numRequestsPerSession");
+    numRequestsToSend = par("numRequestsPerSession").longValue();
     if (numRequestsToSend < 1)
         numRequestsToSend = 1;
 
@@ -186,7 +184,7 @@ void TCPBasicClientApp::socketDataArrived(int connId, void *ptr, cPacket *msg, b
 
     if (numRequestsToSend > 0)
     {
-        EV << "reply arrived\n";
+        EV_INFO << "reply arrived\n";
 
         if (timeoutMsg)
         {
@@ -196,7 +194,7 @@ void TCPBasicClientApp::socketDataArrived(int connId, void *ptr, cPacket *msg, b
     }
     else if (socket.getState() != TCPSocket::LOCALLY_CLOSED)
     {
-        EV << "reply to last request arrived, closing session\n";
+        EV_INFO << "reply to last request arrived, closing session\n";
         close();
     }
 }

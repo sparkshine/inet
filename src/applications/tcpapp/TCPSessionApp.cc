@@ -115,7 +115,6 @@ void TCPSessionApp::handleTimer(cMessage *msg)
     switch (msg->getKind())
     {
         case MSGKIND_CONNECT:
-            EV << "opening connection\n";
             if (activeOpen)
                 connect(); // sending will be scheduled from socketEstablished()
             else
@@ -137,8 +136,8 @@ void TCPSessionApp::handleTimer(cMessage *msg)
 
 void TCPSessionApp::sendData()
 {
-    EV << "sending data\n";
     long numBytes = commands[commandIndex].numBytes;
+    EV_INFO << "sending data with " << numBytes << " bytes\n";
     sendPacket(createDataPacket(numBytes));
 
     if (++commandIndex < (int)commands.size()) {
@@ -213,6 +212,7 @@ void TCPSessionApp::parseScript(const char *script)
 {
     const char *s = script;
 
+    EV_DEBUG << "parse script \"" << script << "\"\n";
     while (*s)
     {
         // parse time
@@ -241,6 +241,7 @@ void TCPSessionApp::parseScript(const char *script)
             s++;
 
         // add command
+        EV_DEBUG << " add command (" << tSend << "s, " << "B)\n";
         commands.push_back(Command(tSend, numBytes));
 
         // skip delimiter
@@ -258,4 +259,6 @@ void TCPSessionApp::parseScript(const char *script)
         while (isspace(*s))
             s++;
     }
+    EV_DEBUG << "parser finished\n";
 }
+

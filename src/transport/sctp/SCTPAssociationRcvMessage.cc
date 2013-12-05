@@ -2427,17 +2427,16 @@ SCTPEventCode SCTPAssociation::processAsconfAckArrived(SCTPAsconfAckChunk* ascon
                     {
                         for (iter = errorCorrId.begin(); iter != errorCorrId.end(); iter++)
                         {
-                            if ((*iter) == delParam->getRequestCorrelationId())
+                            if ((*iter) == priParam->getRequestCorrelationId())
                             {
                                 errorFound = true;
                                 break;
                             }
                         }
                     }
-                    if (errorFound==true) 
+                    if (!errorFound)
                     {
-                        delete delParam;
-                        break;
+                        //TODO processing priParam
                     }
                     delete priParam;
                     break;
@@ -2684,7 +2683,7 @@ void SCTPAssociation::process_TIMEOUT_HEARTBEAT(SCTPPathVariables* path)
             sendIndicationToApp(SCTP_I_CONN_LOST);
             return;
 
-        } else if (path->activePath == false && oldState == true)
+        } else if (path->activePath == false && oldState == true)   //FIXME oldState may be uninitialized
         {
             /* notify the application, in case the PATH STATE has changed from ACTIVE to INACTIVE */
             pathStatusIndication(path, false);

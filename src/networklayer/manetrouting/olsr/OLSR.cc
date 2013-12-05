@@ -98,7 +98,7 @@ OLSR_Timer::OLSR_Timer() : cOwnedObject("OLSR_Timer")
 {
     agent_ = dynamic_cast <OLSR*> (this->getOwner());
     if (agent_==NULL)
-        opp_error("timer ower is bad");
+        throw cRuntimeError("timer ower is bad");
     tuple_ = NULL;
 }
 
@@ -559,7 +559,7 @@ void OLSR::handleMessage(cMessage *msg)
         {
             OLSR_Timer *timer = timerQueuePtr->begin()->second;
             if (timer==NULL)
-                opp_error("timer ower is bad");
+                throw cRuntimeError("timer ower is bad");
             else
             {
                 timerQueuePtr->erase(timerQueuePtr->begin());
@@ -1883,7 +1883,7 @@ OLSR::send_hello()
                             nb_type = OLSR_NOT_NEIGH;
                         else
                         {
-                            error ("There is a neighbor tuple with an unknown status!");
+                            throw cRuntimeError("There is a neighbor tuple with an unknown status!");
                         }
                         ok = true;
                         break;
@@ -2893,7 +2893,7 @@ uint32_t OLSR::getRoute(const ManetAddress &dest, std::vector<ManetAddress> &add
             add.push_back(apAddr);
             OLSR_rt_entry* rt_entry_aux = rtable_.find_send_entry(rt_entry);
             if (rt_entry_aux->next_addr() != add[0])
-                opp_error("OLSR Data base error");
+                throw cRuntimeError("OLSR Data base error");
             return rt_entry->dist();
         }
         return 0;
@@ -2904,7 +2904,7 @@ uint32_t OLSR::getRoute(const ManetAddress &dest, std::vector<ManetAddress> &add
     add.push_back(dest);
     OLSR_rt_entry* rt_entry_aux = rtable_.find_send_entry(rt_entry);
     if (rt_entry_aux->next_addr() != add[0])
-        opp_error("OLSR Data base error");
+        throw cRuntimeError("OLSR Data base error");
     return rt_entry->dist();
 }
 
@@ -2927,7 +2927,7 @@ bool OLSR::getNextHop(const ManetAddress &dest, ManetAddress &add, int &iface, d
                 add = rt_entry->next_addr();
             OLSR_rt_entry* rt_entry_aux = rtable_.find_send_entry(rt_entry);
             if (rt_entry_aux->next_addr() != add)
-                opp_error("OLSR Data base error");
+                throw cRuntimeError("OLSR Data base error");
 
             InterfaceEntry * ie = getInterfaceWlanByAddress(rt_entry->iface_addr());
             iface = ie->getInterfaceId();
@@ -2943,7 +2943,7 @@ bool OLSR::getNextHop(const ManetAddress &dest, ManetAddress &add, int &iface, d
         add = rt_entry->next_addr();
     OLSR_rt_entry* rt_entry_aux = rtable_.find_send_entry(rt_entry);
     if (rt_entry_aux->next_addr() != add)
-        opp_error("OLSR Data base error");
+        throw cRuntimeError("OLSR Data base error");
 
     InterfaceEntry * ie = getInterfaceWlanByAddress(rt_entry->iface_addr());
     iface = ie->getInterfaceId();
@@ -2981,7 +2981,7 @@ void OLSR::scheduleNextEvent()
             scheduleAt(e->first, timerMessage);
         }
         else if (e->first>timerMessage->getArrivalTime())
-            error("OLSR timer Queue problem");
+            throw cRuntimeError("OLSR timer Queue problem");
     }
     else
     {
@@ -3013,7 +3013,7 @@ int OLSR::getRouteGroup(const AddressGroup &gr, std::vector<ManetAddress> &add)
         add[rt_entry->route.size()] = dest;
         OLSR_rt_entry* rt_entry_aux = rtable_.find_send_entry(rt_entry);
         if (rt_entry_aux->next_addr() != add[0])
-            opp_error("OLSR Data base error");
+            throw cRuntimeError("OLSR Data base error");
     }
     if (distance==1000)
         return 0;
@@ -3039,7 +3039,7 @@ bool OLSR::getNextHopGroup(const AddressGroup &gr, ManetAddress &add, int &iface
             add = rt_entry->next_addr();
         OLSR_rt_entry* rt_entry_aux = rtable_.find_send_entry(rt_entry);
         if (rt_entry_aux->next_addr() != add)
-            opp_error("OLSR Data base error");
+            throw cRuntimeError("OLSR Data base error");
         InterfaceEntry * ie = getInterfaceWlanByAddress(rt_entry->iface_addr());
         iface = ie->getInterfaceId();
         gw = dest;

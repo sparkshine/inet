@@ -318,7 +318,7 @@ OLSR_ETX::recv_olsr(cMessage* msg)
         {
             link_tuple = dynamic_cast<OLSR_ETX_link_tuple*> (link_aux);
             if (!link_tuple)
-                opp_error("\n Error conversion link tuple to link ETX tuple");
+                throw cRuntimeError("\n Error conversion link tuple to link ETX tuple");
         }
         if (link_tuple)
             link_tuple->link_delay_computation(op);
@@ -385,7 +385,7 @@ OLSR_ETX::olsr_r1_mpr_computation()
 
 
         if (!nb2hop_tuple)
-            opp_error("\n Error conversion nd2hop tuple");
+            throw cRuntimeError("\n Error conversion nd2hop tuple");
 
 
         bool ok = true;
@@ -428,7 +428,7 @@ OLSR_ETX::olsr_r1_mpr_computation()
     {
         OLSR_ETX_nb2hop_tuple* nb2hop_tuple1 = dynamic_cast<OLSR_ETX_nb2hop_tuple*>(*it);
         if (!nb2hop_tuple1)
-            opp_error("\n Error conversion nd2hop tuple");
+            throw cRuntimeError("\n Error conversion nd2hop tuple");
 
         increment = true;
 
@@ -467,7 +467,7 @@ OLSR_ETX::olsr_r1_mpr_computation()
         {
             OLSR_ETX_nb2hop_tuple* nb2hop_tuple2 = dynamic_cast<OLSR_ETX_nb2hop_tuple*>(*it2);
             if (!nb2hop_tuple2)
-                opp_error("\n Error conversion nd2hop tuple");
+                throw cRuntimeError("\n Error conversion nd2hop tuple");
 
             if (nb2hop_tuple1->nb2hop_addr() == nb2hop_tuple2->nb2hop_addr())
             {
@@ -487,7 +487,7 @@ OLSR_ETX::olsr_r1_mpr_computation()
             {
                 OLSR_ETX_nb2hop_tuple* nb2hop_tuple2 = dynamic_cast<OLSR_ETX_nb2hop_tuple*>(*it2);
                 if (!nb2hop_tuple2)
-                    opp_error("\n Error conversion nd2hop tuple");
+                    throw cRuntimeError("\n Error conversion nd2hop tuple");
 
                 if (nb2hop_tuple1->nb_main_addr() == nb2hop_tuple2->nb_main_addr())
                 {
@@ -559,7 +559,7 @@ OLSR_ETX::olsr_r1_mpr_computation()
             {
                 OLSR_ETX_nb2hop_tuple* nb2hop_tuple = dynamic_cast<OLSR_ETX_nb2hop_tuple*>(*it2);
                 if (!nb2hop_tuple)
-                    opp_error("\n Error conversion nd2hop tuple");
+                    throw cRuntimeError("\n Error conversion nd2hop tuple");
 
 
                 if (nb_tuple->nb_main_addr() == nb2hop_tuple->nb_main_addr())
@@ -609,14 +609,14 @@ OLSR_ETX::olsr_r1_mpr_computation()
                             {
                                 nb_link_tuple = dynamic_cast<OLSR_ETX_link_tuple *>(link_tuple_aux);
                                 if (!nb_link_tuple)
-                                    opp_error("\n Error conversion link tuple");
+                                    throw cRuntimeError("\n Error conversion link tuple");
                             }
                             link_tuple_aux = state_.find_sym_link_tuple(max->nb_main_addr(), now);
                             if (link_tuple_aux)
                             {
                                 max_link_tuple = dynamic_cast<OLSR_ETX_link_tuple *>(link_tuple_aux);
                                 if (!max_link_tuple)
-                                    opp_error("\n Error conversion link tuple");
+                                    throw cRuntimeError("\n Error conversion link tuple");
                             }
                             if (nb_link_tuple || max_link_tuple)
                                 continue;
@@ -666,7 +666,7 @@ OLSR_ETX::olsr_r1_mpr_computation()
             {
                 OLSR_ETX_nb2hop_tuple* nb2hop_tuple = dynamic_cast<OLSR_ETX_nb2hop_tuple*>(*it);
                 if (!nb2hop_tuple)
-                    opp_error("\n Error conversion nd2hop tuple");
+                    throw cRuntimeError("\n Error conversion nd2hop tuple");
 
 
                 if (nb2hop_tuple->nb_main_addr() == max->nb_main_addr())
@@ -681,7 +681,7 @@ OLSR_ETX::olsr_r1_mpr_computation()
             {
                 OLSR_ETX_nb2hop_tuple* nb2hop_tuple = dynamic_cast<OLSR_ETX_nb2hop_tuple*>(*it);
                 if (!nb2hop_tuple)
-                    opp_error("\n Error conversion nd2hop tuple");
+                    throw cRuntimeError("\n Error conversion nd2hop tuple");
 
 
                 std::set<nsaddr_t>::iterator it2 =
@@ -728,7 +728,7 @@ OLSR_ETX::olsr_r2_mpr_computation()
     {
         OLSR_ETX_nb2hop_tuple* nb2hop_tuple = dynamic_cast<OLSR_ETX_nb2hop_tuple*>(*it);
         if (!nb2hop_tuple)
-            opp_error("\n Error conversion nd2hop tuple");
+            throw cRuntimeError("\n Error conversion nd2hop tuple");
 
 
         bool ok = true;
@@ -767,7 +767,7 @@ OLSR_ETX::olsr_r2_mpr_computation()
             {
                 OLSR_ETX_nb2hop_tuple* nb2hop_tuple = dynamic_cast<OLSR_ETX_nb2hop_tuple*>(*it2);
                 if (!nb2hop_tuple)
-                    opp_error("\n Error conversion nd2hop tuple");
+                    throw cRuntimeError("\n Error conversion nd2hop tuple");
 
 
                 if (nb_tuple->nb_main_addr() == nb2hop_tuple->nb_main_addr())
@@ -807,14 +807,14 @@ OLSR_ETX::olsr_r2_mpr_computation()
                         {
                             nb_link_tuple = dynamic_cast<OLSR_ETX_link_tuple *>(link_tuple_aux);
                             if (!nb_link_tuple)
-                                opp_error("\n Error conversion link tuple");
+                                throw cRuntimeError("\n Error conversion link tuple");
                         }
                         link_tuple_aux = state_.find_sym_link_tuple(max->nb_main_addr(), now);
                         if (link_tuple_aux)
                         {
                             max_link_tuple = dynamic_cast<OLSR_ETX_link_tuple *>(link_tuple_aux);
                             if (!max_link_tuple)
-                                opp_error("\n Error conversion link tuple");
+                                throw cRuntimeError("\n Error conversion link tuple");
                         }
                         if (nb_link_tuple || max_link_tuple)
                             continue;
@@ -886,7 +886,7 @@ OLSR_ETX::olsr_r2_mpr_computation()
             {
                 OLSR_ETX_nb2hop_tuple* nb2hop_tuple = dynamic_cast<OLSR_ETX_nb2hop_tuple*>(*it);
                 if (!nb2hop_tuple)
-                    opp_error("\n Error conversion nd2hop tuple");
+                    throw cRuntimeError("\n Error conversion nd2hop tuple");
 
                 if (nb2hop_tuple->nb_main_addr() == max->nb_main_addr())
                 {
@@ -901,7 +901,7 @@ OLSR_ETX::olsr_r2_mpr_computation()
             {
                 OLSR_ETX_nb2hop_tuple* nb2hop_tuple = dynamic_cast<OLSR_ETX_nb2hop_tuple*>(*it);
                 if (!nb2hop_tuple)
-                    opp_error("\n Error conversion nd2hop tuple");
+                    throw cRuntimeError("\n Error conversion nd2hop tuple");
 
                 std::set<nsaddr_t>::iterator it2 =
                     nb2hop_addrs.find(nb2hop_tuple->nb2hop_addr());
@@ -946,7 +946,7 @@ OLSR_ETX::qolsr_mpr_computation()
     {
         OLSR_ETX_nb2hop_tuple* nb2hop_tuple = dynamic_cast<OLSR_ETX_nb2hop_tuple*>(*it);
         if (!nb2hop_tuple)
-            opp_error("\n Error conversion nd2hop tuple");
+            throw cRuntimeError("\n Error conversion nd2hop tuple");
 
         bool ok = true;
         OLSR_ETX_nb_tuple* nb_tuple = state_.find_sym_nb_tuple(nb2hop_tuple->nb_main_addr());
@@ -983,7 +983,7 @@ OLSR_ETX::qolsr_mpr_computation()
             {
                 OLSR_ETX_nb2hop_tuple* nb2hop_tuple = dynamic_cast<OLSR_ETX_nb2hop_tuple*>(*it2);
                 if (!nb2hop_tuple)
-                    opp_error("\n Error conversion nd2hop tuple");
+                    throw cRuntimeError("\n Error conversion nd2hop tuple");
 
                 if (nb_tuple->nb_main_addr() == nb2hop_tuple->nb_main_addr())
                     r++;
@@ -998,7 +998,7 @@ OLSR_ETX::qolsr_mpr_computation()
         {
             z = dynamic_cast<OLSR_ETX_nb2hop_tuple*> (t_aux);
             if (!z)
-                opp_error("\n Error conversion nd2hop tuple");
+                throw cRuntimeError("\n Error conversion nd2hop tuple");
         }
 
         // Add to Mi, if not yet present, the node in N that provides the
@@ -1014,7 +1014,7 @@ OLSR_ETX::qolsr_mpr_computation()
         {
             OLSR_ETX_nb2hop_tuple* nb2hop_tuple = dynamic_cast<OLSR_ETX_nb2hop_tuple*>(*it);
             if (!nb2hop_tuple)
-                opp_error("\n Error conversion nd2hop tuple");
+                throw cRuntimeError("\n Error conversion nd2hop tuple");
 
 
             // If the two hop neighbor is not the one we have selected, skip
@@ -1048,14 +1048,14 @@ OLSR_ETX::qolsr_mpr_computation()
                             {
                                 nb_link_tuple = dynamic_cast<OLSR_ETX_link_tuple *>(link_tuple_aux);
                                 if (!nb_link_tuple)
-                                    opp_error("\n Error conversion link tuple");
+                                    throw cRuntimeError("\n Error conversion link tuple");
                             }
                             link_tuple_aux = state_.find_sym_link_tuple(max->nb_main_addr(), now); /* bug */
                             if (link_tuple_aux)
                             {
                                 max_link_tuple = dynamic_cast<OLSR_ETX_link_tuple *>(link_tuple_aux);
                                 if (!max_link_tuple)
-                                    opp_error("\n Error conversion link tuple");
+                                    throw cRuntimeError("\n Error conversion link tuple");
                             }
 
                             double current_total_etx, max_total_etx;
@@ -1135,7 +1135,7 @@ OLSR_ETX::qolsr_mpr_computation()
             {
                 OLSR_ETX_nb2hop_tuple* nb2hop_tuple = dynamic_cast<OLSR_ETX_nb2hop_tuple*>(*it);
                 if (!nb2hop_tuple)
-                    opp_error("\n Error conversion nd2hop tuple");
+                    throw cRuntimeError("\n Error conversion nd2hop tuple");
 
                 if (nb2hop_tuple->nb_main_addr() == max->nb_main_addr())
                 {
@@ -1150,7 +1150,7 @@ OLSR_ETX::qolsr_mpr_computation()
             {
                 OLSR_ETX_nb2hop_tuple* nb2hop_tuple = dynamic_cast<OLSR_ETX_nb2hop_tuple*>(*it);
                 if (!nb2hop_tuple)
-                    opp_error("\n Error conversion nd2hop tuple");
+                    throw cRuntimeError("\n Error conversion nd2hop tuple");
 
 
                 std::set<nsaddr_t>::iterator it2 =
@@ -1255,7 +1255,7 @@ OLSR_ETX::rtable_dijkstra_computation()
     {
         OLSR_ETX_nb2hop_tuple* nb2hop_tuple = dynamic_cast<OLSR_ETX_nb2hop_tuple*>(*it);
         if (!nb2hop_tuple)
-            opp_error("\n Error conversion nd2hop tuple");
+            throw cRuntimeError("\n Error conversion nd2hop tuple");
 
         nsaddr_t nb2hop_main_addr = nb2hop_tuple->nb2hop_addr();
         nsaddr_t nb_main_addr = nb2hop_tuple->nb_main_addr();
@@ -1277,7 +1277,7 @@ OLSR_ETX::rtable_dijkstra_computation()
         {
             best_link = dynamic_cast<OLSR_ETX_nb2hop_tuple *>(nb2hop_tuple_aux);
             if (!best_link)
-                opp_error("\n Error conversion nb2tuple tuple");
+                throw cRuntimeError("\n Error conversion nb2tuple tuple");
         }
 
         bool found = false;
@@ -1322,7 +1322,7 @@ OLSR_ETX::rtable_dijkstra_computation()
     {
         OLSR_ETX_topology_tuple* topology_tuple = dynamic_cast<OLSR_ETX_topology_tuple*>(*it);
         if (!topology_tuple)
-            opp_error("\n Error conversion topology tuple");
+            throw cRuntimeError("\n Error conversion topology tuple");
 
 
 
@@ -1354,7 +1354,7 @@ OLSR_ETX::rtable_dijkstra_computation()
         std::multimap<int,nsaddr_t>::iterator it = processed_nodes.begin();
         Dijkstra::DijkstraMap::iterator itDij = dijkstra->dijkstraMap.find(it->second);
         if (itDij==dijkstra->dijkstraMap.end())
-            opp_error("node not found in DijkstraMap");
+            throw cRuntimeError("node not found in DijkstraMap");
         int hopCount = it->first;
         if (hopCount == 1)
         {
@@ -1367,7 +1367,7 @@ OLSR_ETX::rtable_dijkstra_computation()
             // add route...
             OLSR_ETX_rt_entry* entry = rtable_.lookup(itDij->second.link().last_node());
             if (entry==NULL)
-                opp_error("entry not found");
+                throw cRuntimeError("entry not found");
             rtable_.add_entry(it->second, entry->next_addr(), entry->iface_addr(), hopCount, entry->local_iface_index(),itDij->second.link().quality(),itDij->second.link().getDelay());
             omnet_chg_rte (it->second, entry->next_addr(), netmask, hopCount, false, entry->iface_addr());
         }
@@ -1513,7 +1513,7 @@ OLSR_ETX::process_tc(OLSR_msg& msg, const nsaddr_t &sender_iface, const int &ind
     {
         link_tuple = dynamic_cast<OLSR_ETX_link_tuple*> (tuple_aux);
         if (!link_tuple)
-            opp_error("\n Error conversion link tuple");
+            throw cRuntimeError("\n Error conversion link tuple");
     }
 
     if (link_tuple == NULL)
@@ -1529,7 +1529,7 @@ OLSR_ETX::process_tc(OLSR_msg& msg, const nsaddr_t &sender_iface, const int &ind
     {
         topology_tuple = dynamic_cast<OLSR_ETX_topology_tuple*> (topology_tuple_aux);
         if (!topology_tuple)
-            opp_error("\n error conversion Topology tuple");
+            throw cRuntimeError("\n error conversion Topology tuple");
     }
 
     if (topology_tuple != NULL)
@@ -1558,7 +1558,7 @@ OLSR_ETX::process_tc(OLSR_msg& msg, const nsaddr_t &sender_iface, const int &ind
         {
             topology_tuple = dynamic_cast<OLSR_ETX_topology_tuple*> (topology_tuple_aux);
             if (!topology_tuple)
-                opp_error("\n error conversion Topology tuple");
+                throw cRuntimeError("\n error conversion Topology tuple");
         }
 
 
@@ -1802,7 +1802,7 @@ OLSR_ETX::send_hello()
     {
         OLSR_ETX_link_tuple* link_tuple = dynamic_cast<OLSR_ETX_link_tuple*>(*it);
         if (!link_tuple)
-            opp_error("\n Error conversion link tuple");
+            throw cRuntimeError("\n Error conversion link tuple");
 
 
         if (link_tuple->local_iface_addr() == ra_addr() && link_tuple->time() >= now)
@@ -1837,7 +1837,7 @@ OLSR_ETX::send_hello()
                             nb_type = OLSR_NOT_NEIGH;
                         else
                         {
-                            error("There is a neighbor tuple with an unknown status!");
+                            throw cRuntimeError("There is a neighbor tuple with an unknown status!");
                         }
                         ok = true;
                         break;
@@ -2150,7 +2150,7 @@ OLSR_ETX::link_sensing
     {
         link_tuple = dynamic_cast<OLSR_ETX_link_tuple*>(link_tuple_aux);
         if (link_tuple == NULL)
-            opp_error("\n Error conversion link tuple");
+            throw cRuntimeError("\n Error conversion link tuple");
     }
     if (link_tuple == NULL)
     {
@@ -2285,7 +2285,7 @@ OLSR_ETX::populate_nb2hopset(OLSR_msg& msg)
     {
         OLSR_ETX_link_tuple* link_tuple = dynamic_cast<OLSR_ETX_link_tuple*>(*it_lt);
         if (!link_tuple)
-            opp_error("\n Error conversion link tuple");
+            throw cRuntimeError("\n Error conversion link tuple");
 
 
 
@@ -2326,7 +2326,7 @@ OLSR_ETX::populate_nb2hopset(OLSR_msg& msg)
                         {
                             nb2hop_tuple = dynamic_cast<OLSR_ETX_nb2hop_tuple*>(nb2hop_tuple_aux);
                             if (!nb2hop_tuple)
-                                opp_error("\n Error conversion nd2hop tuple");
+                                throw cRuntimeError("\n Error conversion nd2hop tuple");
                         }
 
                         if (nb2hop_tuple == NULL)
@@ -2749,7 +2749,7 @@ bool OLSR_ETX::getNextHop(const ManetAddress &dest, ManetAddress &add, int &ifac
                 add = rt_entry->next_addr();
             OLSR_rt_entry* rt_entry_aux = rtable_.find_send_entry(rt_entry);
             if (rt_entry_aux->next_addr() != add)
-                opp_error("OLSR Data base error");
+                throw cRuntimeError("OLSR Data base error");
 
             InterfaceEntry * ie = getInterfaceWlanByAddress(rt_entry->iface_addr());
             iface = ie->getInterfaceId();
@@ -2768,7 +2768,7 @@ bool OLSR_ETX::getNextHop(const ManetAddress &dest, ManetAddress &add, int &ifac
         add = rt_entry->next_addr();
     OLSR_rt_entry* rt_entry_aux = rtable_.find_send_entry(rt_entry);
     if (rt_entry_aux->next_addr() != add)
-        opp_error("OLSR Data base error");
+        throw cRuntimeError("OLSR Data base error");
 
     InterfaceEntry * ie = getInterfaceWlanByAddress(rt_entry->iface_addr());
     iface = ie->getInterfaceId();

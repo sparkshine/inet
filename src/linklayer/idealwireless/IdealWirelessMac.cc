@@ -85,7 +85,7 @@ void IdealWirelessMac::initialize(int stage)
         cGate *queueOut = gate("upperLayerIn")->getPathStartGate();
         queueModule = dynamic_cast<IPassiveQueue *>(queueOut->getOwnerModule());
         if (!queueModule)
-            error("Missing queueModule");
+            throw cRuntimeError("Missing queueModule");
 
         initializeMACAddress();
     }
@@ -163,7 +163,7 @@ void IdealWirelessMac::startTransmitting(cPacket *msg)
 
 void IdealWirelessMac::handleSelfMsg(cMessage *msg)
 {
-    error("Unexpected self-message");
+    throw cRuntimeError("Unexpected self-message");
 }
 
 void IdealWirelessMac::getNextMsgFromHL()
@@ -183,7 +183,7 @@ void IdealWirelessMac::handleUpperMsg(cPacket *msg)
     if (radioState == RadioState::TRANSMIT)
     {
         // Logic error: we do not request packet from the external queue when radio is transmitting
-        error("Received msg for transmission but transmitter is busy");
+        throw cRuntimeError("Received msg for transmission but transmitter is busy");
     }
     else if (radioState == RadioState::SLEEP)
     {
@@ -199,7 +199,7 @@ void IdealWirelessMac::handleUpperMsg(cPacket *msg)
 
 void IdealWirelessMac::handleCommand(cMessage *msg)
 {
-    error("Unexpected command received from higher layer");
+    throw cRuntimeError("Unexpected command received from higher layer");
 }
 
 void IdealWirelessMac::handleLowerMsg(cPacket *msg)

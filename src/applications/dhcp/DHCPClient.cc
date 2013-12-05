@@ -96,7 +96,7 @@ void DHCPClient::initialize(int stage)
 
         if (ie == NULL)
         {
-            error("DHCP Interface does not exist. aborting.");
+            throw cRuntimeError("DHCP Interface does not exist. aborting.");
             return;
         }
 

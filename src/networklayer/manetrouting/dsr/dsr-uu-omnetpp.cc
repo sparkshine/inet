@@ -347,7 +347,7 @@ void DSRUU::initialize(int stage)
         if (num_80211==1)
             interface80211ptr = i_face;
         else
-            opp_error("DSR has found %i 80211 interfaces", num_80211);
+            throw cRuntimeError("DSR has found %i 80211 interfaces", num_80211);
 
         /* Initilize tables */
         lc_init();
@@ -566,7 +566,7 @@ void DSRUU::handleMessage(cMessage* msg)
         //EV << "############################################################\n";
         //delete msg;
         //return;
-        opp_error("DSR has received not supported packet");
+        throw cRuntimeError("DSR has received not supported packet");
     }
     DEBUG("##########\n");
     if (ipDgram->getSrcAddress().isUnspecified())

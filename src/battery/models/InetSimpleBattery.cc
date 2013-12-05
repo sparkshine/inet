@@ -92,10 +92,10 @@ int InetSimpleBattery::registerDevice(cObject *id, int numAccts)
 {
     for (unsigned int i = 0; i<deviceEntryVector.size(); i++)
         if (deviceEntryVector[i]->owner == id)
-            error("device already registered!");
+            throw cRuntimeError("device already registered!");
     if (numAccts < 1)
     {
-        error("number of activities must be at least 1");
+        throw cRuntimeError("number of activities must be at least 1");
     }
 
     DeviceEntry *device = new DeviceEntry();
@@ -170,13 +170,13 @@ void InetSimpleBattery::handleMessage(cMessage *msg)
             break;
 
         default:
-            error("battery receives mysterious timeout");
+            throw cRuntimeError("battery receives mysterious timeout");
             break;
         }
     }
     else
     {
-        error("unexpected message");
+        throw cRuntimeError("unexpected message");
         delete msg;
     }
 }
@@ -202,7 +202,7 @@ void InetSimpleBattery::receiveChangeNotification(int aCategory, const cObject* 
             return;
 
         if (rs->getState()>=it->second->numAccts)
-            opp_error("Error in battery states");
+            throw cRuntimeError("Error in battery states");
 
         double current = it->second->radioUsageCurrent[rs->getState()];
 
@@ -225,7 +225,7 @@ void InetSimpleBattery::draw(int deviceID, DrawAmount& amount, int activity)
 
         double current = amount.getValue();
         if (activity < 0 && current != 0)
-            error("invalid CURRENT message");
+            throw cRuntimeError("invalid CURRENT message");
 
         EV << simTime() << " device " << deviceID <<
         " draw current " << current <<
@@ -243,7 +243,7 @@ void InetSimpleBattery::draw(int deviceID, DrawAmount& amount, int activity)
         double energy = amount.getValue();
         if (!(activity >= 0 && activity < deviceEntryVector[deviceID]->numAccts))
         {
-            error("invalid activity specified");
+            throw cRuntimeError("invalid activity specified");
         }
 
         EV << simTime() << " device " << deviceID <<  " deduct " << energy <<
@@ -259,7 +259,7 @@ void InetSimpleBattery::draw(int deviceID, DrawAmount& amount, int activity)
     }
     else
     {
-        error("Unknown power type!");
+        throw cRuntimeError("Unknown power type!");
     }
 }
 

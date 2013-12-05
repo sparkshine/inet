@@ -194,7 +194,7 @@ void BGPRouting::socketEstablished(int connId, void *yourPtr)
     _currSessionId = findIdFromSocketConnId(_BGPSessions, connId);
     if (_currSessionId == (BGP::SessionID)-1)
     {
-        error("socket id=%d is not established", connId);
+        throw cRuntimeError("socket id=%d is not established", connId);
     }
 
     //if it's an IGP Session, TCPConnectionConfirmed only if all EGP Sessions established
@@ -544,7 +544,7 @@ void BGPRouting::loadSessionConfig(cXMLElementList& sessionList, simtime_t* dela
         }
         if (peerAddr.isUnspecified())
         {
-            error("BGP Error: No valid external address for session ID : %s", (*sessionListIt)->getAttribute("id"));
+            throw cRuntimeError("BGP Error: No valid external address for session ID : %s", (*sessionListIt)->getAttribute("id"));
         }
 
         BGP::SessionID newSessionID = createSession(BGP::EGP, peerAddr.str().c_str());
@@ -608,7 +608,7 @@ std::vector<const char *> BGPRouting::loadASConfig(cXMLElementList& ASConfig)
         }
         else
         {
-            error("BGP Error: unknown element named '%s' for AS %u", nodeName.c_str(), _myAS);
+            throw cRuntimeError("BGP Error: unknown element named '%s' for AS %u", nodeName.c_str(), _myAS);
         }
     }
     return routerInSameASList;
@@ -617,13 +617,13 @@ std::vector<const char *> BGPRouting::loadASConfig(cXMLElementList& ASConfig)
 void BGPRouting::loadConfigFromXML(cXMLElement *bgpConfig)
 {
     if (strcmp(bgpConfig->getTagName(), "BGPConfig"))
-        error("Cannot read BGP configuration, unaccepted '%s' node at %s", bgpConfig->getTagName(), bgpConfig->getSourceLocation());
+        throw cRuntimeError("Cannot read BGP configuration, unaccepted '%s' node at %s", bgpConfig->getTagName(), bgpConfig->getSourceLocation());
 
     // load bgp timer parameters informations
     simtime_t delayTab[BGP::NB_TIMERS];
     cXMLElement* paramNode = bgpConfig->getElementByPath("TimerParams");
     if (paramNode == NULL)
-        error("BGP Error: No configuration for BGP timer parameters");
+        throw cRuntimeError("BGP Error: No configuration for BGP timer parameters");
 
     cXMLElementList timerConfig = paramNode->getChildren();
     loadTimerConfig(timerConfig, delayTab);
@@ -633,7 +633,7 @@ void BGPRouting::loadConfigFromXML(cXMLElement *bgpConfig)
     int routerPosition;
     _myAS = findMyAS(ASList, routerPosition);
     if (_myAS == 0)
-        error("BGP Error:  No AS configuration for Router ID: %s", _rt->getRouterId().str().c_str());
+        throw cRuntimeError("BGP Error:  No AS configuration for Router ID: %s", _rt->getRouterId().str().c_str());
 
     // load EGP Session informations
     cXMLElementList sessionList = bgpConfig->getElementsByTagName("Session");
@@ -648,7 +648,7 @@ void BGPRouting::loadConfigFromXML(cXMLElement *bgpConfig)
     cXMLElement* ASNode = bgpConfig->getElementByPath(ASXPath);
     std::vector<const char *> routerInSameASList;
     if (ASNode == NULL)
-        error("BGP Error:  No configuration for AS ID: %d", _myAS);
+        throw cRuntimeError("BGP Error:  No configuration for AS ID: %d", _myAS);
 
     cXMLElementList ASConfig = ASNode->getChildren();
     routerInSameASList = loadASConfig(ASConfig);
@@ -716,7 +716,7 @@ BGP::SessionID BGPRouting::createSession(BGP::type typeSession, const char* peer
         info.linkIntf = _rt->getInterfaceForDestAddr(info.peerAddr);
         if (info.linkIntf == 0)
         {
-            error("BGP Error: No configuration interface for peer address: %s", peerAddr);
+            throw cRuntimeError("BGP Error: No configuration interface for peer address: %s", peerAddr);
         }
         info.sessionID = info.peerAddr.getInt() + info.linkIntf->ipv4Data()->getIPAddress().getInt();
     }
@@ -875,7 +875,7 @@ BGP::SessionID BGPRouting::findNextSession(BGP::type type, bool startSession)
         InterfaceEntry* linkIntf = _rt->getInterfaceForDestAddr(_BGPSessions[sessionID]->getPeerAddr());
         if (linkIntf == 0)
         {
-            error("No configuration interface for peer address: %s", _BGPSessions[sessionID]->getPeerAddr().str().c_str());
+            throw cRuntimeError("No configuration interface for peer address: %s", _BGPSessions[sessionID]->getPeerAddr().str().c_str());
         }
         _BGPSessions[sessionID]->setlinkIntf(linkIntf);
         _BGPSessions[sessionID]->startConnection();

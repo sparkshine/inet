@@ -191,7 +191,7 @@ void IdealRadio::handleUpperMsg(cMessage *msg)
     IdealAirFrame *airframe = encapsulatePacket(PK(msg));
 
     if (rs == RadioState::TRANSMIT)
-        error("Trying to send a message while already transmitting -- MAC should "
+        throw cRuntimeError("Trying to send a message while already transmitting -- MAC should "
               "take care this does not happen");
 
     sendDown(airframe);
@@ -242,7 +242,7 @@ void IdealRadio::handleSelfMsg(cMessage *msg)
     }
     else
     {
-        error("Internal error: unknown self-message `%s'", msg->getName());
+        throw cRuntimeError("Internal error: unknown self-message `%s'", msg->getName());
     }
     EV << "IdealRadio::handleSelfMsg END" << endl;
 }

@@ -148,7 +148,7 @@ void ChannelControl::unregisterRadio(RadioRef r)
         }
     }
 
-    error("unregisterRadio failed: no such radio");
+    throw cRuntimeError("unregisterRadio failed: no such radio");
 }
 
 ChannelControl::RadioRef ChannelControl::lookupRadio(cModule *radio)
@@ -211,7 +211,7 @@ void ChannelControl::updateConnections(RadioRef h)
 void ChannelControl::checkChannel(int channel)
 {
     if (channel >= numChannels || channel < 0)
-        error("Invalid channel, must above 0 and below %d", numChannels);
+        throw cRuntimeError("Invalid channel, must above 0 and below %d", numChannels);
 }
 
 void ChannelControl::setRadioPosition(RadioRef r, const Coord& pos)

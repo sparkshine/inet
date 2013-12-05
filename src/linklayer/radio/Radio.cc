@@ -71,7 +71,7 @@ void Radio::initialize(int stage)
         // read parameters
         transmitterPower = par("transmitterPower");
         if (transmitterPower > (double) (getChannelControlPar("pMax")))
-            error("transmitterPower cannot be bigger than pMax in ChannelControl!");
+            throw cRuntimeError("transmitterPower cannot be bigger than pMax in ChannelControl!");
         rs.setBitrate(par("bitrate"));
         rs.setChannelNumber(par("channelNumber"));
         rs.setRadioId(this->getId());
@@ -274,7 +274,7 @@ void Radio::handleMessage(cMessage *msg)
     {
         cObject *ctrl = msg->removeControlInfo();
         if (msg->getKind()==0)
-            error("Message '%s' with length==0 is supposed to be a command, but msg kind is also zero", msg->getName());
+            throw cRuntimeError("Message '%s' with length==0 is supposed to be a command, but msg kind is also zero", msg->getName());
         handleCommand(msg->getKind(), ctrl);
         delete msg;
         return;
@@ -410,7 +410,7 @@ AirFrame *Radio::unbufferMsg(cMessage *msg)
 void Radio::handleUpperMsg(AirFrame *airframe)
 {
     if (rs.getState() == RadioState::TRANSMIT)
-        error("Trying to send a message while already transmitting -- MAC should "
+        throw cRuntimeError("Trying to send a message while already transmitting -- MAC should "
               "take care this does not happen");
 
     // if a packet was being received, it is corrupted now as should be treated as noise
@@ -496,7 +496,7 @@ void Radio::handleCommand(int msgkind, cObject *ctrl)
         }
     }
     else
-        error("unknown command (msgkind=%d)", msgkind);
+        throw cRuntimeError("unknown command (msgkind=%d)", msgkind);
 }
 
 void Radio::handleSelfMsg(cMessage *msg)
@@ -559,7 +559,7 @@ void Radio::handleSelfMsg(cMessage *msg)
     }
     else
     {
-        error("Internal error: unknown self-message `%s'", msg->getName());
+        throw cRuntimeError("Internal error: unknown self-message `%s'", msg->getName());
     }
     EV<<"Radio::handleSelfMsg END"<<endl;
 }
@@ -767,7 +767,7 @@ void Radio::changeChannel(int channel)
     if (channel == rs.getChannelNumber())
         return;
     if (rs.getState() == RadioState::TRANSMIT)
-        error("changing channel while transmitting is not allowed");
+        throw cRuntimeError("changing channel while transmitting is not allowed");
 
    // Clear the recvBuff
    for (RecvBuff::iterator it = recvBuff.begin(); it!=recvBuff.end(); ++it)
@@ -860,9 +860,9 @@ void Radio::setBitrate(double bitrate)
     if (rs.getBitrate() == bitrate)
         return;
     if (bitrate < 0)
-        error("setBitrate(): bitrate cannot be negative (%g)", bitrate);
+        throw cRuntimeError("setBitrate(): bitrate cannot be negative (%g)", bitrate);
     if (rs.getState() == RadioState::TRANSMIT)
-        error("changing the bitrate while transmitting is not allowed");
+        throw cRuntimeError("changing the bitrate while transmitting is not allowed");
 
     EV << "Setting bitrate to " << (bitrate/1e6) << "Mbps\n";
     emit(bitrateSignal, bitrate);
@@ -1052,7 +1052,7 @@ void Radio::disconnectReceiver()
     receiverConnected = false;
     cc->disableReception(this->myRadioRef);
     if (rs.getState() == RadioState::TRANSMIT)
-        error("changing channel while transmitting is not allowed");
+        throw cRuntimeError("changing channel while transmitting is not allowed");
 
    // Clear the recvBuff
    for (RecvBuff::iterator it = recvBuff.begin(); it!=recvBuff.end(); ++it)
@@ -1161,7 +1161,7 @@ void Radio::getSensitivityList(cXMLElement* xmlConfig)
             const char* sensitivityStr = (*it)->getAttribute("Sensitivity");
             double rate = atof(bitRate);
             if (rate == 0)
-                error("invalid bit rate");
+                throw cRuntimeError("invalid bit rate");
             double sens = atof(sensitivityStr);
             sensitivityList[rate] = FWMath::dBm2mW(sens);
 

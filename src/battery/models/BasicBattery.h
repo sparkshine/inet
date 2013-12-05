@@ -88,16 +88,16 @@ class INET_API BasicBattery : public cSimpleModule, public cListener
   public:
     virtual int registerDevice(cObject *id, int numAccts)
     {
-        error("BasicBattery::registerDevice not overloaded"); return 0;
+        throw cRuntimeError("BasicBattery::registerDevice not overloaded"); return 0;
     }
     virtual void registerWirelessDevice(int id, double mUsageRadioIdle, double mUsageRadioRecv, double mUsageRadioSend, double mUsageRadioSleep)
     {
-        error("BasicBattery::registerWirelessDevice not overloaded");
+        throw cRuntimeError("BasicBattery::registerWirelessDevice not overloaded");
     }
 
     virtual void draw(int drainID, DrawAmount& amount, int account)
     {
-        error("BasicBattery::draw not overloaded");
+        throw cRuntimeError("BasicBattery::draw not overloaded");
     }
     double GetEnergy() {return residualCapacity;}
 

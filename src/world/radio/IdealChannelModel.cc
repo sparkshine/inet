@@ -103,7 +103,7 @@ void IdealChannelModel::unregisterRadio(RadioEntry *r)
         }
     }
 
-    error("unregisterRadio failed: no such radio");
+    throw cRuntimeError("unregisterRadio failed: no such radio");
 }
 
 IdealChannelModel::RadioEntry *IdealChannelModel::lookupRadio(cModule *radio)

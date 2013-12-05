@@ -45,7 +45,8 @@ class INET_API RadioState : public cObject
       RECV,
       TRANSMIT,
       SLEEP, //XXX do we need this, or simply OFF would suffice?
-      OFF
+      OFF,
+      _NUMBER_OF_STATES
     };
 
     //XXX consider adding the following:

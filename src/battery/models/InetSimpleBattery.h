@@ -39,7 +39,7 @@ class INET_API InetSimpleBattery : public BasicBattery
       public:
         int currentState;
         cObject * owner;
-        double radioUsageCurrent[4];
+        double radioUsageCurrent[RadioState::State::_NUMBER_OF_STATES];
         double  draw;
         int     currentActivity;
         int     numAccts;
@@ -53,7 +53,7 @@ class INET_API InetSimpleBattery : public BasicBattery
             accts = NULL;
             times = NULL;
             owner = NULL;
-            for (int i=0; i<4; i++)
+            for (int i=0; i < RadioState::State::_NUMBER_OF_STATES; i++)
                 radioUsageCurrent[i] = 0.0;
         }
         ~DeviceEntry()

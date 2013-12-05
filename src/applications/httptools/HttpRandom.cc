@@ -268,7 +268,7 @@ rdZipf::rdZipf(cXMLAttributeMap attributes)
 
     try
     {
-        atoi(attributes["n"].c_str());
+        n = atoi(attributes["n"].c_str());
     }
     catch (...)
     {

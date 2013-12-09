@@ -19,7 +19,7 @@ for root, dirs, files in os.walk(rootPath):
 	for filename in fnmatch.filter(files,fileType):
 		f = open(os.path.join(root,filename),'r')
 		headerFile = f.read()
-		pattern = "(#ifndef )(.*_H|h).*\n#define.*"
+		pattern = "#ifndef .*_H.*\n#define.*"
 		m = re.search(pattern,headerFile)
 		if not m:
 			print filename

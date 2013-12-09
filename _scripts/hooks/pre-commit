@@ -1,0 +1,27 @@
+#!/usr/bin/env python
+#pre-commit hook for removing trailing whitespaces
+
+import os
+from subprocess import check_output
+import re
+import sys
+
+def getStagedFiles():
+    stagedFiles = check_output(["git","diff","--cached","--name-only"])
+    stagedFiles = stagedFiles.split("\n")
+    return [f for f in stagedFiles if f]
+
+stagedFiles = getStagedFiles()
+
+for currentFile in stagedFiles:
+    fr = open(currentFile,'r')
+    sourceCode = fr.read()
+    modifiedSourceCode = re.sub('[ \t]+$', '', sourceCode,0,re.MULTILINE)
+    fr.close()
+    if modifiedSourceCode != sourceCode:
+        fw = open(currentFile,'w')
+        fw.write(modifiedSourceCode)
+        fw.close()
+sys.exit(0)
+
+

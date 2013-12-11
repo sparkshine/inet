@@ -3,24 +3,36 @@
 
 import os
 from subprocess import check_output
+from subprocess import call
 import re
 import sys
+
+# allowed file extensions to be checked
+allowedExtensions = [".h", ".cc", ".msg", ".ned", ".tex"]
+
+def isAllowedExt(filename):
+	fileExt = os.path.splitext(filename)[1]
+	return fileExt in allowedExtensions
 
 def getStagedFiles():
     stagedFiles = check_output(["git","diff","--cached","--name-only"])
     stagedFiles = stagedFiles.split("\n")
-    return [f for f in stagedFiles if f]
+    return [f for f in stagedFiles if f and isAllowedExt(f)]
 
 stagedFiles = getStagedFiles()
 
 for currentFile in stagedFiles:
     fr = open(currentFile,'r')
     sourceCode = fr.read()
-    modifiedSourceCode = re.sub('[ \t]+$','',sourceCode,0,re.MULTILINE)
     fr.close()
+
+    modifiedSourceCode = re.sub('[ \t]+$','',sourceCode,0,re.MULTILINE) # trim trailing whitespaces
+    modifiedSourceCode = modifiedSourceCode.replace('\t','    ') # replace tabs with four spaces
+
     if modifiedSourceCode != sourceCode:
         fw = open(currentFile,'w')
         fw.write(modifiedSourceCode)
         fw.close()
-        check_output["git", "add", currentFile]
+        check_output(["git", "add", currentFile])
+
 sys.exit(0)

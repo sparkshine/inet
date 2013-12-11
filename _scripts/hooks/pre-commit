@@ -16,12 +16,11 @@ stagedFiles = getStagedFiles()
 for currentFile in stagedFiles:
     fr = open(currentFile,'r')
     sourceCode = fr.read()
-    modifiedSourceCode = re.sub('[ \t]+$', '', sourceCode,0,re.MULTILINE)
+    modifiedSourceCode = re.sub('[ \t]+$','',sourceCode,0,re.MULTILINE)
     fr.close()
     if modifiedSourceCode != sourceCode:
         fw = open(currentFile,'w')
         fw.write(modifiedSourceCode)
         fw.close()
+        check_output["git", "add", currentFile]
 sys.exit(0)
-
-

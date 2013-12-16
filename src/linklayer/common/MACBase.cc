@@ -112,7 +112,9 @@ void MACBase::updateOperationalFlag(bool isNodeUp)
 void MACBase::registerInterface()  //XXX registerInterfaceIfInterfaceTableExists() ???
 {
     ASSERT(interfaceEntry == NULL);
-    IInterfaceTable *ift = InterfaceTableAccess().getIfExists();
+    IInterfaceTable *ift = NULL;
+    if (getModuleByPath(par("interfaceTablePath")))
+        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
     if (ift) {
         interfaceEntry = createInterfaceEntry();
         ift->addInterface(interfaceEntry);

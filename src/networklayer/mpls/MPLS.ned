@@ -52,6 +52,7 @@ package inet.networklayer.mpls;
 simple MPLS
 {
     parameters:
+        string interfaceTablePath = default("^.interfaceTable");   // The path to the InterfaceTable module
         string classifier; // a module which implements the IClassifier C++ interface
         @display("i=block/switch");
     gates:

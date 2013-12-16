@@ -15,7 +15,6 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "IInterfaceTable.h"
 #include "InterfaceTableAccess.h"
 #include "UDPSocket.h"
 #include "UDPControlInfo.h"
@@ -185,9 +184,8 @@ void UDPSocket::joinMulticastGroup(const Address& multicastAddr, int interfaceId
     sendToUDP(msg);
 }
 
-void UDPSocket::joinLocalMulticastGroups()
+void UDPSocket::joinLocalMulticastGroups(IInterfaceTable *ift)
 {
-    IInterfaceTable *ift = InterfaceTableAccess().get();
     unsigned int numOfAddresses = 0;
     for (int i = 0; i < ift->getNumInterfaces(); ++i)
     {
@@ -247,9 +245,8 @@ void UDPSocket::leaveMulticastGroup(const Address& multicastAddr)
     sendToUDP(msg);
 }
 
-void UDPSocket::leaveLocalMulticastGroups()
+void UDPSocket::leaveLocalMulticastGroups(IInterfaceTable *ift)
 {
-    IInterfaceTable *ift = InterfaceTableAccess().get();
     unsigned int numOfAddresses = 0;
     for (int i = 0; i < ift->getNumInterfaces(); ++i)
     {

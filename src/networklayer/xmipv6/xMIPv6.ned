@@ -29,6 +29,7 @@ package inet.networklayer.xmipv6;
 simple xMIPv6
 {
     parameters:
+        string interfaceTablePath = default("^.^.^.interfaceTable");   // The path to the InterfaceTable module
         bool isHomeAgent;
         bool isMobileNode;
         @display("i=block/classifier2");

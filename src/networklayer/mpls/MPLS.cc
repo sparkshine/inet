@@ -44,7 +44,7 @@ void MPLS::initialize(int stage)
         // interfaceTable must be initialized
 
         lt = LIBTableAccess().get();
-        ift = InterfaceTableAccess().get();
+        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
 
         pct = check_and_cast<IClassifier*>(getParentModule()->getSubmodule(par("classifier")));
     }

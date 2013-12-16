@@ -50,7 +50,7 @@ void BGPRouting::initialize(int stage)
 
         // we must wait until IPv4RoutingTable is completely initialized
         _rt = IPv4RoutingTableAccess().get();
-        _inft = InterfaceTableAccess().get();
+        _inft = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
 
         // read BGP configuration
         cXMLElement *bgpConfig = par("bgpConfig").xmlValue();

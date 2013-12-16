@@ -75,7 +75,7 @@ void IPv6NeighbourDiscovery::initialize(int stage)
     }
     else if (stage == INITSTAGE_NETWORK_LAYER_3)
     {
-        ift = InterfaceTableAccess().get();
+        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
         rt6 = check_and_cast<IPv6RoutingTable *>(getModuleByPath(par("routingTableModule")));
         icmpv6 = ICMPv6Access().get();
 

@@ -56,6 +56,7 @@ package inet.linklayer.ieee80211.mac;
 simple Ieee80211Mac
 {
     parameters:
+        string interfaceTablePath = default("^.^.interfaceTable");   // The path to the InterfaceTable module
         string address = default("auto"); // MAC address as hex string (12 hex digits), or
                                           // "auto". "auto" values will be replaced by
                                           // a generated MAC address in init stage 0.

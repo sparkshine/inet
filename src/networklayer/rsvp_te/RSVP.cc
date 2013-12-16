@@ -59,7 +59,7 @@ void RSVP::initialize(int stage)
     {
         tedmod = TEDAccess().get();
         rt = IPv4RoutingTableAccess().get();
-        ift = InterfaceTableAccess().get();
+        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
         routerId = rt->getRouterId();
         lt = LIBTableAccess().get();
 

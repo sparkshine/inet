@@ -26,6 +26,7 @@ package inet.networklayer.ted;
 simple LinkStateRouting
 {
     parameters:
+        string interfaceTablePath = default("^.interfaceTable");   // The path to the InterfaceTable module
         string peers;
         @display("i=block/network2");
     gates:

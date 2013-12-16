@@ -69,7 +69,7 @@ void IPv6RoutingTable::initialize(int stage)
         multicastForward = par("forwardMulticast");
         WATCH(isrouter);
 
-        ift = InterfaceTableAccess().get();
+        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
 
 #ifdef WITH_xMIPv6
         // the following MIPv6 related flags will be overridden by the MIPv6 module (if existing)

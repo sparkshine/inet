@@ -74,7 +74,7 @@ void DHCPServer::initialize(int stage)
         host->subscribe(NF_INTERFACE_CREATED, this);
         host->subscribe(NF_INTERFACE_DELETED, this);
 
-        IInterfaceTable* ift = InterfaceTableAccess().get();
+        IInterfaceTable* ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
         ie = ift->getInterfaceByName(par("interface"));
         if (ie != NULL)    //FIXME: if (nodeUP)
             openSocket();
@@ -418,7 +418,7 @@ bool DHCPServer::handleOperationStage(LifecycleOperation *operation, int stage, 
     Enter_Method_Silent();
     if (dynamic_cast<NodeStartOperation *>(operation)) {
         if (stage == NodeStartOperation::STAGE_APPLICATION_LAYER) {
-            IInterfaceTable* ift = InterfaceTableAccess().get();
+            IInterfaceTable* ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
             ie = ift->getInterfaceByName(par("interface"));
             openSocket();
         }

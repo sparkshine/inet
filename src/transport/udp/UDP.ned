@@ -54,6 +54,7 @@ import inet.transport.IUDP;
 simple UDP like IUDP
 {
     parameters:
+        string interfaceTablePath = default("^.interfaceTable");   // The path to the InterfaceTable module
         @display("i=block/transport");
         @signal[sentPk](type=cPacket);
         @signal[rcvdPk](type=cPacket);

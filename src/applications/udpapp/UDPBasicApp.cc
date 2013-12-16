@@ -81,7 +81,7 @@ void UDPBasicApp::setSocketOptions()
     const char *multicastInterface = par("multicastInterface");
     if (multicastInterface[0])
     {
-        IInterfaceTable *ift = InterfaceTableAccess().get(this);
+        IInterfaceTable *ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
         InterfaceEntry *ie = ift->getInterfaceByName(multicastInterface);
         if (!ie)
             throw cRuntimeError("Wrong multicastInterface setting: no interface named \"%s\"", multicastInterface);
@@ -94,7 +94,7 @@ void UDPBasicApp::setSocketOptions()
 
     bool joinLocalMulticastGroups = par("joinLocalMulticastGroups");
     if (joinLocalMulticastGroups)
-        socket.joinLocalMulticastGroups();
+        socket.joinLocalMulticastGroups(check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath"))));
 }
 
 Address UDPBasicApp::chooseDestAddr()

@@ -27,6 +27,7 @@ import inet.applications.IUDPApp;
 simple DHCPServer like IUDPApp
 {
     parameters:
+        string interfaceTablePath = default("^.interfaceTable");   // The path to the InterfaceTable module
         string net;          // IP network to assign
         string mask;          // netmask to assign
         string ipBegin;    // ip to start to lease

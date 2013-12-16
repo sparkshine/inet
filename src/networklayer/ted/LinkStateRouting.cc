@@ -56,7 +56,7 @@ void LinkStateRouting::initialize(int stage)
         // peers are given as interface names in the "peers" module parameter;
         // store corresponding interface addresses in peerIfAddrs[]
         cStringTokenizer tokenizer(par("peers"));
-        IInterfaceTable *ift = InterfaceTableAccess().get();
+        IInterfaceTable *ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
         const char *token;
         while ((token = tokenizer.nextToken())!=NULL)
         {

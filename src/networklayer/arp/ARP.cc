@@ -99,7 +99,7 @@ void ARP::initialize(int stage)
     }
     else if (stage == INITSTAGE_NETWORK_LAYER_3)  // IP addresses should be available
     {
-        ift = InterfaceTableAccess().get();
+        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
         rt = check_and_cast<IIPv4RoutingTable *>(getModuleByPath(par("routingTableModule")));
 
         isUp = isNodeUp();

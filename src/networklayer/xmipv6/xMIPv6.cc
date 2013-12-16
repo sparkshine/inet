@@ -129,7 +129,7 @@ void xMIPv6::initialize(int stage)
         rt6->setIsHomeAgent(par("isHomeAgent").boolValue());
         rt6->setIsMobileNode(par("isMobileNode").boolValue());
 
-        ift = InterfaceTableAccess().get();
+        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
         ipv6nd = IPv6NeighbourDiscoveryAccess().get(); //Zarrar Yousaf 17.07.07
 
         if (rt6->isMobileNode())

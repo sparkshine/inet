@@ -23,6 +23,7 @@ package inet.networklayer.arp;
 simple GlobalARP
 {
     parameters:
+        string interfaceTablePath = default("^.interfaceTable");   // The path to the InterfaceTable module
     gates:
         input ipIn @labels(IGenericDatagram);
         output nicOut[] @labels(IGenericDatagram);

@@ -38,7 +38,7 @@ void DSDV_2::initialize(int stage)
         IPSocket socket(gate("to_ip"));
         socket.registerProtocol(IP_PROT_MANET);
 
-        ift = InterfaceTableAccess().get();
+        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
         /* Search the 80211 interface */
         int  num_80211 = 0;
         InterfaceEntry *   ie;
@@ -153,7 +153,7 @@ void DSDV_2::handleMessage(cMessage *msg)
 
             //pointer to interface and routing table
             if (!ift)
-                ift = InterfaceTableAccess().get();
+                ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
             if (!rt)
                 rt = IPv4RoutingTableAccess().get();
 
@@ -246,7 +246,7 @@ void DSDV_2::handleMessage(cMessage *msg)
 
             // int numIntf = 0;
             if (ift!=NULL)
-                ift = InterfaceTableAccess().get();
+                ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
             //InterfaceEntry *ie = NULL;
             //for (int k=0; k<ift->getNumInterfaces(); k++)
             //  if (!ift->getInterface(k)->isLoopback())
@@ -289,7 +289,7 @@ void DSDV_2::handleMessage(cMessage *msg)
 
             //pointer to interface and routing table
             //rt = RoutingTableAccess_DSDV().get(); // IPv4RoutingTable *rt = nodeInfo[i].rt;
-            //ift = InterfaceTableAccess().get();//InterfaceTable *ift = nodeInfo[i].ift;
+            //ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));//InterfaceTable *ift = nodeInfo[i].ift;
 
 
             //reads DSDV hello message fields

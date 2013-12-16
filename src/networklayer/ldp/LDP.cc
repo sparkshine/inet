@@ -113,7 +113,7 @@ void LDP::initialize(int stage)
         holdTime = par("holdTime").doubleValue();
         helloInterval = par("helloInterval").doubleValue();
 
-        ift = InterfaceTableAccess().get();
+        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
         rt = IPv4RoutingTableAccess().get();
         lt = LIBTableAccess().get();
         tedmod = TEDAccess().get();

@@ -871,7 +871,7 @@ void UDP::joinMulticastGroups(SockDesc *sd, const std::vector<Address>& multicas
         sd->multicastAddrs[multicastAddr] = interfaceId;
 
         // add the multicast address to the selected interface or all interfaces
-        IInterfaceTable *ift = InterfaceTableAccess().get(this);
+        IInterfaceTable *ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
         if (interfaceId != -1)
         {
             InterfaceEntry *ie = ift->getInterfaceById(interfaceId);

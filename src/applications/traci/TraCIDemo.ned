@@ -26,6 +26,7 @@ package inet.applications.traci;
 simple TraCIDemo
 {
     parameters:
+        string interfaceTablePath = default("^.interfaceTable");   // The path to the InterfaceTable module
         @display("i=block/app2");
     gates:
         inout udp;

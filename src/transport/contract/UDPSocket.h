@@ -21,6 +21,7 @@
 
 #include "INETDefs.h"
 #include "Address.h"
+#include "IInterfaceTable.h"
 
 class UDPDataIndication;
 
@@ -175,7 +176,7 @@ class INET_API UDPSocket
      * Joins the socket to each multicast group that are registered with
      * any of the interfaces.
      */
-    void joinLocalMulticastGroups();
+    void joinLocalMulticastGroups(IInterfaceTable *ift);
 
     /**
      * Causes the socket to leave the given multicast group, i.e. UDP packets
@@ -187,7 +188,7 @@ class INET_API UDPSocket
      * Causes the socket to leave each multicast groups that are registered with
      * any of the interfaces.
      */
-    void leaveLocalMulticastGroups();
+    void leaveLocalMulticastGroups(IInterfaceTable *ift);
 
     /**
      * Sends a data packet to the given address and port.

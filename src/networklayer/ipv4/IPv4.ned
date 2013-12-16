@@ -84,6 +84,7 @@ package inet.networklayer.ipv4;
 simple IPv4
 {
     parameters:
+        string interfaceTablePath = default("^.^.interfaceTable");   // The path to the InterfaceTable module
         string routingTableModule;
         double procDelay @unit("s") = default(0s);
         int timeToLive = default(32);

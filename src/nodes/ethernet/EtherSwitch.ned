@@ -18,6 +18,7 @@
 
 package inet.nodes.ethernet;
 
+import inet.base.UnimplementedModule;
 import inet.base.NotificationBoard;
 import inet.linklayer.IMACRelayUnit;
 import inet.linklayer.IWiredNic;
@@ -44,6 +45,7 @@ module EtherSwitch
         bool hasStatus = default(false);
         bool csmacdSupport = default(true);  // by default use CSMA/CD
         string macType = default(csmacdSupport ? "EtherMAC" : "EtherMACFullDuplex"); // ~EtherMAC or ~EtherMACFullDuplex
+        string spanningTreeProtocol = default("");
         string relayUnitType = default("MACRelayUnitNP"); // type of the ~IMACRelayUnit; currently possible
         eth[*].encapType = "EtherEncapDummy";
         eth[*].csmacdSupport = csmacdSupport;
@@ -55,6 +57,9 @@ module EtherSwitch
         status: NodeStatus if hasStatus {
             @display("p=50,50;is=s");
         }
+        l2NodeConfigurator: UnimplementedModule if spanningTreeProtocol != "" {
+            @display("p=73,208");
+        }
         interfaceTable: InterfaceTable {
             @display("p=50,100;is=s");
         }
@@ -62,9 +67,15 @@ module EtherSwitch
             parameters:
                 @display("p=50,150;is=s");
         }
+        macTable: UnimplementedModule {
+            @display("p=73,19;is=s");
+        }
         relayUnit: <relayUnitType> like IMACRelayUnit {
             parameters:
                 @display("p=270,50");
+        }
+        stp: UnimplementedModule if spanningTreeProtocol != "" {
+            @display("p=168,50");
         }
         eth[sizeof(ethg)]: <default("EthernetInterface")> like IWiredNic {
             parameters:

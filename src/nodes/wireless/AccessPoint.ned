@@ -16,6 +16,7 @@
 package inet.nodes.wireless;
 
 import inet.base.NotificationBoard;
+import inet.base.UnimplementedModule;
 import inet.linklayer.IMACRelayUnit;
 import inet.linklayer.IWiredNic;
 import inet.linklayer.IWirelessNic;
@@ -69,6 +70,9 @@ module AccessPoint
         mobility: <mobilityType> like IMobility {
             parameters:
                 @display("p=208,43");
+        }
+        macTable: UnimplementedModule {
+            @display("p=73,19;is=s");
         }
         relayUnit: <relayUnitType> like IMACRelayUnit if sizeof(ethg)+numRadios>1 {
             parameters:

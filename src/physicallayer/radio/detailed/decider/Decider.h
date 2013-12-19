@@ -11,7 +11,6 @@
 
 #include "INETDefs.h"
 #include "DeciderToPhyInterface.h"
-#include "ChannelSenseRequest_m.h"
 #include "ChannelState.h"
 
 /**
@@ -118,26 +117,8 @@ public:
 
 	/**
 	 * @brief A function that returns information about the channel state
-	 *
-	 * It is an alternative for the MACLayer in order to obtain information
-	 * immediately (in contrast to sending a ChannelSenseRequest,
-	 * i.e. sending a cMessage over the OMNeT-control-channel)
 	 */
 	virtual ChannelState getChannelState() const;
-
-	/**
-	 * @brief This function is called by the PhyLayer to hand over a
-	 * ChannelSenseRequest.
-	 *
-	 * The MACLayer is able to send a ChannelSenseRequest to the PhyLayer
-	 * that calls this function with it and is returned a time point when to
-	 * re-call this function with the specific ChannelSenseRequest.
-	 *
-	 * The Decider puts the result (ChannelState) to the ChannelSenseRequest
-	 * and "answers" by calling the "sendControlMsg"-function on the
-	 * DeciderToPhyInterface, i.e. telling the PhyLayer to send it back.
-	 */
-	virtual simtime_t handleChannelSenseRequest(ChannelSenseRequest* request);
 
 	/**
 	 * @brief Method to be called by an OMNeT-module during its own finish(),

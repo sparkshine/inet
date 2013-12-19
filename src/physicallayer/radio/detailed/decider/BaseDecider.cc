@@ -97,12 +97,6 @@ simtime_t BaseDecider::processSignal(DetailedRadioFrame* frame) {
 	    }
 	}
 
-	// following call is important for channel sense request
-	// handling, in the past this call was done in the process...
-	// methods, but it shall be called always on processSignal
-	// messages
-	channelStateChanged();
-
 	return HandleAgain;
 }
 
@@ -203,56 +197,6 @@ ChannelState BaseDecider::getChannelState() const {
 	return ChannelState(!currentSignal.isProcessing() && (!bUseNewSense || pairRssiMaxEnd.second <= now), pairRssiMaxEnd.first);
 }
 
-simtime_t BaseDecider::handleChannelSenseRequest(ChannelSenseRequest* request)
-{
-
-	assert(request);
-
-	if (currentChannelSenseRequest.getRequest() == NULL) {
-		return handleNewSenseRequest(request);
-	}
-
-	if (currentChannelSenseRequest.getRequest() != request) {
-		opp_error("Got a new ChannelSenseRequest while already handling another one!");
-		return notAgain;
-	}
-	simtime_t now = phy->getSimTime();
-
-	if(now >= currentChannelSenseRequest.getAnswerTime()) {
-	    simtime_t canAnswerAt = canAnswerCSR(currentChannelSenseRequest);
-
-	    if (canAnswerAt > now) {
-	        currentChannelSenseRequest.setAnswerTime( canAnswerAt );
-	        return currentChannelSenseRequest.getAnswerTime();
-	    }
-	}
-	handleSenseRequestEnd(currentChannelSenseRequest);
-	// say that we don't want to have it again
-	return notAgain;
-}
-
-simtime_t BaseDecider::handleNewSenseRequest(ChannelSenseRequest* request)
-{
-	// no request handled at the moment, handling the new one
-	simtime_t now = phy->getSimTime();
-
-	// saving the pointer to the request and its start-time (now)
-	currentChannelSenseRequest.setRequest(request);
-	currentChannelSenseRequest.setSenseStart(now);
-
-	//get point in time when we can answer the request (as far as we
-	//know at this point in time)
-	currentChannelSenseRequest.setAnswerTime( canAnswerCSR(currentChannelSenseRequest) );
-
-	//check if we can already answer the request
-	if(now >= currentChannelSenseRequest.getAnswerTime()) {
-		answerCSR(currentChannelSenseRequest);
-		return notAgain;
-	}
-
-	return currentChannelSenseRequest.getAnswerTime();
-}
-
 void BaseDecider::channelChanged(int newChannel) {
     currentSignal.clear();
 
@@ -260,13 +204,6 @@ void BaseDecider::channelChanged(int newChannel) {
     channel_sense_rssi_t pairRssiMaxEnd = calcChannelSenseRSSI(now, now);
 
     currentSignal.busyUntilTime = pairRssiMaxEnd.second;
-
-    channelStateChanged();
-}
-
-void BaseDecider::handleSenseRequestEnd(CSRInfo& requestInfo) {
-	//assert(canAnswerCSR(requestInfo) <= phy->getSimTime());
-	answerCSR(requestInfo);
 }
 
 BaseDecider::eSignalState BaseDecider::getSignalState(const DetailedRadioFrame* frame) const {
@@ -309,65 +246,6 @@ simtime_t BaseDecider::getNextSignalHandleTime(const DetailedRadioFrame* frame) 
     return frame->getSignal().getReceptionEnd();
 }
 
-void BaseDecider::channelStateChanged()
-{
-	if(!currentChannelSenseRequest.getRequest())
-		return;
-
-	//check if the point in time when we can answer the request has changed
-	simtime_t canAnswerAt = canAnswerCSR(currentChannelSenseRequest);
-
-	//check if answer time has changed
-	if(canAnswerAt != currentChannelSenseRequest.getAnswerTime()) {
-		//can we answer it now?
-		if(canAnswerAt <= phy->getSimTime()) {
-			phy->cancelScheduledMessage(currentChannelSenseRequest.getRequest());
-			answerCSR(currentChannelSenseRequest);
-		} else {
-            currentChannelSenseRequest.setAnswerTime( canAnswerAt );
-			phy->rescheduleMessage( currentChannelSenseRequest.getRequest()
-			                      , currentChannelSenseRequest.getAnswerTime());
-		}
-	}
-}
-
-simtime_t BaseDecider::canAnswerCSR(const CSRInfo& requestInfo) const
-{
-	assert(requestInfo.getRequest());
-
-	bool      modeFulfilled = false;
-	simtime_t now           = phy->getSimTime();
-	simtime_t canAnswerAt   = requestInfo.getSenseStart() + requestInfo.getRequest()->getSenseTimeout();
-
-	switch(requestInfo.getRequest()->getSenseMode())
-	{
-		case UNTIL_IDLE: {
-			modeFulfilled = !currentSignal.isProcessing();
-			if (bUseNewSense && modeFulfilled) {
-			    modeFulfilled = currentSignal.getBusyEndTime() <= now;
-			    if (!modeFulfilled && currentSignal.getBusyEndTime() < canAnswerAt) {
-			        canAnswerAt = currentSignal.getBusyEndTime();
-			    }
-			    EV_DEBUG << "canAnswerCSR(UNTIL_IDLE): busy end time = " << SIMTIME_STR(currentSignal.getBusyEndTime()) << ", now = " << SIMTIME_STR(now) << " isIdle = " << (modeFulfilled ? "true" : "false") << ", canAnswerAt: " << SIMTIME_STR(canAnswerAt) << std::endl;
-			}
-		} break;
-		case UNTIL_BUSY: {
-			modeFulfilled = currentSignal.isProcessing();
-            if (bUseNewSense && !modeFulfilled) {
-                modeFulfilled = currentSignal.getBusyEndTime() > now;
-                EV_DEBUG << "canAnswerCSR(UNTIL_BUSY): busy end time = " << SIMTIME_STR(currentSignal.getBusyEndTime()) << ", " << SIMTIME_STR(now) << " isBusy = " << (modeFulfilled ? "true" : "false") << ", canAnswerAt: " << SIMTIME_STR(canAnswerAt) << std::endl;
-            }
-		} break;
-		default: break;
-	}
-
-	if(modeFulfilled) {
-		return now;
-	}
-
-	return canAnswerAt;
-}
-
 BaseDecider::channel_sense_rssi_t BaseDecider::calcChannelSenseRSSI(simtime_t_cref start, simtime_t_cref end) const {
     rssi_mapping_t pairMapMaxEnd = calculateRSSIMapping(start, end);
 
@@ -376,21 +254,6 @@ BaseDecider::channel_sense_rssi_t BaseDecider::calcChannelSenseRSSI(simtime_t_cr
 
 	delete pairMapMaxEnd.first;
 	return std::make_pair(rssi, pairMapMaxEnd.second);
-}
-
-void BaseDecider::answerCSR(CSRInfo& requestInfo)
-{
-    simtime_t            now            = phy->getSimTime(); // maybe better requestInfo.getAnswerTime()
-    channel_sense_rssi_t pairRssiMaxEnd = calcChannelSenseRSSI(requestInfo.getSenseStart(), now);
-
-	// put the sensing-result to the request and
-	// send it to the Mac-Layer as Control-message (via Interface)
-	requestInfo.getRequest()->setResult( ChannelState(!currentSignal.isProcessing() && (!bUseNewSense || pairRssiMaxEnd.second <= now), pairRssiMaxEnd.first) );
-
-    EV_DEBUG << "answerCSR: channel_sense_rssi_t(" << pairRssiMaxEnd.first << ", " << pairRssiMaxEnd.second << ")@[" << SIMTIME_STR(requestInfo.getSenseStart()) << ", " << SIMTIME_STR(now) << "] ChannelState(" << requestInfo.getRequest()->getResult().isIdle() << ", " << requestInfo.getRequest()->getResult().getRSSI() << ")" << std::endl;
-
-	phy->sendControlMsgToMac(requestInfo.getRequest());
-	requestInfo.clear();
 }
 
 Mapping* BaseDecider::calculateSnrMapping(const DetailedRadioFrame* frame) const

@@ -12,12 +12,6 @@
  * received total power level (independent from signal or noise).
  * If its above the threshold defined by the "busyThreshold" parameter
  * it considers the channel busy.
- * The RSSI value returned by this Decider for a ChannelSenseRequest
- * over time is always the RSSI value at the end of the sense.
- *
- * SNRThresholdDecider implements only instantaneous channel sensing
- * therefore it can only handle "UNTIL_IDLE" and "UNTIL_BUSY"
- * ChannelSenseRequests but not "UNTIL_TIMEOUT".
  *
  * Instantaneous channel sensing means SNRThresholdDecider is simplified in the way that
  * the channel does not has to be below the threshold for a certain
@@ -66,20 +60,6 @@ protected:
 	virtual DeciderResult* createResult(const DetailedRadioFrame* frame) const;
 
 	/**
-	 * @brief Returns point in time when the ChannelSenseRequest of the passed CSRInfo can be answered
-	 * (e.g. because channel state changed or timeout is reached).
-	 */
-	virtual simtime_t canAnswerCSR(const CSRInfo& requestInfo) const;
-
-	/**
-	 * @brief Answers the ChannelSenseRequest (CSR) from the passed CSRInfo.
-	 *
-	 * Calculates the rssi value and the channel idle state and sends the CSR
-	 * together with the result back to the mac layer.
-	 */
-	virtual void answerCSR(CSRInfo& requestInfo);
-
-	/**
 	 * @brief Returns whether the passed rssi value indicates a idle channel.
 	 * @param rssi the channels rssi value to evaluate
 	 * @return true if the channel should be considered idle
@@ -124,10 +104,6 @@ public:
 
 	/**
 	 * @brief A function that returns information about the channel state
-	 *
-	 * It is an alternative for the MACLayer in order to obtain information
-	 * immediately (in contrast to sending a ChannelSenseRequest,
-	 * i.e. sending a cMessage over the OMNeT-control-channel)
 	 */
 	virtual ChannelState getChannelState() const;
 };

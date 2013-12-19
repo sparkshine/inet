@@ -18,7 +18,3 @@ simtime_t Decider::processSignal(DetailedRadioFrame* /*s*/)
 ChannelState Decider::getChannelState() const {
 	return ChannelState();
 }
-
-simtime_t Decider::handleChannelSenseRequest(ChannelSenseRequest* /*request*/) {
-	return notAgain;
-}

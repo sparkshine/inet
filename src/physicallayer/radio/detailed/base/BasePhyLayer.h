@@ -78,8 +78,6 @@ public:
         TX_OVER = 22000,
         /** @brief Indicates the end of a radio switch. */
         RADIO_SWITCHING_OVER,
-        /** @brief Channel sense control message between Mac and Phy.*/
-        CHANNEL_SENSE_REQUEST,
         /** @brief AirFrame kind */
         AIR_FRAME,
         /** @brief Stores the id on which classes extending BasePhy should
@@ -101,10 +99,6 @@ protected:
 	 * channel consistency. This means that before anything else happens
 	 * at a time point t every AirFrame which ended at t has been removed and
 	 * every AirFrame started at t has been added to the channel.
-	 *
-	 * An example where this matters is a ChannelSenseRequest which ends at
-	 * the same time as an AirFrame starts (or ends). Depending on which message
-	 * is handled first the result of ChannelSenseRequest would differ.
 	 */
 	static short airFramePriority;
 
@@ -334,13 +328,6 @@ protected:
 	virtual void handleSelfMessage(cMessage* msg);
 
 	/**
-	 * @brief Handles reception of a ChannelSenseRequest by forwarding it
-	 * to the decider and scheduling it to the point in time
-	 * returned by the decider.
-	 */
-	virtual void handleChannelSenseRequest(cMessage* msg);
-
-	/**
 	 * @brief Handles incoming AirFrames with the state FIRST_RECEIVE.
 	 */
 	void handleAirFrameFirstReceive(DetailedRadioFrame* msg);
@@ -538,8 +525,6 @@ public:
 
 	/**
 	 * @brief Called by the Decider to send a control message to the MACLayer
-	 *
-	 * This function can be used to answer a ChannelSenseRequest to the MACLayer
 	 *
 	 */
 	virtual void sendControlMsgToMac(cMessage* msg);

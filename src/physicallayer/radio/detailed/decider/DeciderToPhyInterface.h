@@ -29,8 +29,6 @@ class DeciderResult;
  * 		- get the list of AirFrames that intersect with a specific time interval (to
  * 			calculate SNR)
  * 		- tell the BasePhyLayer to hand an AirFrame up to the MACLayer
- * 		- tell the BasePhyLayer to send a control message to the MACLayer (to answer
- * 			a ChannelSenseRequest)
  *
  * @ingroup decider
  */
@@ -73,9 +71,6 @@ public:
 
 	/**
 	 * @brief Called by the Decider to send a control message to the MACLayer
-	 *
-	 * This function can be used to answer a ChannelSenseRequest to the MACLayer
-	 *
 	 */
 	virtual void sendControlMsgToMac(cMessage* msg) = 0;
 

@@ -534,27 +534,6 @@ DetailedRadioFrame* BasePhyLayer::encapsMsg(cPacket *macPkt)
 	return frame;
 }
 
-void BasePhyLayer::handleChannelSenseRequest(cMessage* msg) {
-	ChannelSenseRequest* senseReq = static_cast<ChannelSenseRequest*>(msg);
-
-	simtime_t nextHandleTime = decider->handleChannelSenseRequest(senseReq);
-
-	if(nextHandleTime >= simTime()) { //schedule request for next handling
-		sendSelfMessage(msg, nextHandleTime);
-
-		//don't throw away any AirFrames while ChannelSenseRequest is active
-		if(!channelInfo.isRecording()) {
-			channelInfo.startRecording(simTime());
-		}
-	} else if(nextHandleTime >= SIMTIME_ZERO){
-		opp_error("Next handle time of ChannelSenseRequest returned by the Decider is smaller then current simulation time: %.2f",
-				SIMTIME_DBL(nextHandleTime));
-	}
-
-	// else, i.e. nextHandleTime < 0.0, the Decider doesn't want to handle
-	// the request again
-}
-
 void BasePhyLayer::handleUpperControlMessage(cMessage* msg) {
 	switch(msg->getKind()) {
 // TODO: complete implementation
@@ -566,9 +545,6 @@ void BasePhyLayer::handleUpperControlMessage(cMessage* msg) {
         delete phyCtrl;
         break;
     }
-	case CHANNEL_SENSE_REQUEST:
-		handleChannelSenseRequest(msg);
-		break;
 	default:
 		EV << "Received unknown control message from upper layer!" << endl;
 		break;
@@ -593,11 +569,6 @@ void BasePhyLayer::handleSelfMessage(cMessage* msg) {
 	//AirFrame
 	case AIR_FRAME:
 		handleAirFrame(static_cast<DetailedRadioFrame*>(msg));
-		break;
-
-	//ChannelSenseRequest
-	case CHANNEL_SENSE_REQUEST:
-		handleChannelSenseRequest(msg);
 		break;
 
 	default:

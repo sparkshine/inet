@@ -70,11 +70,6 @@ public:
 	virtual ConstMapping* getThermalNoise(simtime_t_cref from, simtime_t_cref to) = 0;
 
 	/**
-	 * @brief Called by the Decider to send a control message to the MACLayer
-	 */
-	virtual void sendControlMsgToMac(cMessage* msg) = 0;
-
-	/**
 	 * @brief Called to send an AirFrame with DeciderResult to the MACLayer
 	 *
 	 * When a packet is completely received and not noise, the Decider

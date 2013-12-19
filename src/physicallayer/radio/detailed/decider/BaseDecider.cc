@@ -144,6 +144,7 @@ simtime_t BaseDecider::processSignalEnd(DetailedRadioFrame* frame) {
 
 	DeciderResult* pResult = createResult(frame);
 
+	// TODO: this whole code block should rather be in the radio module
 	if (pResult != NULL && pResult->isSignalCorrect() && !frame->hasBitError()) {
         EV_DEBUG << "AirFrame was received correctly, it is now handed to upper layer..." << endl;
         // go on with processing this AirFrame, send it to the Mac-Layer
@@ -165,12 +166,13 @@ simtime_t BaseDecider::processSignalEnd(DetailedRadioFrame* frame) {
             ++nbFramesWithoutInterferenceDropped;
         }
         if (pMacPacket) {
-            pMacPacket->setName("ERROR");
-            pMacPacket->setKind(PACKET_DROPPED);
-            if (pResult) {
-                PhyToMacControlInfo::setControlInfo(pMacPacket, pResult);
-            }
-            phy->sendControlMsgToMac(pMacPacket);
+            // TODO: we should send a signal with the dropped packet instead
+//            pMacPacket->setName("ERROR");
+//            pMacPacket->setKind(PACKET_DROPPED);
+//            if (pResult) {
+//                PhyToMacControlInfo::setControlInfo(pMacPacket, pResult);
+//            }
+//            phy->sendControlMsgToMac(pMacPacket);
         }
     }
     currentSignal.finishProcessing();

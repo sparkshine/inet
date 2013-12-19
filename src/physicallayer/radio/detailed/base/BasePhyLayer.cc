@@ -578,13 +578,6 @@ void BasePhyLayer::handleSelfMessage(cMessage* msg) {
 
 //--Send messages------------------------------
 
-void BasePhyLayer::sendControlMessageUp(cMessage* msg) {
-	// KLUDGE: TODO: refactor, it was send(msg, upperControlOut);
-    // KLUDGE: TODO: seems to be unused
-    EV_ERROR << "Dropping control msg\n";
-    delete msg;
-}
-
 void BasePhyLayer::sendMacPktUp(cMessage* pkt) {
 	send(pkt, upperLayerOut);
 }
@@ -826,15 +819,6 @@ ConstMapping* BasePhyLayer::getThermalNoise(simtime_t_cref from, simtime_t_cref 
 		thermalNoise->initializeArguments(Argument(from));
 
 	return thermalNoise;
-}
-
-void BasePhyLayer::sendControlMsgToMac(cMessage* msg) {
-	if(msg->getKind() == CHANNEL_SENSE_REQUEST) {
-		if(channelInfo.isRecording()) {
-			channelInfo.stopRecording();
-		}
-	}
-	sendControlMessageUp(msg);
 }
 
 void BasePhyLayer::sendUp(DetailedRadioFrame* frame, DeciderResult* result) {

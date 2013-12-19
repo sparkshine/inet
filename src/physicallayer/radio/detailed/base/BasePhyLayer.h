@@ -355,11 +355,6 @@ protected:
 	/*@{ */
 
 	/**
-	 * @brief Sends the passed control message to the upper layer.
-	 */
-	void sendControlMessageUp(cMessage* msg);
-
-	/**
 	 * @brief Sends the passed MacPkt to the upper layer.
 	 */
 	void sendMacPktUp(cMessage* pkt);
@@ -522,12 +517,6 @@ public:
 	 * thermal noise.
 	 */
 	virtual ConstMapping* getThermalNoise(simtime_t_cref from, simtime_t_cref to);
-
-	/**
-	 * @brief Called by the Decider to send a control message to the MACLayer
-	 *
-	 */
-	virtual void sendControlMsgToMac(cMessage* msg);
 
 	/**
 	 * @brief Called to send an AirFrame with DeciderResult to the MACLayer

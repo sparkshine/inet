@@ -24,6 +24,7 @@ simple DHCPClient like IUDPApp
 {
     parameters:
         string interfaceTablePath = default("^.interfaceTable");   // The path to the InterfaceTable module
+        string routingTableModule = default("^.routingTable");
         string interface;  // which NIC should be configured (i.e. wlan0, eth1 etc.)
         @display("i=device/card");
     gates:

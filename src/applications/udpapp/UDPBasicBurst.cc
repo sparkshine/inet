@@ -144,10 +144,14 @@ void UDPBasicBurst::processStart()
     bool excludeLocalDestAddresses = par("excludeLocalDestAddresses").boolValue();
 
 #ifdef WITH_IPv4
-    IIPv4RoutingTable *rt = IPv4RoutingTableAccess().getIfExists();
+    IIPv4RoutingTable *rt = NULL;
+    if (getModuleByPath(par("routingTableModule")))
+        rt = check_and_cast<IIPv4RoutingTable *>(getModuleByPath(par("routingTableModule")));
 #endif
 #ifdef WITH_IPv6
-    IPv6RoutingTable *rt6 = IPv6RoutingTableAccess().getIfExists();
+    IPv6RoutingTable *rt6 = NULL;
+    if (getModuleByPath(par("routingTable6Module")))
+        rt6 = check_and_cast<IPv6RoutingTable *>(getModuleByPath(par("routingTable6Module")));
 #endif
 
     while ((token = tokenizer.nextToken()) != NULL)

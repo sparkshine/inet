@@ -62,7 +62,7 @@ void DSDV_2::initialize(int stage)
             interface80211ptr = i_face;
         else
             opp_error("DSDV has found %i 80211 interfaces", num_80211);
-        rt = IPv4RoutingTableAccess().get();
+        rt = check_and_cast<IIPv4RoutingTable *>(getModuleByPath(par("routingTableModule")));
         if (par("manetPurgeRoutingTables").boolValue())
         {
             IPv4Route *entry;
@@ -155,7 +155,7 @@ void DSDV_2::handleMessage(cMessage *msg)
             if (!ift)
                 ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
             if (!rt)
-                rt = IPv4RoutingTableAccess().get();
+                rt = check_and_cast<IIPv4RoutingTable *>(getModuleByPath(par("routingTableModule")));
 
             rt->purge();
 

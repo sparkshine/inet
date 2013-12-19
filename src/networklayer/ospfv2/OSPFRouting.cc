@@ -62,7 +62,7 @@ void OSPFRouting::initialize(int stage)
 
 void OSPFRouting::createOspfRouter()
 {
-    IIPv4RoutingTable *rt = IPv4RoutingTableAccess().get();
+    IIPv4RoutingTable *rt = check_and_cast<IIPv4RoutingTable *>(getModuleByPath(par("routingTableModule")));
     ospfRouter = new OSPF::Router(rt->getRouterId(), this);
 
     // read the OSPF AS configuration

@@ -322,7 +322,7 @@ void DSRUU::initialize(int stage)
         ipSocket.registerProtocol(IP_PROT_DSR);
 
         /* Search the 80211 interface */
-        inet_rt = IPv4RoutingTableAccess().get();
+        inet_rt = check_and_cast<IIPv4RoutingTable *>(getModuleByPath(par("routingTableModule")));
         inet_ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
 
         // ASSERT(stage >= STAGE:IP_LAYER_READY_FOR_HOOK_REGISTRATION);

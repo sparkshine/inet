@@ -49,7 +49,7 @@ void BGPRouting::initialize(int stage)
             throw cRuntimeError("This module doesn't support starting in node DOWN state");
 
         // we must wait until IPv4RoutingTable is completely initialized
-        _rt = IPv4RoutingTableAccess().get();
+        _rt = check_and_cast<IIPv4RoutingTable *>(getModuleByPath(par("routingTableModule")));
         _inft = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
 
         // read BGP configuration

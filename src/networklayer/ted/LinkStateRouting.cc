@@ -46,7 +46,7 @@ void LinkStateRouting::initialize(int stage)
     {
         tedmod = TEDAccess().get();
 
-        IIPv4RoutingTable *rt = IPv4RoutingTableAccess().get();
+        IIPv4RoutingTable *rt = check_and_cast<IIPv4RoutingTable *>(getModuleByPath(par("routingTableModule")));
         routerId = rt->getRouterId();
 
         // listen for TED modifications

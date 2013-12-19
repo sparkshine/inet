@@ -162,7 +162,7 @@ bool ICMP::possiblyLocalBroadcast(const IPv4Address& addr, int interfaceId)
     if ((addr.getInt()&1) == 0)
         return false;
 
-    IIPv4RoutingTable *rt = IPv4RoutingTableAccess().get();
+    IIPv4RoutingTable *rt = check_and_cast<IIPv4RoutingTable *>(getModuleByPath(par("routingTableModule")));
     if (rt->isLocalBroadcastAddress(addr))
         return true;
 

@@ -100,6 +100,7 @@ simple RSVP
 {
     parameters:
         string interfaceTablePath = default("^.interfaceTable");   // The path to the InterfaceTable module
+        string routingTableModule = default("^.routingTable");
         xml traffic = default(xml("<sessions/>")); // specifies paths to set up
         string peers; // names of the interfaces towards RSVP peers
         double helloInterval @unit(s);

@@ -101,7 +101,7 @@ void DHCPClient::initialize(int stage)
         }
 
         // get the routing table to update and subscribe it to the blackboard
-        irt = IPv4RoutingTableAccess().get();
+        irt = check_and_cast<IIPv4RoutingTable *>(getModuleByPath(par("routingTableModule")));
 
         // grab the interface mac address
         client_mac_address = ie->getMacAddress();

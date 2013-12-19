@@ -28,22 +28,22 @@
 # /examples/emulation/extserver/,      -f omnetpp.ini -c Uplink_and_Downlink_Traffic -r 0, 100s,    0000-0000    # pcap devices not supported
 # /examples/emulation/traceroute/,     -f omnetpp.ini -c General -r 0,                100s,         0000-0000    # pcap devices not supported
 
-/examples/ethernet/arptest/,         -f fingerprints.ini -c ARPTest -r 0,           100s,            c197-dcd9
-/examples/ethernet/arptest/,         -f omnetpp.ini -c ARPTest -r 0,                500s,            c197-dcd9
+/examples/ethernet/arptest/,         -f fingerprints.ini -c ARPTest -r 0,           100s,            ac00-4651
+/examples/ethernet/arptest/,         -f omnetpp.ini -c ARPTest -r 0,                500s,            ac00-4651
 /examples/ethernet/arptest2/,        -f omnetpp.ini -c ARPTest -r 0,                500s,            ef75-e68a
 /examples/ethernet/lans/,            -f bus.ini -c BusLAN -r 0,                     100s,            ff4c-c904
 # /examples/ethernet/lans/,            -f defaults.ini -c General -r 0,               -1s,           0000-0000   ,# not a complete simulations, defaults.ini included by other ini files
-/examples/ethernet/lans/,            -f duplexswitch.ini -c SwitchedDuplexLAN -r 0, 50s,             c794-10fb
-/examples/ethernet/lans/,            -f fingerprints-largenet.ini -c LargeNet -r 0, 5s,              286e-adb0
-/examples/ethernet/lans/,            -f fingerprints.ini -c MixedLAN1 -r 0,         200s,            d43c-eba8
+/examples/ethernet/lans/,            -f duplexswitch.ini -c SwitchedDuplexLAN -r 0, 50s,             70bc-d456
+/examples/ethernet/lans/,            -f fingerprints-largenet.ini -c LargeNet -r 0, 5s,              16dd-2870
+/examples/ethernet/lans/,            -f fingerprints.ini -c MixedLAN1 -r 0,         200s,            8b4a-bee4
 /examples/ethernet/lans/,            -f hub.ini -c Hub1 -r 0,                       100s,            16c0-7069
 /examples/ethernet/lans/,            -f hub.ini -c Hub2 -r 0,                       10s,             cdaf-1f2b
 /examples/ethernet/lans/,            -f hub.ini -c Hub3 -r 0,                       100s,            16c0-7069
 /examples/ethernet/lans/,            -f hub.ini -c Hub4 -r 0,                       100s,            16c0-7069
-/examples/ethernet/lans/,            -f largeNet.ini -c LargeNet -r 0,              5s,              286e-adb0
-/examples/ethernet/lans/,            -f mixed.ini -c MixedLAN -r 0,                 100s,            3a5c-be78
-/examples/ethernet/lans/,            -f omnetpp.ini -c MixedLAN1 -r 0,              500s,            9ecd-76de
-/examples/ethernet/lans/,            -f switch.ini -c SwitchedLAN1 -r 0,            5000s,           c7a3-f074
+/examples/ethernet/lans/,            -f largeNet.ini -c LargeNet -r 0,              5s,              16dd-2870
+/examples/ethernet/lans/,            -f mixed.ini -c MixedLAN -r 0,                 100s,            8497-c46b
+/examples/ethernet/lans/,            -f omnetpp.ini -c MixedLAN1 -r 0,              500s,            b722-bef2
+/examples/ethernet/lans/,            -f switch.ini -c SwitchedLAN1 -r 0,            5000s,           d828-09a7
 /examples/ethernet/lans/,            -f twoHosts.ini -c TwoHosts1 -r 0,             200s,            d263-8a61
 
 /examples/httptools/direct/flashdirect/, -f omnetpp.ini -c General -r 0,                500000s,         25e4-59d6
@@ -81,7 +81,7 @@
 # /examples/inet/hierarchical/,        -f omnetpp.ini -c Hosts9000 -r 0,              1s,              0000-0000    # cpu time limit exceeded during 0s simtime
 
 /examples/inet/hierarchical99/,      -f omnetpp.ini -c General -r 0,                10000s,          f8f8-9deb
-/examples/inet/ipv4largenet/,        -f omnetpp.ini -c IPv4LargeNet -r 0,           20s,             13a4-a032
+/examples/inet/ipv4largenet/,        -f omnetpp.ini -c IPv4LargeNet -r 0,           20s,             06c7-afdf
 
 /examples/inet/kidsnw1/,             -f omnetpp.ini -c General -r 0,                1000s,           bd72-dbbb
 
@@ -291,12 +291,12 @@
 /examples/voip/,                     -f omnetpp.ini -c BadChannel -r 0,             200s,            50ba-f2bc
 /examples/voip/,                     -f omnetpp.ini -c PeriodicChannel -r 0,        200s,            04b3-54f0
 
-/examples/voipstream/VoIPStreamLargeNet/, -f omnetpp.ini -c General -r 0,                5s,              4190-2669
-/examples/voipstream/VoIPStreamTest/, -f omnetpp.ini -c g726 -r 0,                   5s,              54f1-afbe
-/examples/voipstream/VoIPStreamTest/, -f omnetpp.ini -c g711_aLaw -r 0,              5s,              0009-ab72
-/examples/voipstream/VoIPStreamTest/, -f omnetpp.ini -c g711_muLaw -r 0,             5s,              4868-c7ea
-/examples/voipstream/VoIPStreamTest/, -f omnetpp.ini -c pcm_s16le -r 0,              5s,              e798-3249
-/examples/voipstream/VoIPStreamTrafficTest/, -f omnetpp.ini -c General -r 0,                2s,              36fc-5e1b
+/examples/voipstream/VoIPStreamLargeNet/, -f omnetpp.ini -c General -r 0,                5s,              b7a6-0d34
+/examples/voipstream/VoIPStreamTest/, -f omnetpp.ini -c g726 -r 0,                   5s,              0d48-c628
+/examples/voipstream/VoIPStreamTest/, -f omnetpp.ini -c g711_aLaw -r 0,              5s,              5238-79ba
+/examples/voipstream/VoIPStreamTest/, -f omnetpp.ini -c g711_muLaw -r 0,             5s,              1a59-1522
+/examples/voipstream/VoIPStreamTest/, -f omnetpp.ini -c pcm_s16le -r 0,              5s,              2a67-937b
+/examples/voipstream/VoIPStreamTrafficTest/, -f omnetpp.ini -c General -r 0,                2s,              78ca-e886
 
 /examples/wireless/handover/,        -f omnetpp.ini -c General -r 0,                1500s,           b2c8-a0e3
 /examples/wireless/hosttohost/,      -f omnetpp.ini -c Throughput1 -r 0,            5s,              735d-1851

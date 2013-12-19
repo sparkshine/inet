@@ -39,10 +39,10 @@ simple MACRelayUnitNP like IMACRelayUnit
 {
     parameters:
         string addressTableFile = default("");  // see ~IMACRelayUnit
-        int addressTableSize = default(100); // see ~IMACRelayUnit
-        double agingTime @unit("s") = default(120s); // see ~IMACRelayUnit
-        int numCPUs = default(1);  // number of CPUs
-        double processingTime @unit("s") = default(0s);  // processing time of one frame
+        int addressTableSize = 100; // see ~IMACRelayUnit
+        double agingTime @unit("s") = 120s; // see ~IMACRelayUnit
+        int numCPUs = 1;  // number of CPUs
+        double processingTime @unit("s") = 0s;  // processing time of one frame
         int bufferSize @unit("B") = default(1MiB);  // memory
         int highWatermark @unit("B") = default(512KiB);  // buffer usage threshold to send PAUSE frame
         int pauseUnits = 0;  // time to put in PAUSE frames (in units of 512 bit times)

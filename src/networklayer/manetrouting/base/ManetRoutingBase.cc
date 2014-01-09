@@ -85,8 +85,10 @@ void ManetRoutingBase::registerRoutingModule()
     /* Set host parameters */
     isRegistered = true;
     int  num_80211 = 0;
-    inet_rt = IPv4RoutingTableAccess().getIfExists();
-    inet_ift = InterfaceTableAccess().get();
+    inet_rt = NULL;
+    if (getModuleByPath(par("routingTableModule")))
+        inet_rt = check_and_cast<IIPv4RoutingTable *>(getModuleByPath(par("routingTableModule")));
+    inet_ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
     hostModule = getContainingNode(this);
 
     if (routesVector)
@@ -94,7 +96,9 @@ void ManetRoutingBase::registerRoutingModule()
 
     if (par("useICMP"))
     {
-        icmpModule = ICMPAccess().getIfExists();
+        icmpModule = NULL;
+        if (getModuleByPath(par("ICMPModule")))
+            icmpModule = check_and_cast<ICMP *>(getModuleByPath(par("ICMPModule")));
     }
     sendToICMP = false;
 
@@ -244,7 +248,7 @@ void ManetRoutingBase::registerRoutingModule()
         {
             (*interfaceVector)[i].interfacePtr->ipv4Data()->joinMulticastGroup(IPv4Address::LL_MANET_ROUTERS);
         }
-        arp = ARPCacheAccess().get();
+        arp = check_and_cast<IARPCache *>(getModuleByPath(par("ARPCacheModule")));
     }
     hostModule->subscribe(NF_L2_AP_DISASSOCIATED, this);
     hostModule->subscribe(NF_L2_AP_ASSOCIATED, this);

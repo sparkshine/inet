@@ -32,6 +32,10 @@ import inet.networklayer.IManetRouting;
 simple Batman extends BaseRouting like IManetRouting
 {
     parameters:
+        string interfaceTablePath = default("^.interfaceTable");
+        string routingTableModule = default("^.routingTable");
+        string ICMPModule = default("^.networkLayer.icmp");
+        string ARPCacheModule = default("^.networkLayer.arp");
         @class(Batman);
         int debugLevel = default(4);
         double purgeTimeout @unit(s) = default(200s);

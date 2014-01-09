@@ -67,7 +67,7 @@ void AppBase::handleMessageWhenDown(cMessage *msg)
 {
     if (msg->isSelfMessage())
         throw cRuntimeError("Model error: self msg '%s' received when isOperational is false", msg->getName());
-    EV << "Application is turned off, dropping '" << msg->getName() << "' message\n";
+    EV_WARN << "Application is turned off, dropping '" << msg->getName() << "' message\n";
     delete msg;
 }
 

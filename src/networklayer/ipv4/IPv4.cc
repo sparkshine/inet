@@ -50,7 +50,7 @@ void IPv4::initialize(int stage)
 
         ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
         rt = check_and_cast<IIPv4RoutingTable *>(getModuleByPath(par("routingTableModule")));
-        arp = ARPCacheAccess().get();
+        arp = check_and_cast<IARPCache *>(getModuleByPath(par("ARPCacheModule")));;
 
         arpDgramOutGate = gate("arpDgramOut");
         arpInGate = gate("arpIn");

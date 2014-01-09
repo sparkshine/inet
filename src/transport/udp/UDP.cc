@@ -459,7 +459,7 @@ void UDP::processUndeliverablePacket(UDPPacket *udpPacket, cObject *ctrl)
 #ifdef WITH_IPv4
         IPv4ControlInfo *ctrl4 = (IPv4ControlInfo *)ctrl;
         if (!icmp)
-            icmp = ICMPAccess().get();
+            icmp = check_and_cast<ICMP *>(getModuleByPath(par("ICMPModule")));
         icmp->sendErrorMessage(udpPacket, ctrl4, ICMP_DESTINATION_UNREACHABLE, ICMP_DU_PORT_UNREACHABLE);
 #else
         delete udpPacket;
@@ -470,7 +470,7 @@ void UDP::processUndeliverablePacket(UDPPacket *udpPacket, cObject *ctrl)
 #ifdef WITH_IPv6
         IPv6ControlInfo *ctrl6 = (IPv6ControlInfo *)ctrl;
         if (!icmpv6)
-            icmpv6 = ICMPv6Access().get();
+            icmpv6 = check_and_cast<ICMPv6 *>(getModuleByPath(par("ICMPv6Module")));
         icmpv6->sendErrorMessage(udpPacket, ctrl6, ICMPv6_DESTINATION_UNREACHABLE, PORT_UNREACHABLE);
 #else
         delete udpPacket;

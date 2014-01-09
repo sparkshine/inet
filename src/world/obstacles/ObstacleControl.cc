@@ -42,9 +42,11 @@ void ObstacleControl::initialize(int stage)
     }
     else if (stage == INITSTAGE_PHYSICAL_ENVIRONMENT)
     {
-        annotations = AnnotationManagerAccess().getIfExists();
-        if (annotations)
+        if (getModuleByPath(par("annotationManagerModule")))
+        {
+            annotations = check_and_cast<AnnotationManager *>(getModuleByPath(par("annotationManagerModule")));
             annotationGroup = annotations->createGroup("obstacles");
+        }
 
         addFromXml(obstaclesXml);
     }

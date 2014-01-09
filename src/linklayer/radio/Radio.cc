@@ -113,8 +113,11 @@ void Radio::initialize(int stage)
         WATCH(noiseLevel);
         WATCH(rs);
 
-        obstacles = ObstacleControlAccess().getIfExists();
-        if (obstacles) EV << "Found ObstacleControl" << endl;
+        if (getModuleByPath(par("obstacleControlModule")))
+        {
+            obstacles = check_and_cast<ObstacleControl *>(getModuleByPath(par("obstacleControlModule")));
+            EV << "Found ObstacleControl" << endl;
+        }
 
         // this is the parameter of the channel controller (global)
         std::string propModel = getChannelControlPar("propagationModel").stdstringValue();
@@ -951,9 +954,9 @@ void Radio::updateSensitivity(double rate)
 
 void Radio::registerBattery()
 {
-    BasicBattery *bat = BatteryAccess().getIfExists();
-    if (bat)
+    if (getModuleByPath(par("batteryModule")))
     {
+        BasicBattery *bat = check_and_cast<BasicBattery *>(getModuleByPath(par("batteryModule")));
         //int id,double mUsageRadioIdle,double mUsageRadioRecv,double mUsageRadioSend,double mUsageRadioSleep)=0;
         // read parameters
         double mUsageRadioIdle = par("usage_radio_idle");

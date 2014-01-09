@@ -36,6 +36,7 @@ package inet.mobility.models;
 simple TraCIMobility extends MobilityBase
 {
     parameters:
+        string TraCIScenarioManagerModule = default("^.manager");
         @display("i=block/cogwheel");
         int accidentCount = default(0);  // number of accidents
         double accidentStart @unit("s") = default(uniform(30s,60s));  // time until first accident, relative to departure time

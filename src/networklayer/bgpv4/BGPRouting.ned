@@ -56,6 +56,7 @@ simple BGPRouting like ITCPApp
     parameters:
         string interfaceTablePath = default("^.interfaceTable");   // The path to the InterfaceTable module
         string routingTableModule = default("^.routingTable");
+        string OSPFRoutingModule = default("^.ospf");
         @display("i=block/network2");
         xml bgpConfig;
         string dataTransferMode @enum("bytecount","object","bytestream") = default("bytecount");

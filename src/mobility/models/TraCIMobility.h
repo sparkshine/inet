@@ -116,10 +116,8 @@ class INET_API TraCIMobility : public MobilityBase
             if (angle == M_PI) throw cRuntimeError("TraCIMobility::getAngleRad called with no angle set yet");
             return angle;
         }
-        virtual TraCIScenarioManager* getManager() const {
-            if (!manager) manager = TraCIScenarioManagerAccess().get();
-            return manager;
-        }
+        virtual TraCIScenarioManager* getManager();
+
         void commandSetSpeedMode(int32_t bitset) {
             getManager()->commandSetSpeedMode(getExternalId(), bitset);
         }

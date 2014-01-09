@@ -394,7 +394,7 @@ void IPv6RoutingTable::configureInterfaceFromXML(InterfaceEntry *ie, cXMLElement
 
 void IPv6RoutingTable::configureTunnelFromXML(cXMLElement* cfg)
 {
-    IPv6Tunneling* tunneling = IPv6TunnelingAccess().get();
+    IPv6Tunneling* tunneling = check_and_cast<IPv6Tunneling *>(getModuleByPath(par("IPv6TunnelingModule")));
 
     // parse basic config (attributes)
     cXMLElementList tunnelList = cfg->getElementsByTagName("tunnelEntry");

@@ -77,11 +77,11 @@ void IPv6NeighbourDiscovery::initialize(int stage)
     {
         ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
         rt6 = check_and_cast<IPv6RoutingTable *>(getModuleByPath(par("routingTableModule")));
-        icmpv6 = ICMPv6Access().get();
+        icmpv6 = check_and_cast<ICMPv6 *>(getModuleByPath(par("ICMPv6Module")));
 
 #ifdef WITH_xMIPv6
         if (rt6->isMobileNode())
-            mipv6 = xMIPv6Access().get();
+            mipv6 = check_and_cast<xMIPv6 *>(getModuleByPath(par("xMIPv6Module")));
 #endif /* WITH_xMIPv6 */
 
         pendingQueue.setName("pendingQueue");

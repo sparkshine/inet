@@ -79,6 +79,9 @@ simple IPv6
     parameters:
         string interfaceTablePath = default("^.^.interfaceTable");   // The path to the InterfaceTable module
         string routingTableModule;
+        string IPv6NeighbourDiscoveryModule = default("^.neighbourDiscovery");
+        string ICMPv6Module = default("^.icmpv6");
+        string IPv6TunnelingModule = default("^.iptunneling");
         double procDelay @unit("s") = default(0s);
         @display("i=block/network2");
     gates:

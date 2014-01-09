@@ -44,7 +44,7 @@ void LinkStateRouting::initialize(int stage)
 
     if (stage == INITSTAGE_ROUTING_PROTOCOLS)
     {
-        tedmod = TEDAccess().get();
+        tedmod = check_and_cast<TED *>(getModuleByPath(par("TEDModule")));
 
         IIPv4RoutingTable *rt = check_and_cast<IIPv4RoutingTable *>(getModuleByPath(par("routingTableModule")));
         routerId = rt->getRouterId();

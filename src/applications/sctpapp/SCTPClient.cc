@@ -59,7 +59,7 @@ void SCTPClient::initialize(int stage)
 {
     cSimpleModule::initialize(stage);
 
-    sctpEV3 << "initialize SCTP Client stage "<< stage << endl;
+    EV_DEBUG << "initialize SCTP Client stage "<< stage << endl;
     if (stage == INITSTAGE_LOCAL)
     {
         numSessions = numBroken = packetsSent = packetsRcvd = bytesSent = echoedBytesSent = bytesRcvd = 0;
@@ -163,7 +163,7 @@ void SCTPClient::connect()
     {
         cMessage* cmsg = new cMessage("StreamReset");
         cmsg->setKind(MSGKIND_RESET);
-        sctpEV3 << "StreamReset Timer scheduled at " << simulation.getSimTime() << "\n";
+        EV_INFO << "StreamReset Timer scheduled at " << simulation.getSimTime() << "\n";
         scheduleAt(simulation.getSimTime()+(double)par("streamRequestTime"), cmsg);
     }
 
@@ -214,7 +214,7 @@ void SCTPClient::socketEstablished(int32, void *, uint64 buffer )
     if (numRequestsToSend < 1)
         numRequestsToSend = 0;
 
-    sctpEV3 << "SCTPClient:numRequestsToSend=" << numRequestsToSend << "\n";
+    EV_INFO << "SCTPClient:numRequestsToSend=" << numRequestsToSend << "\n";
 
     // perform first request (next one will be sent when reply arrives)
     if ((numRequestsToSend > 0 && !timer) || timer)
@@ -277,7 +277,7 @@ void SCTPClient::socketEstablished(int32, void *, uint64 buffer )
 
         if ((!timer && numRequestsToSend == 0) && (simtime_t)par("waitToClose")==0)
         {
-            sctpEV3 << "socketEstablished:no more packets to send, call shutdown\n";
+            EV_INFO << "socketEstablished:no more packets to send, call shutdown\n";
             socket.shutdown();
 
             if (timeMsg->isScheduled())
@@ -299,7 +299,7 @@ void SCTPClient::sendQueueRequest()
     cmsg->setKind(SCTP_C_QUEUE_MSGS_LIMIT);
     qinfo->setAssocId(socket.getConnectionId());
     cmsg->setControlInfo(qinfo);
-    sctpEV3 << "Sending queue request ..." << endl;
+    EV_INFO << "Sending queue request ..." << endl;
     socket.sendRequest(cmsg);
 }
 
@@ -307,7 +307,7 @@ void SCTPClient::sendRequestArrived()
 {
     int32 count = 0;
 
-    sctpEV3 << "sendRequestArrived numRequestsToSend=" << numRequestsToSend << "\n";
+    EV_INFO << "sendRequestArrived numRequestsToSend=" << numRequestsToSend << "\n";
 
     while (((!timer && numRequestsToSend > 0) || timer) && count++ < queueSize && sendAllowed)
     {
@@ -318,7 +318,7 @@ void SCTPClient::sendRequestArrived()
 
         if ((!timer && numRequestsToSend == 0))
         {
-            sctpEV3 << "no more packets to send, call shutdown\n";
+            EV_INFO << "no more packets to send, call shutdown\n";
             socket.shutdown();
 
             if (timeMsg->isScheduled())
@@ -334,7 +334,7 @@ void SCTPClient::socketDataArrived(int32, void *, cPacket *msg, bool)
 {
     packetsRcvd++;
 
-    sctpEV3 << "Client received packet Nr " << packetsRcvd << " from SCTP\n";
+    EV_INFO << "Client received packet Nr " << packetsRcvd << " from SCTP\n";
     SCTPCommand* ind = check_and_cast<SCTPCommand*>(msg->removeControlInfo());
     emit(rcvdPkSignal, msg);
     bytesRcvd += msg->getByteLength();
@@ -416,7 +416,7 @@ void SCTPClient::sendRequest(bool last)
     cmsg->setKind(ordered ? SCTP_C_SEND_ORDERED : SCTP_C_SEND_UNORDERED);
 
     // send SCTPMessage with SCTPSimpleMessage enclosed
-    sctpEV3 << "Sending request ..." << endl;
+    EV_INFO << "Sending request ..." << endl;
     bufferSize -= sendBytes;
 
     if (bufferSize < 0)
@@ -482,7 +482,7 @@ void SCTPClient::handleTimer(cMessage *msg)
             break;
 
         case MSGKIND_RESET:
-            sctpEV3 << "StreamReset Timer expired at Client at " << simulation.getSimTime() << "...send notification\n";
+            EV_INFO << "StreamReset Timer expired at Client at " << simulation.getSimTime() << "...send notification\n";
             sendStreamResetNotification();
             delete msg;
             break;
@@ -669,7 +669,7 @@ void SCTPClient::sendqueueAbatedArrived(int32 assocId, uint64 buffer)
 
     if ((!timer && numRequestsToSend == 0) && (simtime_t) par("waitToClose") == 0)
     {
-        sctpEV3 << "socketEstablished:no more packets to send, call shutdown\n";
+        EV_INFO << "socketEstablished:no more packets to send, call shutdown\n";
         socket.shutdown();
 
         if (timeMsg->isScheduled())
@@ -691,6 +691,6 @@ void SCTPClient::finish()
     EV_INFO << getFullPath() << ": opened " << numSessions << " sessions\n";
     EV_INFO << getFullPath() << ": sent " << bytesSent << " bytes in " << packetsSent << " packets\n";
     EV_INFO << getFullPath() << ": received " << bytesRcvd << " bytes in " << packetsRcvd << " packets\n";
-    sctpEV3 << "Client finished\n";
+    EV_INFO << "Client finished\n";
 }
 

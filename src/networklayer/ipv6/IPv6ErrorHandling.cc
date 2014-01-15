@@ -39,12 +39,12 @@ void IPv6ErrorHandling::handleMessage(cMessage *msg)
     IPv6Datagram *d = check_and_cast<IPv6Datagram *>(icmpv6Msg->getEncapsulatedPacket());
     int type = (int)icmpv6Msg->getType();
     int code;
-    EV << " Type: " << type;
+    EV_ERROR << " Type: " << type;
     if (dynamic_cast<ICMPv6DestUnreachableMsg *>(icmpv6Msg))
     {
         ICMPv6DestUnreachableMsg *msg2 = (ICMPv6DestUnreachableMsg *)icmpv6Msg;
         code = msg2->getCode();
-        EV << " Code: " << code;
+        EV_ERROR << " Code: " << code;
     }
     else if (dynamic_cast<ICMPv6PacketTooBigMsg *>(icmpv6Msg))
     {
@@ -55,16 +55,16 @@ void IPv6ErrorHandling::handleMessage(cMessage *msg)
     {
         ICMPv6TimeExceededMsg *msg2 = (ICMPv6TimeExceededMsg *)icmpv6Msg;
         code = msg2->getCode();
-        EV << " Code: " << code;
+        EV_ERROR << " Code: " << code;
     }
     else if (dynamic_cast<ICMPv6ParamProblemMsg *>(icmpv6Msg))
     {
         ICMPv6ParamProblemMsg *msg2 = (ICMPv6ParamProblemMsg *)icmpv6Msg;
         code = msg2->getCode();
-        EV << " Code: " << code;
+        EV_ERROR << " Code: " << code;
     }
 
-    EV << " Byte length: " << d->getByteLength()
+    EV_DETAIL << " Byte length: " << d->getByteLength()
        << " Src: " << d->getSrcAddress()
        << " Dest: " << d->getDestAddress()
        << " Time: " << simTime()
@@ -79,51 +79,51 @@ void IPv6ErrorHandling::handleMessage(cMessage *msg)
     else if (type == 4)
         displayType4Msg(code);
     else
-        EV << "Unknown Error Type!" << endl;
+        EV_ERROR << "Unknown Error Type!" << endl;
     delete icmpv6Msg;
 }
 
 void IPv6ErrorHandling::displayType1Msg(int code)
 {
-    EV << "Destination Unreachable: ";
+    EV_ERROR << "Destination Unreachable: ";
     if (code == 0)
-        EV << "no route to destination\n";
+        EV_ERROR << "no route to destination\n";
     else if (code == 1)
-        EV << "communication with destination administratively prohibited\n";
+        EV_ERROR << "communication with destination administratively prohibited\n";
     else if (code == 3)
-        EV << "address unreachable\n";
+        EV_ERROR << "address unreachable\n";
     else if (code == 4)
-        EV << "port unreachable\n";
+        EV_ERROR << "port unreachable\n";
     else
-        EV << "Unknown Error Code!\n";
+        EV_ERROR << "Unknown Error Code!\n";
 }
 
 void IPv6ErrorHandling::displayType2Msg()
 {
-    EV << "Packet Too Big" << endl;
+    EV_WARN << "Packet Too Big" << endl;
     //Code is always 0 and ignored by the receiver.
 }
 
 void IPv6ErrorHandling::displayType3Msg(int code)
 {
-    EV << "Time Exceeded Message: ";
+    EV_ERROR << "Time Exceeded Message: ";
     if (code == 0)
-        EV << "hop limit exceeded in transit\n";
+        EV_ERROR << "hop limit exceeded in transit\n";
     else if (code == 1)
-        EV << "fragment reassembly time exceeded\n";
+        EV_ERROR << "fragment reassembly time exceeded\n";
     else
-        EV << "Unknown Error Code!\n";
+        EV_ERROR << "Unknown Error Code!\n";
 }
 
 void IPv6ErrorHandling::displayType4Msg(int code)
 {
-    EV << "Parameter Problem Message: ";
+    EV_ERROR << "Parameter Problem Message: ";
     if (code == 0)
-        EV << "erroneous header field encountered\n";
+        EV_ERROR << "erroneous header field encountered\n";
     else if (code == 1)
-        EV << "unrecognized Next Header type encountered\n";
+        EV_ERROR << "unrecognized Next Header type encountered\n";
     else if (code == 2)
-        EV << "unrecognized IPv6 option encountered\n";
+        EV_ERROR << "unrecognized IPv6 option encountered\n";
     else
-        EV << "Unknown Error Code!\n";
+        EV_ERROR << "Unknown Error Code!\n";
 }

@@ -246,7 +246,7 @@ void NS_CLASS initialize(int stage)
         is_init=true;
         // Initialize the timer
         scheduleNextEvent();
-        EV << "Aodv active"<< "\n";
+        EV_INFO << "Aodv active"<< "\n";
     }
 }
 
@@ -562,7 +562,7 @@ void NS_CLASS handleMessage (cMessage *msg)
                     }
                     delete ctrl;
                 }
-                EV << "Aodv rec datagram  " << ipDgram->getName() << " with dest=" << ipDgram->getDestAddress().str() << "\n";
+                EV_INFO << "Aodv rec datagram  " << ipDgram->getName() << " with dest=" << ipDgram->getDestAddress().str() << "\n";
                 processPacket(ipDgram,ifindex);   // Data path
             }
         }

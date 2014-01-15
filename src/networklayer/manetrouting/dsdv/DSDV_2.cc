@@ -212,7 +212,7 @@ void DSDV_2::handleMessage(cMessage *msg)
                 {
                     try
                     {
-                        EV << "Vou mandar forward do " << (*it)->hello->getSrcIPAddress() << endl;
+                        EV << "Vou mandar forward do " << (*it)->hello->getSrcIPAddress() << endl; // todo
                         if ( (*it)->hello->getControlInfo() == NULL )
                             error("Apanhei-o a nulo no for");
                         send((*it)->hello, "to_ip");
@@ -302,7 +302,7 @@ void DSDV_2::handleMessage(cMessage *msg)
 
             if (src==source)
             {
-                EV << "Hello msg dropped. This message returned to the original creator.\n";
+                EV_INFO << "Hello msg dropped. This message returned to the original creator.\n";
                 try
                 {
                     delete recHello;
@@ -321,7 +321,7 @@ void DSDV_2::handleMessage(cMessage *msg)
 
             if (src==source)
             {
-                EV << "Hello msg dropped. This message returned to the original creator.\n";
+                EV_INFO << "Hello msg dropped. This message returned to the original creator.\n";
                 try
                 {
                     delete fhp;
@@ -380,9 +380,9 @@ void DSDV_2::handleMessage(cMessage *msg)
                 //HelloForward=NULL;//
                 double waitTime = intuniform(1, 50);
                 waitTime = waitTime/100;
-                EV << "waitime for forward before was " << waitTime <<" And host is " << source << "\n";
+                EV_DETAIL << "waitime for forward before was " << waitTime <<" And host is " << source << "\n";
                 //waitTime= SIMTIME_DBL (simTime())+waitTime;
-                EV << "waitime for forward is " << waitTime <<" And host is " << source << "\n";
+                EV_DETAIL << "waitime for forward is " << waitTime <<" And host is " << source << "\n";
                 sendDelayed(recHello, waitTime, "to_ip");
 #else
                 try
@@ -395,9 +395,9 @@ void DSDV_2::handleMessage(cMessage *msg)
                     //HelloForward=NULL;//
                     double waitTime = intuniform(1, 50);
                     waitTime = waitTime/100;
-                    EV << "waitime for forward before was " << waitTime <<" And host is " << source << "\n";
+                    EV_DETAIL << "waitime for forward before was " << waitTime <<" And host is " << source << "\n";
                     waitTime = SIMTIME_DBL(simTime())+waitTime;
-                    EV << "waitime for forward is " << waitTime <<" And host is " << source << "\n";
+                    EV_DETAIL << "waitime for forward is " << waitTime <<" And host is " << source << "\n";
                     fhp->event = new cMessage("event2");
                     scheduleAt(waitTime, fhp->event);
                     forwardList->push_back(fhp);

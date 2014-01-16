@@ -26,14 +26,25 @@
 #include "NodeStatus.h"
 #include "NodeOperations.h"
 
+using namespace units::values;
+
 simsignal_t SimplifiedRadio::bitrateSignal = registerSignal("bitrate");
 simsignal_t SimplifiedRadio::lossRateSignal = registerSignal("lossRate");
 simsignal_t SimplifiedRadio::changeLevelNoise = registerSignal("changeLevelNoise");
 
 #define MIN_DISTANCE 0.001 // minimum distance 1 millimeter
-#define BASE_NOISE_LEVEL (noiseGenerator?noiseLevel+noiseGenerator->noiseLevel():noiseLevel)
+#define BASE_NOISE_LEVEL (noiseGenerator?noiseLevel+mW(noiseGenerator->noiseLevel()):noiseLevel)
 
 Define_Module(SimplifiedRadio);
+
+template <typename U, typename V> static V xpar(cModule *module, const char *parname)
+{
+    cPar &par = module->par(parname);
+    std::stringstream stream;
+    units::output_unit<U> unit;
+    unit.fn(stream);
+    return V(cNEDValue::convertUnit(par.doubleValue(), par.getUnit(), stream.str().c_str()));
+}
 
 SimplifiedRadio::SimplifiedRadio()
 {
@@ -57,12 +68,12 @@ void SimplifiedRadio::initialize(int stage)
         getSensitivityList(par("SensitivityTable").xmlValue());
 
         // read parameters
-        transmitterPower = par("transmitterPower");
-        if (transmitterPower > (double) (getRadioChannelPar("pMax")))
+        transmitterPower = xpar<units::units::W, W>(this, "transmitterPower");
+        if (transmitterPower > xpar<units::units::W, W>(dynamic_cast<cModule *>(cc), "pMax"))
             error("transmitterPower cannot be bigger than pMax in SimplifiedRadioChannel!");
         bitrate = par("bitrate");
-        thermalNoise = FWMath::dBm2mW(par("thermalNoise"));
-        sensitivity = FWMath::dBm2mW(par("sensitivity"));
+        thermalNoise = xpar<units::units::dBm, dBm>(this, "thermalNoise");
+        sensitivity = xpar<units::units::dBm, dBm>(this, "sensitivity");
         carrierFrequency = par("carrierFrequency");
 
         // initialize noiseLevel
@@ -111,7 +122,7 @@ void SimplifiedRadio::initialize(int stage)
         {
             if (sensitivityList.size() == 1 && sensitivityList.begin()->second == sensitivity)
             {
-                sensitivity = receptionModel->calculateReceivedPower(transmitterPower, carrierFrequency, par("maxDistance").doubleValue());
+                sensitivity = mW(receptionModel->calculateReceivedPower(transmitterPower.get(), carrierFrequency, par("maxDistance").doubleValue()));
                 sensitivityList[0] = sensitivity;
             }
         }
@@ -119,10 +130,10 @@ void SimplifiedRadio::initialize(int stage)
         receptionThreshold = sensitivity;
         if (par("setReceptionThreshold").boolValue())
         {
-            receptionThreshold = FWMath::dBm2mW(par("receptionThreshold").doubleValue());
+            receptionThreshold = xpar<units::units::dBm, dBm>(this, "receptionThreshold");
             if (par("maxDistantReceptionThreshold").doubleValue() > 0)
             {
-                receptionThreshold = receptionModel->calculateReceivedPower(transmitterPower, carrierFrequency, par("maxDistantReceptionThreshold").doubleValue());
+                receptionThreshold = mW(receptionModel->calculateReceivedPower(transmitterPower.get(), carrierFrequency, par("maxDistantReceptionThreshold").doubleValue()));
             }
         }
 
@@ -306,7 +317,7 @@ SimplifiedRadioFrame *SimplifiedRadio::encapsulatePacket(cPacket *frame)
     //if (ctrl && ctrl->getAdaptiveSensitivity()) updateSensitivity(ctrl->getBitrate());
     SimplifiedRadioFrame *radioFrame = createRadioFrame();
     radioFrame->setName(frame->getName());
-    radioFrame->setPSend(transmitterPower);
+    radioFrame->setPSend(transmitterPower.get());
     radioFrame->setChannelNumber(radioChannel);
     radioFrame->encapsulate(frame);
     radioFrame->setBitrate(ctrl ? ctrl->getBitrate() : bitrate);
@@ -452,11 +463,11 @@ void SimplifiedRadio::handleCommand(int msgkind, cObject *ctrl)
     else if (msgkind==PHY_C_CHANGETRANSMITTERPOWER)
     {
         PhyControlInfo *phyCtrl = check_and_cast<PhyControlInfo *>(ctrl);
-        double newTransmitterPower = phyCtrl->getTransmitterPower();
-        if (newTransmitterPower!=-1)
+        mW newTransmitterPower = mW(phyCtrl->getTransmitterPower());
+        if (newTransmitterPower != mW(-1))
         {
-            if (newTransmitterPower > (double)getRadioChannelPar("pMax"))
-                transmitterPower = (double) getRadioChannelPar("pMax");
+            if (newTransmitterPower > mW(getRadioChannelPar("pMax")))
+                transmitterPower = mW((double)getRadioChannelPar("pMax"));
             else
                 transmitterPower = newTransmitterPower;
         }
@@ -535,10 +546,10 @@ void SimplifiedRadio::handleLowerMsgStart(SimplifiedRadioFrame* radioFrame)
     if (distance<MIN_DISTANCE)
         distance = MIN_DISTANCE;
 
-    double rcvdPower = receptionModel->calculateReceivedPower(radioFrame->getPSend(), frequency, distance);
+    mW rcvdPower = mW(receptionModel->calculateReceivedPower(radioFrame->getPSend(), frequency, distance));
     if (obstacles && distance > MIN_DISTANCE)
-        rcvdPower = obstacles->calculateReceivedPower(rcvdPower, carrierFrequency, framePos, 0, getRadioPosition(), 0);
-    radioFrame->setPowRec(rcvdPower);
+        rcvdPower = mW(obstacles->calculateReceivedPower(rcvdPower.get(), carrierFrequency, framePos, 0, getRadioPosition(), 0));
+    radioFrame->setPowRec(rcvdPower.get());
     // store the receive power in the recvBuff
     recvBuff[radioFrame] = rcvdPower;
     updateSensitivity(radioFrame->getBitrate());
@@ -663,7 +674,7 @@ void SimplifiedRadio::addNewSnr()
 {
     SnrListEntry listEntry;     // create a new entry
     listEntry.time = simTime();
-    listEntry.snr = snrInfo.rcvdPower / (BASE_NOISE_LEVEL);
+    listEntry.snr = (snrInfo.rcvdPower / (BASE_NOISE_LEVEL)).get();
     snrInfo.sList.push_back(listEntry);
 }
 
@@ -933,10 +944,10 @@ double SimplifiedRadio::calcDistFreeSpace()
 
     double waveLength = (SPEED_OF_LIGHT / carrierFrequency);
     //minimum power level to be able to physically receive a signal
-    double minReceivePower = sensitivity;
+    mW minReceivePower = sensitivity;
 
-    double interfDistance = pow(waveLength * waveLength * transmitterPower /
-                         (16.0 * M_PI * M_PI * minReceivePower), 1.0 / alpha);
+    double interfDistance = pow(waveLength * waveLength * transmitterPower.get() /
+                         (16.0 * M_PI * M_PI * minReceivePower.get()), 1.0 / alpha);
     return interfDistance;
 }
 
@@ -946,9 +957,9 @@ double SimplifiedRadio::calcDistDoubleRay()
 {
     //the carrier frequency used
     //minimum power level to be able to physically receive a signal
-    double minReceivePower = sensitivity;
+    mW minReceivePower = sensitivity;
 
-    double interfDistance = pow(transmitterPower/minReceivePower, 1.0 / 4);
+    double interfDistance = pow((transmitterPower/minReceivePower).get(), 1.0 / 4);
 
     return interfDistance;
 }
@@ -1039,7 +1050,7 @@ void SimplifiedRadio::getSensitivityList(cXMLElement* xmlConfig)
 
     if (xmlConfig == 0)
     {
-        sensitivityList[0] = FWMath::dBm2mW(par("sensitivity").doubleValue());
+        sensitivityList[0] = xpar<units::units::dBm, dBm>(this, "sensitivity");
         return;
     }
 
@@ -1047,7 +1058,7 @@ void SimplifiedRadio::getSensitivityList(cXMLElement* xmlConfig)
 
     if (sensitivityXmlList.empty())
     {
-        sensitivityList[0] = FWMath::dBm2mW(par("sensitivity").doubleValue());
+        sensitivityList[0] = xpar<units::units::dBm, dBm>(this, "sensitivity");
         return;
     }
 
@@ -1068,8 +1079,7 @@ void SimplifiedRadio::getSensitivityList(cXMLElement* xmlConfig)
             double rate = atof(bitRate);
             if (rate == 0)
                 error("invalid bit rate");
-            double sens = atof(sensitivityStr);
-            sensitivityList[rate] = FWMath::dBm2mW(sens);
+            sensitivityList[rate] = dBm(atof(sensitivityStr));
 
         }
         parameters = data->getElementsByTagName("Default");
@@ -1077,14 +1087,13 @@ void SimplifiedRadio::getSensitivityList(cXMLElement* xmlConfig)
             it != parameters.end(); it++)
         {
             const char* sensitivityStr = (*it)->getAttribute("Sensitivity");
-            double sens = atof(sensitivityStr);
-            sensitivityList[0.0] = FWMath::dBm2mW(sens);
+            sensitivityList[0.0] = dBm(atof(sensitivityStr));
         }
 
         SensitivityList::iterator sensitivityIt = sensitivityList.find(0.0);
         if (sensitivityIt == sensitivityList.end())
         {
-            sensitivityList[0] = FWMath::dBm2mW(par("sensitivity").doubleValue());
+            sensitivityList[0] = xpar<units::units::dBm, dBm>(this, "sensitivity");
         }
     } // end iterator loop
 }

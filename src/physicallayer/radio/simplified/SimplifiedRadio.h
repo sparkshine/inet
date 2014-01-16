@@ -19,6 +19,7 @@
 #ifndef __INET_SIMPLIFIEDRADIO_H
 #define __INET_SIMPLIFIEDRADIO_H
 
+#include "units.h"
 #include "SimplifiedRadioChannelAccess.h"
 #include "SimplifiedRadioFrame.h"
 #include "IRadioModel.h"
@@ -27,6 +28,8 @@
 #include "ObstacleControl.h"
 #include "INoiseGenerator.h"
 #include "NotifierConsts.h"
+
+using namespace units::values;
 
 /**
  * Abstract base class for radio modules. Radio modules deal with the
@@ -56,7 +59,7 @@
 class INET_API SimplifiedRadio : public SimplifiedRadioChannelAccess
 {
   protected:
-    typedef std::map<double,double> SensitivityList; // Sensitivity list
+    typedef std::map<double,mW> SensitivityList; // Sensitivity list
     SensitivityList sensitivityList;
     virtual void getSensitivityList(cXMLElement* xmlConfig);
   public:
@@ -169,7 +172,7 @@ class INET_API SimplifiedRadio : public SimplifiedRadioChannelAccess
     //@}
 
     /** Power used to transmit messages */
-    double transmitterPower;
+    mW transmitterPower;
 
     /** Bitrate used to transmit messages */
     double bitrate;
@@ -181,7 +184,7 @@ class INET_API SimplifiedRadio : public SimplifiedRadioChannelAccess
     struct SnrStruct
     {
         SimplifiedRadioFrame *ptr;    ///< pointer to the message this information belongs to
-        double rcvdPower; ///< received power of the message
+        mW rcvdPower; ///< received power of the message
         SnrList sList;    ///< stores SNR over time
     };
 
@@ -202,7 +205,7 @@ class INET_API SimplifiedRadio : public SimplifiedRadioChannelAccess
             return lhs->getId() < rhs->getId();
         }
     };
-    typedef std::map<SimplifiedRadioFrame*, double, Compare> RecvBuff;
+    typedef std::map<SimplifiedRadioFrame*, mW, Compare> RecvBuff;
 
     /**
      * State: A buffer to store a pointer to a message and the related
@@ -217,7 +220,7 @@ class INET_API SimplifiedRadio : public SimplifiedRadioChannelAccess
     double newBitrate;
 
     /** State: the current noise level of the channel.*/
-    double noiseLevel;
+    mW noiseLevel;
 
     /**
      * Configuration: The carrier frequency used. It is read from the SimplifiedRadioChannel module.
@@ -228,7 +231,7 @@ class INET_API SimplifiedRadio : public SimplifiedRadioChannelAccess
      * Configuration: Thermal noise on the channel. Can be specified in
      * omnetpp.ini. Default: -100 dBm
      */
-    double thermalNoise;
+    mW thermalNoise;
 
     /**
      * Configuration: Defines up to what Power level (in dBm) a message can be
@@ -236,12 +239,12 @@ class INET_API SimplifiedRadio : public SimplifiedRadioChannelAccess
      * only treated as noise. Can be specified in omnetpp.ini. Default:
      * -85 dBm
      */
-    double sensitivity;
+    mW sensitivity;
 
     /*
      *  minimum signal necessary to change the channel state to RECV
      */
-    double receptionThreshold;
+    mW receptionThreshold;
 
     // if true draw coverage circles
     bool drawCoverage;

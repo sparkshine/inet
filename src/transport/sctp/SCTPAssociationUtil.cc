@@ -222,7 +222,7 @@ void SCTPAssociation::printSegmentBrief(SCTPMessage *sctpmsg)
 
 SCTPAssociation* SCTPAssociation::cloneAssociation()
 {
-    SCTPAssociation* assoc = new SCTPAssociation(sctpMain, appGateIndex, assocId);
+    SCTPAssociation* assoc = new SCTPAssociation(sctpMain, appGateIndex, assocId, rt, ift);
     const char* queueClass = transmissionQ->getClassName();
     assoc->transmissionQ = check_and_cast<SCTPQueue *>(createOne(queueClass));
     assoc->retransmissionQ = check_and_cast<SCTPQueue *>(createOne(queueClass));
@@ -618,7 +618,7 @@ void SCTPAssociation::sendInit()
         for (AddressVector::iterator it=remoteAddressList.begin(); it!=remoteAddressList.end(); it++)
         {
             sctpEV3<<__LINE__<<" get new path for "<<(*it)<<"\n";
-            SCTPPathVariables* path = new SCTPPathVariables((*it), this);
+            SCTPPathVariables* path = new SCTPPathVariables((*it), this, rt);
             sctpPathMap[(*it)] = path;
             qCounter.roomTransQ[(*it)] = 0;
             qCounter.bookedTransQ[(*it)] = 0;
@@ -628,7 +628,7 @@ void SCTPAssociation::sendInit()
     else
     {
         sctpEV3<<__LINE__<<" get new path for "<<remoteAddr<<"\n";
-        SCTPPathVariables* path = new SCTPPathVariables(remoteAddr, this);
+        SCTPPathVariables* path = new SCTPPathVariables(remoteAddr, this, rt);
         sctpPathMap[remoteAddr] = path;
         qCounter.roomTransQ[remoteAddr] = 0;
         qCounter.bookedTransQ[remoteAddr] = 0;
@@ -1815,7 +1815,7 @@ void SCTPAssociation::addPath(const Address& addr)
     if (i==sctpPathMap.end())
     {
         sctpEV3<<__LINE__<<" get new path for "<<addr<<"\n";
-        SCTPPathVariables* path = new SCTPPathVariables(addr, this);
+        SCTPPathVariables* path = new SCTPPathVariables(addr, this, rt);
         sctpPathMap[addr] = path;
         qCounter.roomTransQ[addr] = 0;
         qCounter.bookedTransQ[addr] = 0;

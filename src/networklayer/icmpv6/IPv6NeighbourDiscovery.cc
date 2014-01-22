@@ -18,17 +18,17 @@
 
 #include "IPv6NeighbourDiscovery.h"
 
-#include "ICMPv6Access.h"
 #include "IPv6ControlInfo.h"
 #include "IPv6Datagram.h"
 #include "IPv6InterfaceData.h"
-#include "InterfaceTableAccess.h"
+#include "IInterfaceTable.h"
+#include "IPv6RoutingTable.h"
 #include "ModuleAccess.h"
 #include "NodeStatus.h"
-#include "IPv6RoutingTableAccess.h"
+#include "ICMPv6.h"
 
 #ifdef WITH_xMIPv6
-#include "xMIPv6Access.h"
+#include "xMIPv6.h"
 #endif /* WITH_xMIPv6 */
 
 #define MK_ASSIGN_LINKLOCAL_ADDRESS 0

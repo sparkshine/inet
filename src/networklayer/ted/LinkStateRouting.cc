@@ -21,10 +21,10 @@
 #include "IPv4ControlInfo.h"
 #include "IPv4InterfaceData.h"
 #include "NotifierConsts.h"
-#include "IPv4RoutingTableAccess.h"
-#include "InterfaceTableAccess.h"
+#include "IIPv4RoutingTable.h"
+#include "ModuleAccess.h"
+#include "IInterfaceTable.h"
 #include "TED.h"
-#include "TEDAccess.h"
 
 Define_Module(LinkStateRouting);
 

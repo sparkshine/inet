@@ -18,8 +18,8 @@
 
 #include "Ieee80211AgentSTA.h"
 #include "Ieee80211Primitives_m.h"
+#include "ModuleAccess.h"
 #include "NotifierConsts.h"
-#include "InterfaceTableAccess.h"
 #include "opp_utils.h"
 
 Define_Module(Ieee80211AgentSTA);

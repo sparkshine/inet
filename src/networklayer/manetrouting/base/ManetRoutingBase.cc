@@ -29,15 +29,13 @@
 #include "IPv4InterfaceData.h"
 #include "IPv6ControlInfo.h"
 #include "Ieee802Ctrl_m.h"
-#include "IPv4RoutingTableAccess.h"
-#include "InterfaceTableAccess.h"
 #include "IARPCache.h"
 #include "Coord.h"
 #include "ControlInfoBreakLink_m.h"
 #include "Ieee80211Frame_m.h"
-#include "ICMPAccess.h"
 #include "IMobility.h"
 #include "Ieee80211MgmtAP.h"
+#include "ModuleAccess.h"
 
 #define IP_DEF_TTL 32
 #define UDP_HDR_LEN 8

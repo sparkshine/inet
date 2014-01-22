@@ -21,10 +21,11 @@
 #include "GenericRoutingTable.h"
 
 #include "IInterfaceTable.h"
-#include "InterfaceTableAccess.h"
 #include "GenericRoute.h"
 #include "GenericNetworkProtocolInterfaceData.h"
 #include "NotifierConsts.h"
+#include "ModuleAccess.h"
+
 
 
 Define_Module(GenericRoutingTable);

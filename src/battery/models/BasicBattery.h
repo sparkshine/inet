@@ -138,13 +138,5 @@ class INET_API BasicBattery : public cSimpleModule, public cListener
 
 };
 
-
-class INET_API BatteryAccess : public ModuleAccess<BasicBattery>
-{
-  public:
-    BatteryAccess() : ModuleAccess<BasicBattery>("battery") {}
-};
-
-
 #endif
 

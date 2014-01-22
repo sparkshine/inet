@@ -19,15 +19,13 @@
 #include "Utils.h"
 #include "XMLUtils.h"
 #include "IPv4InterfaceData.h"
-#include "TEDAccess.h"
-#include "IPv4RoutingTableAccess.h"
-#include "InterfaceTableAccess.h"
-#include "LIBTableAccess.h"
-#include "NotifierConsts.h"
 #include "ModuleAccess.h"
 #include "NodeOperations.h"
 #include "NodeStatus.h"
 #include "IPSocket.h"
+#include "IIPv4RoutingTable.h"
+#include "IInterfaceTable.h"
+#include "TED.h"
 
 #define PSB_REFRESH_INTERVAL    5.0
 #define RSB_REFRESH_INTERVAL    6.0

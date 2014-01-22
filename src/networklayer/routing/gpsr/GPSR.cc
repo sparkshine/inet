@@ -17,10 +17,11 @@
 //
 
 #include "GPSR.h"
-#include "InterfaceTableAccess.h"
 #include "IPProtocolId_m.h"
 #include "IPSocket.h"
 #include "NodeOperations.h"
+#include "IInterfaceTable.h"
+#include "ModuleAccess.h"
 
 Define_Module(GPSR);
 

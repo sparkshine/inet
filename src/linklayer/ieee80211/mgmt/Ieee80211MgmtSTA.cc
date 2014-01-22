@@ -20,14 +20,12 @@
 
 #include "Ieee802Ctrl_m.h"
 #include "InterfaceEntry.h"
-#include "InterfaceTableAccess.h"
 #include "ModuleAccess.h"
 #include "NotifierConsts.h"
 #include "PhyControlInfo_m.h"
 #include "RadioState.h"
 #include "ChannelAccess.h"
 #include "Radio80211aControlInfo_m.h"
-#include "InterfaceTableAccess.h"
 #include "opp_utils.h"
 
 //TBD supportedRates!

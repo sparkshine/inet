@@ -20,11 +20,11 @@
 
 #include "IAddressType.h"
 #include "InterfaceMatcher.h"
-#include "InterfaceTableAccess.h"
 #include "NodeOperations.h"
 #include "NodeStatus.h"
 #include "NotifierConsts.h"
 #include "UDP.h"
+#include "ModuleAccess.h"
 
 #include "RIPPacket_m.h"
 #include "RIPRouting.h"

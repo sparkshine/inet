@@ -195,13 +195,6 @@ class INET_API TraCIMobility : public MobilityBase
         double calculateCO2emission(double v, double a) const;
 };
 
-class TraCIMobilityAccess : public ModuleAccess<TraCIMobility>
-{
-    public:
-        TraCIMobilityAccess() : ModuleAccess<TraCIMobility>("mobility") {};
-};
-
-
 #endif
 #endif
 

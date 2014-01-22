@@ -23,7 +23,7 @@
 #include <map>
 
 #include "QueueBase.h"
-#include "InterfaceTableAccess.h"
+#include "IInterfaceTable.h"
 #include "INetfilter.h"
 #include "GenericRoutingTable.h"
 #include "GenericNetworkProtocolControlInfo.h"

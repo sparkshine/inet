@@ -20,9 +20,6 @@
 #include "MPLS.h"
 #include "Utils.h"
 
-#include "InterfaceTableAccess.h"
-#include "IPv4RoutingTableAccess.h"
-#include "LIBTableAccess.h"
 #include "IClassifier.h"
 
 

@@ -19,12 +19,13 @@
 #include "INETDefs.h"
 
 #include "ICMPv6.h"
-#include "InterfaceTableAccess.h"
 #include "IPv6InterfaceData.h"
 
 #include "ICMPv6Message_m.h"
 #include "IPv6ControlInfo.h"
 #include "IPv6Datagram.h"
+
+#include "IInterfaceTable.h"
 
 #include "ModuleAccess.h"
 #include "NodeStatus.h"

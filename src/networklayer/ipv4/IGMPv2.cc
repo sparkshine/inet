@@ -18,8 +18,9 @@
 
 #include "IGMPv2.h"
 #include "IPSocket.h"
-#include "IPv4RoutingTableAccess.h"
-#include "InterfaceTableAccess.h"
+#include "IPv4RoutingTable.h"
+#include "IInterfaceTable.h"
+#include "ModuleAccess.h"
 #include "IPv4ControlInfo.h"
 #include "IPv4InterfaceData.h"
 

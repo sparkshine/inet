@@ -22,10 +22,11 @@
 #include "opp_utils.h"
 
 #include "IPv6RoutingTable.h"
+#include "IInterfaceTable.h"
+#include "ModuleAccess.h"
+#include "IPv6Tunneling.h"
 
 #include "IPv6InterfaceData.h"
-#include "InterfaceTableAccess.h"
-#include "IPv6TunnelingAccess.h"
 #include "NodeOperations.h"
 
 Define_Module(IPv6RoutingTable);

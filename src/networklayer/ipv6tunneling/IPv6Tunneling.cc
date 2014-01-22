@@ -37,17 +37,17 @@
 
 #include "IPv6Tunneling.h"
 
-#include "InterfaceTableAccess.h"
 #include "IPv6ControlInfo.h"
 #include "IPv6Datagram.h"
 #include "IPv6InterfaceData.h"
+#include "IPv6RoutingTable.h"
+#include "IInterfaceTable.h"
 #include "ModuleAccess.h"
 #include "NodeStatus.h"
-#include "IPv6RoutingTableAccess.h"
+#include "xMIPv6.h"
 
 #ifdef WITH_xMIPv6
 #include "MobilityHeader_m.h" // for HA Option header
-#include "xMIPv6Access.h"
 #endif
 
 #include <algorithm>

@@ -18,13 +18,11 @@
 
 #include "DHCPClient.h"
 
-#include "InterfaceTableAccess.h"
 #include "IPv4InterfaceData.h"
 #include "ModuleAccess.h"
 #include "NodeStatus.h"
 #include "NotifierConsts.h"
 #include "NodeOperations.h"
-#include "IPv4RoutingTableAccess.h"
 
 Define_Module(DHCPClient);
 

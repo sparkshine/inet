@@ -20,8 +20,6 @@
 
 #include "IPv4NodeConfigurator.h"
 #include "ModuleAccess.h"
-#include "InterfaceTableAccess.h"
-#include "IPv4RoutingTableAccess.h"
 #include "NodeStatus.h"
 #include "NodeOperations.h"
 #include "opp_utils.h"   // for OPP_Global::getModuleByPath()

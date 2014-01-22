@@ -30,6 +30,7 @@
 #include "Ieee802Ctrl_m.h"
 #include "Ieee80211Frame_m.h"
 #include "ICMPMessage_m.h"
+#include "ModuleAccess.h"
 
 unsigned int DSRUU::confvals[CONFVAL_MAX];
 //simtime_t DSRUU::current_time;

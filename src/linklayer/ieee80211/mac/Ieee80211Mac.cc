@@ -20,7 +20,6 @@
 #include "Ieee80211Mac.h"
 #include "RadioState.h"
 #include "IInterfaceTable.h"
-#include "InterfaceTableAccess.h"
 #include "PhyControlInfo_m.h"
 #include "AirFrame_m.h"
 #include "Radio80211aControlInfo_m.h"

@@ -26,12 +26,10 @@
 
 #ifdef WITH_IPv4
 #include "IIPv4RoutingTable.h"
-#include "IPv4RoutingTableAccess.h"
 #endif
 
 #ifdef WITH_IPv6
 #include "IPv6RoutingTable.h"
-#include "IPv6RoutingTableAccess.h"
 #endif
 
 

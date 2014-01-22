@@ -24,10 +24,8 @@
 #include "IPv4Datagram.h"
 #include "IPv4InterfaceData.h"
 #include "IIPv4RoutingTable.h"
-#include "IPv4RoutingTableAccess.h"
 #include "ARPPacket_m.h"
 #include "IInterfaceTable.h"
-#include "InterfaceTableAccess.h"
 #include "NodeOperations.h"
 #include "NodeStatus.h"
 

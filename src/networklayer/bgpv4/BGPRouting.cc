@@ -18,7 +18,6 @@
 #include "BGPRouting.h"
 #include "ModuleAccess.h"
 #include "NodeStatus.h"
-#include "IPv4RoutingTableAccess.h"
 #include "OSPFRouting.h"
 #include "BGPSession.h"
 

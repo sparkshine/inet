@@ -25,15 +25,15 @@
 #include <algorithm>
 
 #include "AddressResolver.h"
-#include "BindingCacheAccess.h"
+#include "BindingCache.h"
 #include "BindingUpdateList.h"
-#include "BindingUpdateListAccess.h"
 #include "InterfaceTableAccess.h"
 #include "IPv6ControlInfo.h"
 #include "IPv6InterfaceData.h"
-#include "IPv6NeighbourDiscoveryAccess.h"
-#include "IPv6TunnelingAccess.h"
-#include "IPv6RoutingTableAccess.h"
+#include "IPv6NeighbourDiscovery.h"
+#include "IPv6Tunneling.h"
+#include "IPv6RoutingTable.h"
+#include "ModuleAccess.h"
 
 
 #define MK_SEND_PERIODIC_BU            1

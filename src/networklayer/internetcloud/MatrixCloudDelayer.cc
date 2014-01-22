@@ -19,9 +19,10 @@
 
 #include "MatrixCloudDelayer.h"
 
-#include "InterfaceTableAccess.h"
+#include "ModuleAccess.h"
 #include "PatternMatcher.h"
 #include "XMLUtils.h"
+#include "IInterfaceTable.h"
 
 Define_Module(MatrixCloudDelayer);
 

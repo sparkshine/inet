@@ -17,7 +17,6 @@
 //
 
 #include "xDYMO.h"
-#include "InterfaceTableAccess.h"
 #include "IPSocket.h"
 #include "IPProtocolId_m.h"
 #include "Ieee80211Frame_m.h"
@@ -25,6 +24,8 @@
 #include "INetworkProtocolControlInfo.h"
 #include "UDPControlInfo.h"
 #include "NodeOperations.h"
+#include "IInterfaceTable.h"
+#include "ModuleAccess.h"
 
 DYMO_NAMESPACE_BEGIN
 

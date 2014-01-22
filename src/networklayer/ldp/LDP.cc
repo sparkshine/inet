@@ -23,16 +23,16 @@
 
 //#include "ConstType.h"
 #include "LIBTable.h"
-#include "InterfaceTableAccess.h"
 #include "IPv4InterfaceData.h"
-#include "IPv4RoutingTableAccess.h"
-#include "LIBTableAccess.h"
-#include "TEDAccess.h"
 #include "NotifierConsts.h"
 #include "UDPControlInfo_m.h"
 #include "UDPPacket.h"
 #include "TCPSegment.h"
 #include "NodeOperations.h"
+#include "IIPv4RoutingTable.h"
+#include "IInterfaceTable.h"
+#include "ModuleAccess.h"
+#include "TED.h"
 
 Define_Module(LDP);
 

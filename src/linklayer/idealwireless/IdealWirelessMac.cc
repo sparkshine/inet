@@ -26,7 +26,6 @@
 #include "IdealWirelessFrame_m.h"
 #include "Ieee802Ctrl_m.h"
 #include "IInterfaceTable.h"
-#include "InterfaceTableAccess.h"
 #include "IPassiveQueue.h"
 #include "opp_utils.h"
 

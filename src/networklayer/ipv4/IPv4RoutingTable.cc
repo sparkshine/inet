@@ -25,7 +25,6 @@
 #include "IPv4RoutingTable.h"
 
 #include "IInterfaceTable.h"
-#include "InterfaceTableAccess.h"
 #include "IPv4InterfaceData.h"
 #include "IPv4Route.h"
 #include "NotifierConsts.h"
@@ -33,6 +32,7 @@
 #include "NodeOperations.h"
 #include "NodeStatus.h"
 #include "opp_utils.h"
+#include "ModuleAccess.h"
 
 using namespace OPP_Global;
 

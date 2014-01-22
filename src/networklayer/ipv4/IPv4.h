@@ -21,11 +21,11 @@
 #include <omnetpp.h>
 #include "INETDefs.h"
 #include "INetfilter.h"
-#include "ICMPAccess.h"
 #include "IPv4FragBuf.h"
 #include "ProtocolMap.h"
 #include "QueueBase.h"
 #include "IPv4Datagram.h"
+#include "ICMP.h"
 
 #include "IPv4Datagram.h"
 #include "ILifecycle.h"
@@ -67,7 +67,7 @@ class INET_API IPv4 : public QueueBase, public INetfilter, public ILifecycle
     IIPv4RoutingTable *rt;
     IInterfaceTable *ift;
     IARPCache *arp;
-    ICMPAccess icmpAccess;
+    ICMP *icmp;
     cGate *arpDgramOutGate;
     cGate *arpInGate;
     cGate *arpOutGate;

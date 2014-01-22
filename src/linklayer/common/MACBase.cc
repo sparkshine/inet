@@ -25,7 +25,6 @@
 #include "NotifierConsts.h"
 #include "InterfaceEntry.h"
 #include "IInterfaceTable.h"
-#include "InterfaceTableAccess.h"
 #include "NodeOperations.h"
 #include "ModuleAccess.h"
 

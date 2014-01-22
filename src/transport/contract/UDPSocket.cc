@@ -15,7 +15,6 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "InterfaceTableAccess.h"
 #include "UDPSocket.h"
 #include "UDPControlInfo.h"
 #ifdef WITH_IPv4

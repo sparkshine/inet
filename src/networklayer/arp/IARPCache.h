@@ -37,11 +37,5 @@ class INET_API IARPCache
     virtual ~IARPCache() {}
 };
 
-class INET_API ARPCacheAccess : public ModuleAccess<IARPCache>
-{
-  public:
-        ARPCacheAccess() : ModuleAccess<IARPCache>("arp") {}
-};
-
 #endif
 

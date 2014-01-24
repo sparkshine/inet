@@ -27,9 +27,7 @@
 #include "SCTPQueue.h"
 #include "SCTPAlgorithm.h"
 #include "IPv4RoutingTable.h"
-#include "IPv4RoutingTableAccess.h"
 #include "InterfaceTable.h"
-#include "InterfaceTableAccess.h"
 #include "IPv6Address.h"
 #include "common.h"
 #include "IPv4ControlInfo.h"
@@ -441,7 +439,6 @@ void SCTPAssociation::initAssociation(SCTPOpenCommand *openCmd)
 
 void SCTPAssociation::sendInit()
 {
-    InterfaceTableAccess interfaceTableAccess;
     AddressVector adv;
     uint32 length = SCTP_INIT_CHUNK_LENGTH;
 
@@ -473,7 +470,6 @@ void SCTPAssociation::sendInit()
     state->asconfSn = 1000;
 
     initTsn = initChunk->getInitTSN();
-    IInterfaceTable *ift = interfaceTableAccess.get();
     sctpEV3<<"add local address\n";
     if (localAddressList.front().isUnspecified())
     {
@@ -2461,7 +2457,6 @@ void SCTPAssociation::pmDataIsSentOn(SCTPPathVariables* path)
 
 void SCTPAssociation::pmStartPathManagement()
 {
-    IPv4RoutingTableAccess routingTableAccess;
     SCTPPathVariables* path;
     int32 i = 0;
     /* populate path structures !!! */
@@ -2471,7 +2466,7 @@ void SCTPAssociation::pmStartPathManagement()
     {
         path = piter->second;
         path->pathErrorCount = 0;
-        InterfaceEntry *rtie = routingTableAccess.get()->getInterfaceForDestAddr(path->remoteAddress.toIPv4());
+        InterfaceEntry *rtie = rt->getInterfaceForDestAddr(path->remoteAddress.toIPv4());
         path->pmtu = rtie->getMTU();
         sctpEV3 << "Path MTU of Interface "<< i << " = " << path->pmtu <<"\n";
         if (path->pmtu < state->assocPmtu)

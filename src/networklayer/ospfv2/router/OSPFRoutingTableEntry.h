@@ -23,7 +23,7 @@
 
 #include "INETDefs.h"
 
-#include "InterfaceTableAccess.h"
+#include "IInterfaceTable.h"
 #include "IIPv4RoutingTable.h"
 #include "LSA.h"
 #include "OSPFcommon.h"
@@ -82,7 +82,7 @@ public:
     Metric                 getType2Cost() const  { return type2Cost; }
     void                   setLinkStateOrigin(const OSPFLSA* lsa)  { linkStateOrigin = lsa; }
     const OSPFLSA*         getLinkStateOrigin() const  { return linkStateOrigin; }
-    void                   addNextHop(NextHop hop);
+    void                   addNextHop(IInterfaceTable* ift, NextHop hop);
     void                   clearNextHops()  { nextHops.clear(); }
     unsigned int           getNextHopCount() const  { return nextHops.size(); }
     NextHop                getNextHop(unsigned int index) const  { return nextHops[index]; }

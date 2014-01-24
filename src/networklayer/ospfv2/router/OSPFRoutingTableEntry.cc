@@ -83,10 +83,10 @@ void OSPF::RoutingTableEntry::setType2Cost(Metric pathCost)
     }
 }
 
-void OSPF::RoutingTableEntry::addNextHop(OSPF::NextHop hop)
+void OSPF::RoutingTableEntry::addNextHop(IInterfaceTable* ift, OSPF::NextHop hop)
 {
     if (nextHops.size() == 0) {
-        InterfaceEntry*    routingInterface = InterfaceTableAccess().get()->getInterfaceById(hop.ifIndex);
+        InterfaceEntry*    routingInterface = ift->getInterfaceById(hop.ifIndex);
 
         setInterface(routingInterface);
         // TODO: this used to be commented out, but it seems we need it

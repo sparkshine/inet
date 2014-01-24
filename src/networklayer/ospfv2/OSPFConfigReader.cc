@@ -23,7 +23,7 @@
 
 #include "OSPFConfigReader.h"
 
-#include "InterfaceTableAccess.h"
+#include "IInterfaceTable.h"
 #include "IPv4Address.h"
 #include "IPv4ControlInfo.h"
 #include "IPv4InterfaceData.h"
@@ -33,13 +33,12 @@
 #include "OSPFcommon.h"
 #include "OSPFInterface.h"
 #include "PatternMatcher.h"
-#include "IPv4RoutingTableAccess.h"
 #include "XMLUtils.h"
+#include "ModuleAccess.h"
 
 
-OSPFConfigReader::OSPFConfigReader(cModule *ospfModule) : ospfModule(ospfModule)
+OSPFConfigReader::OSPFConfigReader(cModule *ospfModule, IInterfaceTable *ift) : ospfModule(ospfModule), ift(ift)
 {
-    ift = InterfaceTableAccess().get(ospfModule);
 }
 
 OSPFConfigReader::~OSPFConfigReader()
@@ -117,7 +116,7 @@ void OSPFConfigReader::loadAreaFromXML(const cXMLElement& asConfig, OSPF::AreaID
         EV << "    loading info for Area id = " << areaID.str(false) << "\n";
     }
 
-    OSPF::Area* area = new OSPF::Area(areaID);
+    OSPF::Area* area = new OSPF::Area(ift, areaID);
     cXMLElementList areaDetails = areaConfig->getChildren();
     for (cXMLElementList::iterator arIt = areaDetails.begin(); arIt != areaDetails.end(); arIt++) {
         std::string nodeName = (*arIt)->getTagName();
@@ -219,7 +218,7 @@ void OSPFConfigReader::loadInterfaceParameters(const cXMLElement& ifConfig)
 
     EV << "        loading " << interfaceType << " " << ie->getName() << " (ifIndex=" << ifIndex << ")\n";
 
-    intf->setIfIndex(ifIndex);
+    intf->setIfIndex(ift, ifIndex);
     if (interfaceType == "PointToPointInterface") {
         intf->setType(OSPF::Interface::POINTTOPOINT);
     } else if (interfaceType == "BroadcastInterface") {

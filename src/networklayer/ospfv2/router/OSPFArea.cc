@@ -19,7 +19,8 @@
 #include "OSPFRouter.h"
 #include <memory.h>
 
-OSPF::Area::Area(OSPF::AreaID id) :
+OSPF::Area::Area(IInterfaceTable* ift, OSPF::AreaID id) :
+    ift(ift),
     areaID(id),
     transitCapability(false),
     externalRoutingCapability(true),
@@ -1613,7 +1614,7 @@ void OSPF::Area::calculateShortestPathTree(std::vector<OSPF::RoutingTableEntry*>
                     entry->setDestinationType(destinationType);
                     entry->setOptionalCapabilities(routerLSA->getHeader().getLsOptions());
                     for (i = 0; i < nextHopCount; i++) {
-                        entry->addNextHop(routerLSA->getNextHop(i));
+                        entry->addNextHop(ift, routerLSA->getNextHop(i));
                     }
 
                     newRoutingTable.push_back(entry);
@@ -1631,7 +1632,7 @@ void OSPF::Area::calculateShortestPathTree(std::vector<OSPF::RoutingTableEntry*>
                             range.address = getInterface(routerLSA->getNextHop(0).ifIndex)->getAddressRange().address;
                             range.mask = IPv4Address::ALLONES_ADDRESS;
                             virtualIntf->setAddressRange(range);
-                            virtualIntf->setIfIndex(routerLSA->getNextHop(0).ifIndex);
+                            virtualIntf->setIfIndex(ift, routerLSA->getNextHop(0).ifIndex);
                             virtualIntf->setOutputCost(routerLSA->getDistance());
                             OSPF::Neighbor* virtualNeighbor = virtualIntf->getNeighbor(0);
                             if (virtualNeighbor != NULL) {
@@ -1719,7 +1720,7 @@ void OSPF::Area::calculateShortestPathTree(std::vector<OSPF::RoutingTableEntry*>
                     entry->setDestinationType(OSPF::RoutingTableEntry::NETWORK_DESTINATION);
                     entry->setOptionalCapabilities(networkLSA->getHeader().getLsOptions());
                     for (i = 0; i < nextHopCount; i++) {
-                        entry->addNextHop(networkLSA->getNextHop(i));
+                        entry->addNextHop(ift, networkLSA->getNextHop(i));
                     }
 
                     if (!overWrite) {
@@ -1796,7 +1797,7 @@ void OSPF::Area::calculateShortestPathTree(std::vector<OSPF::RoutingTableEntry*>
                 std::vector<OSPF::NextHop>* newNextHops = calculateNextHops(link, routerVertex); // (destination, parent)
                 unsigned int nextHopCount = newNextHops->size();
                 for (k = 0; k < nextHopCount; k++) {
-                    entry->addNextHop((*newNextHops)[k]);
+                    entry->addNextHop(ift, (*newNextHops)[k]);
                 }
                 delete newNextHops;
             } else {
@@ -1817,7 +1818,7 @@ void OSPF::Area::calculateShortestPathTree(std::vector<OSPF::RoutingTableEntry*>
                 std::vector<OSPF::NextHop>* newNextHops = calculateNextHops(link, routerVertex); // (destination, parent)
                 unsigned int nextHopCount = newNextHops->size();
                 for (k = 0; k < nextHopCount; k++) {
-                    entry->addNextHop((*newNextHops)[k]);
+                    entry->addNextHop(ift, (*newNextHops)[k]);
                 }
                 delete newNextHops;
 
@@ -2214,7 +2215,7 @@ OSPF::RoutingTableEntry* OSPF::Area::createRoutingTableEntryFromSummaryLSA(const
 
     unsigned int nextHopCount = borderRouterEntry.getNextHopCount();
     for (unsigned int j = 0; j < nextHopCount; j++) {
-        newEntry->addNextHop(borderRouterEntry.getNextHop(j));
+        newEntry->addNextHop(ift, borderRouterEntry.getNextHop(j));
     }
 
     return newEntry;
@@ -2335,7 +2336,7 @@ void OSPF::Area::calculateInterAreaRoutes(std::vector<OSPF::RoutingTableEntry*>&
                      * to the equal entry.
                      */
                     for (unsigned long j = 0; j < nextHopCount; j++) {
-                        equalEntry->addNextHop(borderRouterEntry->getNextHop(j));
+                        equalEntry->addNextHop(ift, borderRouterEntry->getNextHop(j));
                     }
                 } else {
                     OSPF::RoutingTableEntry* newEntry = createRoutingTableEntryFromSummaryLSA(*currentLSA, currentCost, *borderRouterEntry);
@@ -2442,7 +2443,7 @@ void OSPF::Area::recheckSummaryLSAs(std::vector<OSPF::RoutingTableEntry*>& newRo
                 unsigned long nextHopCount = borderRouterEntry->getNextHopCount();
 
                 for (j = 0; j < nextHopCount; j++) {
-                    destinationEntry->addNextHop(borderRouterEntry->getNextHop(j));
+                    destinationEntry->addNextHop(ift, borderRouterEntry->getNextHop(j));
                 }
             }
         }

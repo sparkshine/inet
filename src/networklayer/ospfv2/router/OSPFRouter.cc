@@ -18,12 +18,13 @@
 
 #include "OSPFRouter.h"
 
-#include "IPv4RoutingTableAccess.h"
 
-
-OSPF::Router::Router(OSPF::RouterID id, cSimpleModule* containingModule) :
+OSPF::Router::Router(OSPF::RouterID id, cSimpleModule* containingModule, IInterfaceTable* ift, IIPv4RoutingTable* rt) :
+    ift(ift),
+    rt(rt),
     routerID(id),
     rfc1583Compatibility(false)
+
 {
     messageHandler = new OSPF::MessageHandler(this, containingModule);
     ageTimer = new cMessage();
@@ -745,13 +746,11 @@ void OSPF::Router::rebuildRoutingTable()
     routingTable.clear();
     routingTable.assign(newTable.begin(), newTable.end());
 
-    IPv4RoutingTableAccess routingTableAccess;
     std::vector<IPv4Route*> eraseEntries;
-    IIPv4RoutingTable* simRoutingTable = routingTableAccess.get();
-    unsigned long routingEntryNumber = simRoutingTable->getNumRoutes();
+    unsigned long routingEntryNumber = rt->getNumRoutes();
     // remove entries from the IPv4 routing table inserted by the OSPF module
     for (i = 0; i < routingEntryNumber; i++) {
-        IPv4Route *entry = simRoutingTable->getRoute(i);
+        IPv4Route *entry = rt->getRoute(i);
         OSPF::RoutingTableEntry* ospfEntry = dynamic_cast<OSPF::RoutingTableEntry*>(entry);
         if (ospfEntry != NULL) {
             eraseEntries.push_back(entry);
@@ -760,14 +759,14 @@ void OSPF::Router::rebuildRoutingTable()
 
     unsigned int eraseCount = eraseEntries.size();
     for (i = 0; i < eraseCount; i++) {
-        simRoutingTable->deleteRoute(eraseEntries[i]);
+        rt->deleteRoute(eraseEntries[i]);
     }
 
     // add the new routing entries
     routeCount = routingTable.size();
     for (i = 0; i < routeCount; i++) {
         if (routingTable[i]->getDestinationType() == OSPF::RoutingTableEntry::NETWORK_DESTINATION) {
-            simRoutingTable->addRoute(new OSPF::RoutingTableEntry(*(routingTable[i])));
+            rt->addRoute(new OSPF::RoutingTableEntry(*(routingTable[i])));
         }
     }
 
@@ -969,7 +968,7 @@ void OSPF::Router::calculateASExternalRoutes(std::vector<OSPF::RoutingTableEntry
                 NextHop nextHop = preferredEntry->getNextHop(j);
 
                 nextHop.advertisingRouter = originatingRouter;
-                newEntry->addNextHop(nextHop);
+                newEntry->addNextHop(ift, nextHop);
             }
 
             newRoutingTable.push_back(newEntry);
@@ -1027,7 +1026,7 @@ void OSPF::Router::calculateASExternalRoutes(std::vector<OSPF::RoutingTableEntry
                     NextHop nextHop = preferredEntry->getNextHop(j);
 
                     nextHop.advertisingRouter = originatingRouter;
-                    destinationEntry->addNextHop(nextHop);
+                    destinationEntry->addNextHop(ift, nextHop);
                 }
                 continue;
             }
@@ -1049,7 +1048,7 @@ void OSPF::Router::calculateASExternalRoutes(std::vector<OSPF::RoutingTableEntry
                 NextHop nextHop = preferredEntry->getNextHop(j);
 
                 nextHop.advertisingRouter = originatingRouter;
-                destinationEntry->addNextHop(nextHop);
+                destinationEntry->addNextHop(ift, nextHop);
             }
         }
     }
@@ -1328,13 +1327,12 @@ void OSPF::Router::updateExternalRoute(IPv4Address networkAddress, const OSPFASE
     OSPFOptions lsaOptions;
     //OSPF::LSAKeyType lsaKey;
 
-    IIPv4RoutingTable* simRoutingTable = IPv4RoutingTableAccess().get();
-    unsigned long routingEntryNumber = simRoutingTable->getNumRoutes();
+    unsigned long routingEntryNumber = rt->getNumRoutes();
     bool inRoutingTable = false;
     // add the external route to the routing table if it was not added by another module
     for (unsigned long i = 0; i < routingEntryNumber; i++)
     {
-        const IPv4Route *entry = simRoutingTable->getRoute(i);
+        const IPv4Route *entry = rt->getRoute(i);
         if ((entry->getDestination() == networkAddress)
                 && (entry->getNetmask() == externalRouteContents.getNetworkMask())) //TODO is it enough?
         {
@@ -1347,10 +1345,10 @@ void OSPF::Router::updateExternalRoute(IPv4Address networkAddress, const OSPFASE
         IPv4Route* entry = new IPv4Route;
         entry->setDestination(networkAddress);
         entry->setNetmask(externalRouteContents.getNetworkMask());
-        entry->setInterface(InterfaceTableAccess().get()->getInterfaceById(ifIndex));
+        entry->setInterface(ift->getInterfaceById(ifIndex));
         entry->setSourceType(IRoute::MANUAL);
         entry->setMetric(externalRouteContents.getRouteCost());
-        simRoutingTable->addRoute(entry);   // IIPv4RoutingTable deletes entry pointer
+        rt->addRoute(entry);   // IIPv4RoutingTable deletes entry pointer
     }
 
     lsaHeader.setLsAge(0);
@@ -1380,14 +1378,12 @@ void OSPF::Router::updateExternalRoute(IPv4Address networkAddress, const OSPFASE
 
 void OSPF::Router::addExternalRouteInIPTable(IPv4Address networkAddress, const OSPFASExternalLSAContents& externalRouteContents, int ifIndex)
 {
-    IIPv4RoutingTable* simRoutingTable = IPv4RoutingTableAccess().get();
-    IInterfaceTable* simInterfaceTable = InterfaceTableAccess().get();
-    int routingEntryNumber = simRoutingTable->getNumRoutes();
+    int routingEntryNumber = rt->getNumRoutes();
     bool inRoutingTable = false;
 
     // add the external route to the IPv4 routing table if it was not added by another module
     for (int i = 1; i < routingEntryNumber; i++) {
-        const IPv4Route *entry = simRoutingTable->getRoute(i);
+        const IPv4Route *entry = rt->getRoute(i);
         if ((entry->getDestination() == networkAddress)
                 && (entry->getNetmask() == externalRouteContents.getNetworkMask())) //TODO is it enough?
         {
@@ -1401,10 +1397,10 @@ void OSPF::Router::addExternalRouteInIPTable(IPv4Address networkAddress, const O
         IPv4Route* entry = new IPv4Route();
         entry->setDestination(networkAddress);
         entry->setNetmask(externalRouteContents.getNetworkMask());
-        entry->setInterface(simInterfaceTable->getInterfaceById(ifIndex));
+        entry->setInterface(ift->getInterfaceById(ifIndex));
         entry->setSourceType(IRoute::OSPF);
         entry->setMetric(OSPF_BGP_DEFAULT_COST);
-        simRoutingTable->addRoute(entry);
+        rt->addRoute(entry);
     }
 }
 

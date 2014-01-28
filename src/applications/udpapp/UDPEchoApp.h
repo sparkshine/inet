@@ -41,7 +41,6 @@ class UDPEchoApp : public AppBase
     virtual void finish();
     virtual void updateDisplay();
 
-    //AppBase:
     bool startApp(IDoneCallback *doneCallback);
     bool stopApp(IDoneCallback *doneCallback);
     bool crashApp(IDoneCallback *doneCallback);

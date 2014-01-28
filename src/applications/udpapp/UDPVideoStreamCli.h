@@ -37,33 +37,31 @@
 class INET_API UDPVideoStreamCli : public AppBase
 {
   protected:
+
+    // state
     UDPSocket socket;
     cMessage *selfMsg;
 
     // statistics
     static simsignal_t rcvdPkSignal;
 
-  public:
-    UDPVideoStreamCli() { selfMsg = NULL; }
-    virtual ~UDPVideoStreamCli() { cancelAndDelete(selfMsg); }
-
   protected:
-    ///@name Overridden cSimpleModule functions
-    //@{
     virtual int numInitStages() const { return NUM_INIT_STAGES; }
     virtual void initialize(int stage);
     virtual void finish();
     virtual void handleMessageWhenUp(cMessage *msg);
-    //@}
 
-  protected:
     virtual void requestStream();
     virtual void receiveStream(cPacket *msg);
 
-    //AppBase:
+    // AppBase:
     virtual bool startApp(IDoneCallback *doneCallback);
     virtual bool stopApp(IDoneCallback *doneCallback);
     virtual bool crashApp(IDoneCallback *doneCallback);
+
+  public:
+    UDPVideoStreamCli() { selfMsg = NULL; }
+    virtual ~UDPVideoStreamCli() { cancelAndDelete(selfMsg); }
 };
 
 #endif

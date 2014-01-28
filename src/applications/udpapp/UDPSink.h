@@ -45,7 +45,6 @@ class INET_API UDPSink : public AppBase
     virtual void handleMessageWhenUp(cMessage *msg);
     virtual void finish();
 
-    //AppBase:
     virtual bool startApp(IDoneCallback *doneCallback);
     virtual bool stopApp(IDoneCallback *doneCallback);
     virtual bool crashApp(IDoneCallback *doneCallback);

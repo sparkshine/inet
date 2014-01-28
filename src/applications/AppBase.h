@@ -34,10 +34,6 @@ class INET_API AppBase : public cSimpleModule, public ILifecycle
   protected:
     bool isOperational;
 
-  public:
-    AppBase();
-    virtual ~AppBase();
-
   protected:
     virtual void initialize(int stage);
     virtual int numInitStages() const { return NUM_INIT_STAGES; }
@@ -50,6 +46,10 @@ class INET_API AppBase : public cSimpleModule, public ILifecycle
     virtual bool startApp(IDoneCallback *doneCallback) = 0;
     virtual bool stopApp(IDoneCallback *doneCallback) = 0;
     virtual bool crashApp(IDoneCallback *doneCallback) = 0;
+
+  public:
+    AppBase();
+    virtual ~AppBase();
 };
 
 #endif  // __INET_APPBASE_H

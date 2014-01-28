@@ -54,7 +54,6 @@ class INET_API UDPVideoStreamCli : public AppBase
     virtual void requestStream();
     virtual void receiveStream(cPacket *msg);
 
-    // AppBase:
     virtual bool startApp(IDoneCallback *doneCallback);
     virtual bool stopApp(IDoneCallback *doneCallback);
     virtual bool crashApp(IDoneCallback *doneCallback);

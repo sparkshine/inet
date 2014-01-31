@@ -36,12 +36,12 @@ void STP::initialize(int stage)
 {
     STPBase::initialize(stage);
 
-    if (stage == 0)
+    if (stage == INITSTAGE_LOCAL)
     {
         tick = new cMessage("STP_TICK", 0);
         WATCH(bridgeAddress);
     }
-    else if (stage == 1)
+    else if (stage == INITSTAGE_LINK_LAYER)
     {
         initPortTable();
 

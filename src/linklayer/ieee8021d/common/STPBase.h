@@ -51,7 +51,7 @@ public:
     virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback);
     virtual void receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj) {}
 protected:
-    virtual int numInitStages() const {return 2;}
+    virtual int numInitStages() const {return NUM_INIT_STAGES;}
     virtual void initialize(int stage);
 
     virtual void start();

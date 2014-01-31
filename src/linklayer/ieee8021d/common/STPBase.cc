@@ -35,7 +35,7 @@ STPBase::STPBase()
 
 void STPBase::initialize(int stage)
 {
-    if (stage == 0)
+    if (stage == INITSTAGE_LOCAL)
     {
         visualize = par("visualize");
         bridgePriority = par("bridgePriority");
@@ -52,7 +52,7 @@ void STPBase::initialize(int stage)
         numPorts = switchModule->gate("ethg$o", 0)->getVectorSize();
     }
 
-    if (stage == 1) // "auto" MAC addresses assignment takes place in stage 0
+    if (stage == INITSTAGE_LINK_LAYER_2) // "auto" MAC addresses assignment takes place in stage 0
     {
         cModule *m = findContainingNode(this);
         if (m)

@@ -107,7 +107,7 @@ class L2NetworkConfigurator : public cSimpleModule
     Node * rootNode;
 
     virtual void initialize(int stage);
-    virtual int numInitStages() const  { return 3; }
+    virtual int numInitStages() const  { return NUM_INIT_STAGES; }
     virtual void handleMessage(cMessage *msg) { throw cRuntimeError("this module doesn't handle messages, it runs only in initialize()"); }
 
     /**

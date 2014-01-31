@@ -48,9 +48,9 @@ static void printElapsedTime(const char *name, long startTime)
 
 void L2NetworkConfigurator::initialize(int stage)
 {
-    if (stage == 0)
+    if (stage == INITSTAGE_LOCAL)
         configuration = par("config");
-    else if (stage == 1)
+    else if (stage == INITSTAGE_LINK_LAYER)
         ensureConfigurationComputed(topology);
 }
 

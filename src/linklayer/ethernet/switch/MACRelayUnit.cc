@@ -29,7 +29,7 @@ MACRelayUnit::MACRelayUnit()
 
 void MACRelayUnit::initialize(int stage)
 {
-    if (stage == 0)
+    if (stage == INITSTAGE_LOCAL)
     {
         // number of ports
         numPorts = gate("ifOut", 0)->size();
@@ -43,7 +43,7 @@ void MACRelayUnit::initialize(int stage)
         WATCH(numProcessedFrames);
         WATCH(numDiscardedFrames);
     }
-    else if (stage == 1)
+    else if (stage == INITSTAGE_LINK_LAYER)
     {
         NodeStatus *nodeStatus = dynamic_cast<NodeStatus *>(findContainingNode(this)->getSubmodule("status"));
         isOperational = (!nodeStatus) || nodeStatus->getState() == NodeStatus::UP;

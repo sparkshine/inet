@@ -53,7 +53,7 @@ class Ieee8021dRelay : public cSimpleModule, public ILifecycle
         int numDispatchedBDPUFrames;
 
         virtual void initialize(int stage);
-        virtual int numInitStages() const { return 2; }
+        virtual int numInitStages() const { return NUM_INIT_STAGES; }
         virtual void handleMessage(cMessage * msg);
 
         /**

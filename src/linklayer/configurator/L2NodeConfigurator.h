@@ -35,7 +35,7 @@ class L2NodeConfigurator : public cSimpleModule, public ILifecycle {
         L2NodeConfigurator();
 
     protected:
-        virtual int numInitStages() const { return 4; }
+        virtual int numInitStages() const { return NUM_INIT_STAGES; }
         virtual void handleMessage(cMessage *msg) { throw cRuntimeError("this module doesn't handle messages, it runs only in initialize()"); }
         virtual void initialize(int stage);
         virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback);

@@ -42,7 +42,7 @@ void RSTP::initialize(int stage)
 {
     STPBase::initialize(stage);
 
-    if (stage == 0)
+    if (stage == INITSTAGE_LOCAL)
     {
         autoEdge = par("autoEdge");
         tcWhileTime = par("tcWhileTime");
@@ -51,7 +51,7 @@ void RSTP::initialize(int stage)
         upgradeTimer = new cMessage("upgrade", SELF_UPGRADE);
     }
 
-    if (stage == 2) // "auto" MAC addresses assignment takes place in stage 0
+    if (stage == INITSTAGE_LINK_LAYER_2) // "auto" MAC addresses assignment takes place in stage 0
     {
         initPorts();
         updateDisplay();

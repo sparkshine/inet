@@ -33,7 +33,7 @@ Ieee8021dRelay::Ieee8021dRelay()
 void Ieee8021dRelay::initialize(int stage)
 {
 
-    if (stage == 0)
+    if (stage == INITSTAGE_LOCAL)
     {
         // statistics
         numDispatchedBDPUFrames = numDispatchedNonBPDUFrames = numDeliveredBDPUsToSTP = 0;
@@ -44,7 +44,7 @@ void Ieee8021dRelay::initialize(int stage)
         if (gate("ifIn", 0)->size() != (int)portCount)
             error("the sizes of the ifIn[] and ifOut[] gate vectors must be the same");
     }
-    else if (stage == 1)
+    else if (stage == INITSTAGE_LINK_LAYER_2)
     {
         NodeStatus * nodeStatus = dynamic_cast<NodeStatus *>(findContainingNode(this)->getSubmodule("status"));
         isOperational = (!nodeStatus) || nodeStatus->getState() == NodeStatus::UP;

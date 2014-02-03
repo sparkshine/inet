@@ -38,6 +38,7 @@ class IPv4InterfaceData;
 class IPv6InterfaceData;
 class TRILLInterfaceData;
 class ISISInterfaceData;
+class Ieee8021dInterfaceData;
 
 class INET_API MacEstimateCostProcess
 {
@@ -119,6 +120,7 @@ class INET_API InterfaceEntry : public cNamedObject
     GenericNetworkProtocolInterfaceData *genericNetworkProtocolData; ///< GenericNetworkProtocol-specific interface info (Address, etc)
     ISISInterfaceData *isisdata; ///< ISIS-specific interface info
     TRILLInterfaceData *trilldata; ///< TRILL-specific interface info
+    Ieee8021dInterfaceData * ieee8021ddata;
     std::vector<MacEstimateCostProcess *> estimateCostProcessArray;
 
   private:
@@ -215,6 +217,7 @@ class INET_API InterfaceEntry : public cNamedObject
     GenericNetworkProtocolInterfaceData *getGenericNetworkProtocolData() const {return genericNetworkProtocolData;}
     TRILLInterfaceData *trillData() const {return trilldata;}
     ISISInterfaceData *isisData() const {return isisdata;}
+    Ieee8021dInterfaceData *ieee8021dData() const {return ieee8021ddata;}
     //@}
 
     virtual void joinMulticastGroup(const Address & address) const;
@@ -226,6 +229,7 @@ class INET_API InterfaceEntry : public cNamedObject
     virtual void setGenericNetworkProtocolData(GenericNetworkProtocolInterfaceData *p);
     virtual void setTRILLInterfaceData(TRILLInterfaceData *p);
     virtual void setISISInterfaceData(ISISInterfaceData *p);
+    virtual void setIeee8021dInterfaceData(Ieee8021dInterfaceData *p);
     //@}
 
     /** @name access to the cost process estimation  */

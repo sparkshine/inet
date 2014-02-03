@@ -55,6 +55,10 @@
 
 #include "InitStages.h"
 
+#if OMNETPP_VERSION < 0x404
+#  define Register_Abstract_Class(x)    /* nothing */
+#endif
+
 typedef unsigned short ushort;
 typedef unsigned int uint;
 typedef unsigned long ulong;

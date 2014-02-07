@@ -81,6 +81,7 @@ void MoBANCoordinator::initialize(int stage)
 }
 
 void MoBANCoordinator::setInitialPosition() {
+//    lastPosition = selectDestination();
 }
 
 /**

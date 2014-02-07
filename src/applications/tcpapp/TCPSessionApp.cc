@@ -259,3 +259,11 @@ void TCPSessionApp::parseScript(const char *script)
             s++;
     }
 }
+
+void TCPSessionApp::finish()
+{
+    EV << getFullPath() << ": received " << bytesRcvd << " bytes in " << packetsRcvd << " packets\n";
+    recordScalar("bytesRcvd", bytesRcvd);
+    recordScalar("bytesSent", bytesSent);
+}
+

@@ -14,6 +14,7 @@
 
 #include "TCPSrvHostApp.h"
 
+#include "AddressResolver.h"
 #include "ModuleAccess.h"
 #include "NodeStatus.h"
 

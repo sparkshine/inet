@@ -43,7 +43,6 @@ int TelnetApp::checkedScheduleAt(simtime_t t, cMessage *msg)
     return 0;
 }
 
-
 void TelnetApp::initialize(int stage)
 {
     TCPAppBase::initialize(stage);

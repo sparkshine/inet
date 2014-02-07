@@ -325,7 +325,6 @@ void DSRUU::initialize(int stage)
         inet_rt = IPv4RoutingTableAccess().get();
         inet_ift = InterfaceTableAccess().get();
 
-        // ASSERT(stage >= STAGE:IP_LAYER_READY_FOR_HOOK_REGISTRATION);
         initHook(this);
 
         int  num_80211 = 0;
@@ -374,7 +373,6 @@ void DSRUU::initialize(int stage)
         myaddr_.s_addr = interface80211ptr->ipv4Data()->getIPAddress().getInt();
         macaddr_ = interface80211ptr->getMacAddress();
 
-        // ASSERT(stage >= STAGE:NOTIFICATIONBOARD_AVAILABLE);
         cModule *host = getContainingNode(this);
         host->subscribe(NF_LINK_BREAK, this);
         if (get_confval(PromiscOperation))

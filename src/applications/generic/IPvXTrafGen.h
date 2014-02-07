@@ -75,7 +75,6 @@ class INET_API IPvXTrafGen : public cSimpleModule, public ILifecycle
 
     virtual void printPacket(cPacket *msg);
     virtual void processPacket(cPacket *msg);
-
 };
 
 #endif

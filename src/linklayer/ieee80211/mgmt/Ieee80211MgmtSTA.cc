@@ -15,8 +15,10 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "IRadioChannel.h"
+
 #include "Ieee80211MgmtSTA.h"
+
+#include "IRadioChannel.h"
 #include "IRadioChannel.h"
 #include "InterfaceEntry.h"
 #include "InterfaceTableAccess.h"
@@ -99,6 +101,7 @@ void Ieee80211MgmtSTA::initialize(int stage)
         isScanning = false;
         isAssociated = false;
         assocTimeoutMsg = NULL;
+        myIface = NULL;
 
         host = getContainingNode(this);
         host->subscribe(NF_LINK_FULL_PROMISCUOUS, this);
@@ -291,7 +294,7 @@ void Ieee80211MgmtSTA::changeChannel(int channelNum)
 void Ieee80211MgmtSTA::beaconLost()
 {
     EV << "Missed a few consecutive beacons -- AP is considered lost\n";
-    emit(NF_L2_BEACON_LOST, myIface);  //XXX use InterfaceEntry as detail, etc...
+    emit(NF_L2_BEACON_LOST, myIface);
 }
 
 void Ieee80211MgmtSTA::sendManagementFrame(Ieee80211ManagementFrame *frame, const MACAddress& address)

@@ -27,7 +27,7 @@
 #include "AddressResolver.h"
 #include "BindingCache.h"
 #include "BindingUpdateList.h"
-#include "InterfaceTableAccess.h"
+#include "IInterfaceTable.h"
 #include "IPv6ControlInfo.h"
 #include "IPv6InterfaceData.h"
 #include "IPv6NeighbourDiscovery.h"

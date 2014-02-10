@@ -42,7 +42,10 @@ void TokenBucketMeter::initialize(int stage)
     else if (stage == INITSTAGE_NETWORK_LAYER)
     {
         const char *cirStr = par("cir");
-        CIR = parseInformationRate(cirStr, "cir", *this, 0);
+        IInterfaceTable *ift = NULL;
+        if (getModuleByPath(par("interfaceTablePath")))
+            ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
+        CIR = parseInformationRate(cirStr, "cir", ift, *this, 0);
         lastUpdateTime = simTime();
     }
 }

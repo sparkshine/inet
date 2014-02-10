@@ -327,6 +327,8 @@ void DSRUU::initialize(int stage)
         inet_ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
 
         // ASSERT(stage >= STAGE:IP_LAYER_READY_FOR_HOOK_REGISTRATION);
+        rt = inet_rt;
+        ift = inet_ift;
         initHook(this);
 
         int  num_80211 = 0;

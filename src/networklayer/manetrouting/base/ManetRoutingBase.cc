@@ -277,7 +277,8 @@ void ManetRoutingBase::registerRoutingModule()
             it->second.push_back(data);
         }
     }
-
+    ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
+    rt = check_and_cast<IIPv4RoutingTable *>(getModuleByPath(par("routingTableModule")));
     initHook(this);
 
  //   WATCH_MAP(*routesVector);

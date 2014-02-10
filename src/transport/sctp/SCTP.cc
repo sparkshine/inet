@@ -96,7 +96,7 @@ void SCTP::initialize(int stage)
 
     if (stage == INITSTAGE_LOCAL)
     {
-        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
+        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule")));
         rt = check_and_cast<IIPv4RoutingTable *>(getModuleByPath(par("routingTableModule")));
         this->auth = (bool)par("auth");
         this->pktdrop = (bool)par("packetDrop");

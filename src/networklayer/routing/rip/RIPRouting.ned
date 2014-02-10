@@ -63,7 +63,7 @@ package inet.networklayer.routing.rip;
 simple RIPRouting
 {
     parameters:
-        string interfaceTablePath = default("^.interfaceTable");   // The path to the InterfaceTable module
+        string interfaceTableModule = default("^.interfaceTable");   // The path to the InterfaceTable module
         @display("i=block/network2");
 
         string mode @enum("RIPv2", "RIPng") = default("RIPv2");

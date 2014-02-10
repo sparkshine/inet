@@ -31,7 +31,7 @@ void GlobalARP::initialize(int stage)
 
     if (stage == INITSTAGE_LOCAL)
     {
-        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
+        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule")));
         nicOutBaseGateId = gateSize("nicOut")==0 ? -1 : gate("nicOut", 0)->getId();
     }
 }

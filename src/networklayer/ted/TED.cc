@@ -51,7 +51,7 @@ void TED::initialize(int stage)
         WATCH_VECTOR(ted);
 
         rt = check_and_cast<IIPv4RoutingTable *>(getModuleByPath(par("routingTableModule")));
-        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
+        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule")));
         routerId = rt->getRouterId();
         ASSERT(!routerId.isUnspecified());
 

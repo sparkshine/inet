@@ -32,7 +32,7 @@ import inet.networklayer.contract.IRoutingTable;
 simple IPv6RoutingTable like IRoutingTable
 {
     parameters:
-        string interfaceTablePath = default("^.interfaceTable");   // The path to the InterfaceTable module
+        string interfaceTableModule = default("^.interfaceTable");   // The path to the InterfaceTable module
         string IPv6TunnelingModule = default("^.iptuneling");
         @display("i=block/table");
         xml routes = default(xml("<routingTable/>"));

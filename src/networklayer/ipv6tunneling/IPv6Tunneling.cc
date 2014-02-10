@@ -67,7 +67,7 @@ void IPv6Tunneling::initialize(int stage)
 
     if (stage == INITSTAGE_LOCAL)
     {
-        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
+        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule")));
         rt = check_and_cast<IPv6RoutingTable *>(getModuleByPath(par("routingTableModule")));
 
         vIfIndexTop = INT_MAX; // virtual interface number set to maximum int value

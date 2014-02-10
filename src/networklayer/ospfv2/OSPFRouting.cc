@@ -50,7 +50,7 @@ void OSPFRouting::initialize(int stage)
 
     if (stage == INITSTAGE_ROUTING_PROTOCOLS)
     {
-        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
+        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule")));
         rt = check_and_cast<IIPv4RoutingTable *>(getModuleByPath(par("routingTableModule")));
         IPSocket ipSocket(gate("ipOut"));
         ipSocket.registerProtocol(IP_PROT_OSPF);

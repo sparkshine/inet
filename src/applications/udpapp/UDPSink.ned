@@ -28,7 +28,7 @@ import inet.applications.IUDPApp;
 simple UDPSink like IUDPApp
 {
     parameters:
-        string interfaceTablePath = default("^.interfaceTable");   // The path to the InterfaceTable module
+        string interfaceTableModule = default("^.interfaceTable");   // The path to the InterfaceTable module
         int localPort; // local port
         @display("i=block/sink");
         @signal[rcvdPk](type=cPacket);

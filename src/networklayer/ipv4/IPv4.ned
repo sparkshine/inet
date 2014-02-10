@@ -84,7 +84,7 @@ package inet.networklayer.ipv4;
 simple IPv4
 {
     parameters:
-        string interfaceTablePath = default("^.^.interfaceTable");   // The path to the InterfaceTable module
+        string interfaceTableModule = default("^.^.interfaceTable");   // The path to the InterfaceTable module
         string routingTableModule;
         string ARPCacheModule = default("^.arp");
         string ICMPModule = default("^.icmp");

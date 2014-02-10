@@ -40,7 +40,7 @@ simple DYMO extends BaseRouting like IManetRouting
         @class(DYMO);
         @reactive;                             // IP module will send control messages when no route is present to the destination
         
-        string interfaceTablePath = default("^.interfaceTable");
+        string interfaceTableModule = default("^.interfaceTable");
         string routingTableModule = default("^.routingTable");
         string ICMPModule = default("^.networkLayer.icmp");
         string ARPCacheModule = default("^.networkLayer.arp");

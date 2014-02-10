@@ -26,7 +26,7 @@ package inet.networklayer.ted;
 simple LinkStateRouting
 {
     parameters:
-        string interfaceTablePath = default("^.interfaceTable");   // The path to the InterfaceTable module
+        string interfaceTableModule = default("^.interfaceTable");   // The path to the InterfaceTable module
         string routingTableModule = default("^.routingTable");
         string TEDModule = default("^.ted");
         string peers;

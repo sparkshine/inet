@@ -27,7 +27,7 @@ import inet.transport.ISCTP;
 simple SCTP like ISCTP
 {
     parameters:
-        string interfaceTablePath = default("^.interfaceTable");
+        string interfaceTableModule = default("^.interfaceTable");
         string routingTableModule = default("^.routingTable");
         
         //#====== SCTP Association Parameters =================================

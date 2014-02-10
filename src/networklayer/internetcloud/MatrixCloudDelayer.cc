@@ -136,7 +136,7 @@ void MatrixCloudDelayer::initialize(int stage)
     if (stage == INITSTAGE_LOCAL)
     {
         host = getContainingNode(this);
-        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
+        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule")));
         cXMLElement *configEntity = par("config").xmlValue();
         // parse XML config
         if (strcmp(configEntity->getTagName(), "internetCloud"))

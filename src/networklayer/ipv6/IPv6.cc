@@ -51,7 +51,7 @@ void IPv6::initialize(int stage)
     {
         QueueBase::initialize();
 
-        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
+        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule")));
         rt = check_and_cast<IPv6RoutingTable *>(getModuleByPath(par("routingTableModule")));
         nd = check_and_cast<IPv6NeighbourDiscovery *>(getModuleByPath(par("IPv6NeighbourDiscoveryModule")));
         icmp = check_and_cast<ICMPv6 *>(getModuleByPath(par("ICMPv6Module")));

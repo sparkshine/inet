@@ -57,7 +57,7 @@ void RSVP::initialize(int stage)
     {
         tedmod = check_and_cast<TED *>(getModuleByPath(par("TEDModule")));
         rt = check_and_cast<IIPv4RoutingTable *>(getModuleByPath(par("routingTableModule")));
-        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
+        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule")));
         routerId = rt->getRouterId();
         lt = check_and_cast<LIBTable *>(getModuleByPath(par("LIBTableModule")));
 

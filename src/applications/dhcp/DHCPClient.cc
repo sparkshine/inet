@@ -89,7 +89,7 @@ void DHCPClient::initialize(int stage)
         host->subscribe(NF_L2_ASSOCIATED, this);
 
         // Get the interface to configure
-        IInterfaceTable* ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
+        IInterfaceTable* ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule")));
         ie = ift->getInterfaceByName(par("interface"));
 
         if (ie == NULL)
@@ -603,7 +603,7 @@ bool DHCPClient::handleOperationStage(LifecycleOperation *operation, int stage, 
     Enter_Method_Silent();
     if (dynamic_cast<NodeStartOperation *>(operation)) {
         if (stage == NodeStartOperation::STAGE_APPLICATION_LAYER) {
-            IInterfaceTable* ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
+            IInterfaceTable* ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule")));
             ie = ift->getInterfaceByName(par("interface"));
             socket.bind(bootpc_port);
             changeFSMState(INIT);

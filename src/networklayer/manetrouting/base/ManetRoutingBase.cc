@@ -86,7 +86,7 @@ void ManetRoutingBase::registerRoutingModule()
     inet_rt = NULL;
     if (getModuleByPath(par("routingTableModule")))
         inet_rt = check_and_cast<IIPv4RoutingTable *>(getModuleByPath(par("routingTableModule")));
-    inet_ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
+    inet_ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule")));
     hostModule = getContainingNode(this);
 
     if (routesVector)
@@ -277,7 +277,7 @@ void ManetRoutingBase::registerRoutingModule()
             it->second.push_back(data);
         }
     }
-    ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
+    ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule")));
     rt = check_and_cast<IIPv4RoutingTable *>(getModuleByPath(par("routingTableModule")));
     initHook(this);
 

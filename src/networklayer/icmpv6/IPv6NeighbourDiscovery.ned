@@ -29,7 +29,7 @@ package inet.networklayer.icmpv6;
 simple IPv6NeighbourDiscovery
 {
     parameters:
-        string interfaceTablePath = default("^.^.interfaceTable");   // The path to the InterfaceTable module
+        string interfaceTableModule = default("^.^.interfaceTable");   // The path to the InterfaceTable module
         string ICMPv6Module = default("^.icmpv6");
         string xMIPv6Module = default("^.mipv6support.xMobileIPv6");
         string routingTableModule;

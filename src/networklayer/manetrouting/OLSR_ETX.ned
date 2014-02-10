@@ -41,7 +41,7 @@ simple OLSR_ETX extends BaseRouting like IManetRouting
 {
     parameters:
         @class(OLSR_ETX);
-        string interfaceTablePath = default("^.interfaceTable");
+        string interfaceTableModule = default("^.interfaceTable");
         string routingTableModule = default("^.routingTable");
         string ICMPModule = default("^.networkLayer.icmp");
         string ARPCacheModule = default("^.networkLayer.arp");

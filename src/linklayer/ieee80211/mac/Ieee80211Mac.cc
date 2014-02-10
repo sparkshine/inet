@@ -2771,8 +2771,8 @@ const MACAddress & Ieee80211Mac::isInterfaceRegistered()
         return MACAddress::UNSPECIFIED_ADDRESS;
 
     IInterfaceTable *ift = NULL;
-    if (getModuleByPath(par("interfaceTablePath")))
-        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
+    if (getModuleByPath(par("interfaceTableModule")))
+        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule")));
     if (!ift)
         return MACAddress::UNSPECIFIED_ADDRESS;
     std::string interfaceName = OPP_Global::stripnonalnum(getParentModule()->getFullName());

@@ -99,7 +99,7 @@ package inet.networklayer.rsvp_te;
 simple RSVP
 {
     parameters:
-        string interfaceTablePath = default("^.interfaceTable");   // The path to the InterfaceTable module
+        string interfaceTableModule = default("^.interfaceTable");   // The path to the InterfaceTable module
         string routingTableModule = default("^.routingTable");
         string LIBTableModule = default("^.libTable");
         string TEDModule = default("^.ted");

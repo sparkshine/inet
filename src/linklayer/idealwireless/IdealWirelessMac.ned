@@ -34,7 +34,7 @@ package inet.linklayer.idealwireless;
 simple IdealWirelessMac
 {
     parameters:
-        string interfaceTablePath = default("^.^.interfaceTable");
+        string interfaceTableModule = default("^.^.interfaceTable");
         string address = default("auto");   // MAC address as hex string (12 hex digits), or
                                             // "auto". "auto" values will be replaced by
                                             // a generated MAC address in init stage 0.

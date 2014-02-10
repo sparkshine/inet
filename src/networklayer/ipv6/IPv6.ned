@@ -77,7 +77,7 @@ package inet.networklayer.ipv6;
 simple IPv6
 {
     parameters:
-        string interfaceTablePath = default("^.^.interfaceTable");   // The path to the InterfaceTable module
+        string interfaceTableModule = default("^.^.interfaceTable");   // The path to the InterfaceTable module
         string routingTableModule;
         string IPv6NeighbourDiscoveryModule = default("^.neighbourDiscovery");
         string ICMPv6Module = default("^.icmpv6");

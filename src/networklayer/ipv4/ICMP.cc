@@ -167,7 +167,7 @@ bool ICMP::possiblyLocalBroadcast(const IPv4Address& addr, int interfaceId)
         return true;
 
     // if the input interface is unconfigured, we won't recognize network-directed broadcasts because we don't what network we are on
-    IInterfaceTable *ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
+    IInterfaceTable *ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule")));
     if (interfaceId != -1)
     {
         InterfaceEntry *ie = ift->getInterfaceById(interfaceId);

@@ -28,7 +28,7 @@ package inet.networklayer.ted;
 simple TED
 {
     parameters:
-        string interfaceTablePath = default("^.interfaceTable");   // The path to the InterfaceTable module
+        string interfaceTableModule = default("^.interfaceTable");   // The path to the InterfaceTable module
         string routingTableModule = default("^.routingTable");
         @display("i=block/table");
 }

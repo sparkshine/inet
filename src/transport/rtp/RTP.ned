@@ -50,7 +50,7 @@ package inet.transport.rtp;
 simple RTP
 {
     parameters:
-        string interfaceTablePath = default("^.interfaceTable");   // The path to the InterfaceTable module
+        string interfaceTableModule = default("^.interfaceTable");   // The path to the InterfaceTable module
         string routingTableModule = default("^.routingTable");
         @display("i=block/buffer");
         @signal[rcvdPk](type=cPacket);

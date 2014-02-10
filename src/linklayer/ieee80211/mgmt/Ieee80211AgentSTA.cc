@@ -66,8 +66,8 @@ void Ieee80211AgentSTA::initialize(int stage)
     else if (stage == INITSTAGE_LINK_LAYER_2)
     {
         IInterfaceTable *ift = NULL;
-        if (getModuleByPath(par("interfaceTablePath")))
-            ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath")));
+        if (getModuleByPath(par("interfaceTableModule")))
+            ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule")));
         if (ift)
         {
             myIface = ift->getInterfaceByName(OPP_Global::stripnonalnum(findModuleUnderContainingNode(this)->getFullName()).c_str());

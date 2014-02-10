@@ -29,7 +29,7 @@ package inet.networklayer.xmipv6;
 simple xMIPv6
 {
     parameters:
-        string interfaceTablePath = default("^.^.^.interfaceTable");   // The path to the InterfaceTable module
+        string interfaceTableModule = default("^.^.^.interfaceTable");   // The path to the InterfaceTable module
         string IPv6TunnelingModule = default("^.^.iptunneling");
         string IPv6NeighbourDiscoveryModule = default("^.^.neighbourDiscovery");
         string BindingUpdateListModule = default("^.buList");

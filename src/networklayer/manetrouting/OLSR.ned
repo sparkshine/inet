@@ -38,7 +38,7 @@ simple OLSR extends BaseRouting like IManetRouting
 {
     parameters:
         @class(OLSR);
-        string interfaceTablePath = default("^.interfaceTable");
+        string interfaceTableModule = default("^.interfaceTable");
         string routingTableModule = default("^.routingTable");
         string ICMPModule = default("^.networkLayer.icmp");
         string ARPCacheModule = default("^.networkLayer.arp");

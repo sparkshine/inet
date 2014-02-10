@@ -53,7 +53,7 @@ void TraCIDemo::initialize(int stage)
 
 void TraCIDemo::setupLowerLayer() {
     socket.setOutputGate(gate("udp$o"));
-    socket.joinLocalMulticastGroups(check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTablePath"))));
+    socket.joinLocalMulticastGroups(check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule"))));
     socket.bind(12345);
     socket.setBroadcast(true);
 }

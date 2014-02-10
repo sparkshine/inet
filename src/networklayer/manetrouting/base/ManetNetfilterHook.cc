@@ -28,6 +28,7 @@
 #include "IIPv4RoutingTable.h"
 #include "INetworkProtocolControlInfo.h"
 #include "ProtocolMap.h"
+#include "ModuleAccess.h"
 
 #include "dsr-pkt_omnet.h"
 

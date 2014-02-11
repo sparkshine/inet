@@ -16,15 +16,15 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "GlobalARP.h"
+#include "GenericARP.h"
 #include "InterfaceEntry.h"
 #include "InterfaceTableAccess.h"
 #include "GenericNetworkProtocolControlInfo_m.h"
 #include "Ieee802Ctrl.h"
 
-Define_Module(GlobalARP);
+Define_Module(GenericARP);
 
-MACAddress GlobalARP::resolveMACAddress(Address& address)
+MACAddress GenericARP::resolveMACAddress(Address& address)
 {
     if (address.isUnicast())
         return mapUnicastAddress(address);
@@ -34,7 +34,7 @@ MACAddress GlobalARP::resolveMACAddress(Address& address)
         return MACAddress::BROADCAST_ADDRESS;
 }
 
-void GlobalARP::initialize(int stage)
+void GenericARP::initialize(int stage)
 {
     cSimpleModule::initialize(stage);
 
@@ -45,7 +45,7 @@ void GlobalARP::initialize(int stage)
     }
 }
 
-void GlobalARP::handleMessage(cMessage *msg)
+void GenericARP::handleMessage(cMessage *msg)
 {
     GenericRoutingDecision *controlInfo = check_and_cast<GenericRoutingDecision*>(msg->removeControlInfo());
     Address nextHop = controlInfo->getNextHop();
@@ -76,7 +76,7 @@ void GlobalARP::handleMessage(cMessage *msg)
     sendPacketToNIC(msg, ie, mapUnicastAddress(nextHop), ETHERTYPE_IPv4); // TODO:
 }
 
-MACAddress GlobalARP::mapUnicastAddress(Address addr)
+MACAddress GenericARP::mapUnicastAddress(Address addr)
 {
     cModule * module;
     switch (addr.getType()) {
@@ -96,7 +96,7 @@ MACAddress GlobalARP::mapUnicastAddress(Address addr)
     return interfaceEntry->getMacAddress();
 }
 
-MACAddress GlobalARP::mapMulticastAddress(Address addr)
+MACAddress GenericARP::mapMulticastAddress(Address addr)
 {
     ASSERT(addr.isMulticast());
 
@@ -111,7 +111,7 @@ MACAddress GlobalARP::mapMulticastAddress(Address addr)
     return macAddr;
 }
 
-void GlobalARP::sendPacketToNIC(cMessage *msg, InterfaceEntry *ie, const MACAddress& macAddress, int etherType)
+void GenericARP::sendPacketToNIC(cMessage *msg, InterfaceEntry *ie, const MACAddress& macAddress, int etherType)
 {
     // add control info with MAC address
     Ieee802Ctrl *controlInfo = new Ieee802Ctrl();

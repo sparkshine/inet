@@ -17,7 +17,7 @@
 
 package inet.networklayer.generic;
 
-import inet.networklayer.arp.GlobalARP;
+import inet.networklayer.arp.GenericARP;
 import inet.networklayer.common.EchoProtocol;
 import inet.networklayer.contract.INetworkLayer;
 
@@ -48,7 +48,7 @@ module GenericNetworkLayer like INetworkLayer
             parameters:
                 @display("p=160,63");
         }
-        arp: GlobalARP {
+        arp: GenericARP {
             parameters:
                 @display("p=202,142;q=pendingQueue");
             gates:

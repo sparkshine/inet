@@ -24,7 +24,7 @@
 
 Define_Module(GenericARP);
 
-MACAddress GenericARP::resolveMACAddress(Address& address)
+MACAddress GenericARP::resolveMACAddress(const Address& address, const InterfaceEntry *ie)
 {
     if (address.isUnicast())
         return mapUnicastAddress(address);
@@ -32,6 +32,7 @@ MACAddress GenericARP::resolveMACAddress(Address& address)
         return mapMulticastAddress(address);
     else if (address.isBroadcast())
         return MACAddress::BROADCAST_ADDRESS;
+    throw cRuntimeError("address must be one of unicast or multicast or broadcast");
 }
 
 void GenericARP::initialize(int stage)

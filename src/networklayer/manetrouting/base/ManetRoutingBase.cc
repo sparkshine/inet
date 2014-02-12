@@ -31,7 +31,7 @@
 #include "Ieee802Ctrl.h"
 #include "IPv4RoutingTableAccess.h"
 #include "InterfaceTableAccess.h"
-#include "IARPCache.h"
+#include "IARP.h"
 #include "Coord.h"
 #include "ControlInfoBreakLink_m.h"
 #include "Ieee80211Frame_m.h"
@@ -244,7 +244,7 @@ void ManetRoutingBase::registerRoutingModule()
         {
             (*interfaceVector)[i].interfacePtr->ipv4Data()->joinMulticastGroup(IPv4Address::LL_MANET_ROUTERS);
         }
-        arp = ARPCacheAccess().get();
+        arp = IARPAccess().get();
     }
     hostModule->subscribe(NF_L2_AP_DISASSOCIATED, this);
     hostModule->subscribe(NF_L2_AP_ASSOCIATED, this);
@@ -821,7 +821,7 @@ void ManetRoutingBase::receiveSignal(cComponent *source, simsignal_t signalID, c
         {
             ManetAddress addr;
             if (!mac_layer_ && arp)
-                addr = ManetAddress(arp->getIPv4AddressFor(infoSta->getStaAddress()));
+                addr = ManetAddress(arp->getL3AddressFor(infoSta->getStaAddress()));
             else
                 addr = ManetAddress(infoSta->getStaAddress());
             // sanity check

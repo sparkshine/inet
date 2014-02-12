@@ -23,7 +23,7 @@
 #include "IPv4.h"
 
 #include "ARPPacket_m.h"
-#include "IARPCache.h"
+#include "IARP.h"
 #include "ICMPMessage_m.h"
 #include "Ieee802Ctrl.h"
 #include "IIPv4RoutingTable.h"
@@ -53,7 +53,7 @@ void IPv4::initialize(int stage)
         arpInGate = gate("arpIn");
         arpOutGate = gate("arpOut");
         cModule *arpModule = arpOutGate->getPathEndGate()->getOwnerModule();
-        arp = check_and_cast<IARPCache *>(arpModule);
+        arp = check_and_cast<IARP *>(arpModule);
         transportInGateBaseId = gateBaseId("transportIn");
         queueOutGateBaseId = gateBaseId("queueOut");
 
@@ -74,8 +74,8 @@ void IPv4::initialize(int stage)
         queuedDatagramsForHooks.clear();
 
         pendingPackets.clear();
-        arpModule->subscribe(IARPCache::completedARPResolutionSignal, this);
-        arpModule->subscribe(IARPCache::failedARPResolutionSignal, this);
+        arpModule->subscribe(IARP::completedARPResolutionSignal, this);
+        arpModule->subscribe(IARP::failedARPResolutionSignal, this);
 
         WATCH(numMulticast);
         WATCH(numLocalDeliver);
@@ -847,12 +847,11 @@ void IPv4::sendDatagramToOutput(IPv4Datagram *datagram, const InterfaceEntry *ie
             }
 
             MACAddress nextHopMacAddr;  // unspecified
-                nextHopMacAddr = resolveNextHopMacAddress(datagram, nextHopAddr, ie);
+            nextHopMacAddr = resolveNextHopMacAddress(datagram, nextHopAddr, ie);
 
             if (nextHopMacAddr.isUnspecified())
             {
                 pendingPackets[nextHopAddr].insert(datagram);
-                arp->startAddressResolution(nextHopAddr, ie);
             }
             else
             {
@@ -863,7 +862,7 @@ void IPv4::sendDatagramToOutput(IPv4Datagram *datagram, const InterfaceEntry *ie
     }
 }
 
-void IPv4::arpResolutionCompleted(IARPCache::Notification *entry)
+void IPv4::arpResolutionCompleted(IARP::Notification *entry)
 {
     if (entry->l3Address.getType() != Address::IPv4)
         return;
@@ -884,7 +883,7 @@ void IPv4::arpResolutionCompleted(IARPCache::Notification *entry)
     }
 }
 
-void IPv4::arpResolutionTimedOut(IARPCache::Notification *entry)
+void IPv4::arpResolutionTimedOut(IARP::Notification *entry)
 {
     if (entry->l3Address.getType() != Address::IPv4)
         return;
@@ -913,7 +912,7 @@ MACAddress IPv4::resolveNextHopMacAddress(cPacket *packet, IPv4Address nextHopAd
         return macAddr;
     }
 
-    return arp->getMACAddressFor(nextHopAddr);
+    return arp->resolveMACAddress(nextHopAddr, destIE);
 }
 
 void IPv4::sendPacketToIeee802NIC(cPacket *packet, const InterfaceEntry *ie, const MACAddress& macAddress, int etherType)
@@ -1134,15 +1133,13 @@ void IPv4::receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj)
 {
     Enter_Method_Silent();
 
-    if (signalID == IARPCache::completedARPResolutionSignal)
+    if (signalID == IARP::completedARPResolutionSignal)
     {
-        IARPCache::Notification *entry = check_and_cast<IARPCache::Notification *>(obj);
-        arpResolutionCompleted(entry);
+        arpResolutionCompleted(check_and_cast<IARP::Notification *>(obj));
     }
-    if (signalID == IARPCache::failedARPResolutionSignal)
+    if (signalID == IARP::failedARPResolutionSignal)
     {
-        IARPCache::Notification *entry = check_and_cast<IARPCache::Notification *>(obj);
-        arpResolutionTimedOut(entry);
+        arpResolutionTimedOut(check_and_cast<IARP::Notification *>(obj));
     }
 }
 

@@ -24,14 +24,6 @@
 #include "UDPControlInfo_m.h"
 #include "AddressResolver.h"
 
-#ifdef WITH_IPv4
-#include "IIPv4RoutingTable.h"
-#endif
-
-#ifdef WITH_IPv6
-#include "IPv6RoutingTable.h"
-#endif
-
 
 EXECUTE_ON_STARTUP(
     cEnum *e = cEnum::find("ChooseDestAddrMode");

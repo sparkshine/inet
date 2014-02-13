@@ -141,16 +141,7 @@ void UDPBasicBurst::processStart()
     const char *token;
     bool excludeLocalDestAddresses = par("excludeLocalDestAddresses").boolValue();
 
-#ifdef WITH_IPv4
-    IIPv4RoutingTable *rt = NULL;
-    if (getModuleByPath(par("routingTableModule")))
-        rt = check_and_cast<IIPv4RoutingTable *>(getModuleByPath(par("routingTableModule")));
-#endif
-#ifdef WITH_IPv6
-    IPv6RoutingTable *rt6 = NULL;
-    if (getModuleByPath(par("routingTable6Module")))
-        rt6 = check_and_cast<IPv6RoutingTable *>(getModuleByPath(par("routingTable6Module")));
-#endif
+    IInterfaceTable *ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule")));
 
     while ((token = tokenizer.nextToken()) != NULL)
     {
@@ -159,14 +150,8 @@ void UDPBasicBurst::processStart()
         else
         {
             Address addr = AddressResolver().resolve(token);
-#ifdef WITH_IPv4
-            if (excludeLocalDestAddresses && rt && rt->isLocalAddress(addr.toIPv4()))
+            if (excludeLocalDestAddresses && ift && ift->isLocalAddress(addr))
                 continue;
-#endif
-#ifdef WITH_IPv6
-            if (excludeLocalDestAddresses && rt6 && rt6->isLocalAddress(addr.toIPv6()))
-                continue;
-#endif
             destAddresses.push_back(addr);
         }
     }

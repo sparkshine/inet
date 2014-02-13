@@ -51,8 +51,8 @@ void IPv4::initialize(int stage)
 
         ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule")));
         rt = check_and_cast<IIPv4RoutingTable *>(getModuleByPath(par("routingTableModule")));
-        arp = check_and_cast<IARPCache *>(getModuleByPath(par("ARPCacheModule")));
-        icmp = check_and_cast<ICMP *>(getModuleByPath(par("ICMPModule")));
+        arp = check_and_cast<IARPCache *>(getModuleByPath(par("arpCacheModule")));
+        icmp = check_and_cast<ICMP *>(getModuleByPath(par("icmpModule")));
 
         arpDgramOutGate = gate("arpDgramOut");
         arpInGate = gate("arpIn");

@@ -555,8 +555,8 @@ void IPv6Tunneling::decapsulateDatagram(IPv6Datagram* dgram)
     {
         EV << "Checking Route Optimization for: " << dgram->getSrcAddress() << endl;
         xMIPv6* mipv6 = NULL;
-        if (getModuleByPath(par("xMIPv6Module")))
-            mipv6 = check_and_cast<xMIPv6 *>(getModuleByPath(par("xMIPv6Module")));
+        if (getModuleByPath(par("xmipv6Module")))
+            mipv6 = check_and_cast<xMIPv6 *>(getModuleByPath(par("xmipv6Module")));
         else
             return;
 

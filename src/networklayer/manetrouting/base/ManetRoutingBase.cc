@@ -95,8 +95,8 @@ void ManetRoutingBase::registerRoutingModule()
     if (par("useICMP"))
     {
         icmpModule = NULL;
-        if (getModuleByPath(par("ICMPModule")))
-            icmpModule = check_and_cast<ICMP *>(getModuleByPath(par("ICMPModule")));
+        if (getModuleByPath(par("icmpModule")))
+            icmpModule = check_and_cast<ICMP *>(getModuleByPath(par("icmpModule")));
     }
     sendToICMP = false;
 
@@ -246,7 +246,7 @@ void ManetRoutingBase::registerRoutingModule()
         {
             (*interfaceVector)[i].interfacePtr->ipv4Data()->joinMulticastGroup(IPv4Address::LL_MANET_ROUTERS);
         }
-        arp = check_and_cast<IARPCache *>(getModuleByPath(par("ARPCacheModule")));
+        arp = check_and_cast<IARPCache *>(getModuleByPath(par("arpCacheModule")));
     }
     hostModule->subscribe(NF_L2_AP_DISASSOCIATED, this);
     hostModule->subscribe(NF_L2_AP_ASSOCIATED, this);

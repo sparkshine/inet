@@ -44,7 +44,7 @@ void TraCIDemo::initialize(int stage)
         if (!isOperational)
             throw cRuntimeError("This module doesn't support starting in node DOWN state");
 
-        traci = check_and_cast<TraCIMobility *>(getModuleByPath(par("TraCIMobilityModule")));
+        traci = check_and_cast<TraCIMobility *>(getModuleByPath(par("traciMobilityModule")));
         traci->subscribe(mobilityStateChangedSignal, this);
 
         setupLowerLayer();

@@ -214,8 +214,8 @@ void TraCIMobility::move()
     updateVisualRepresentation();
 }
 
-TraCIScenarioManager* TraCIMobility::getManager() {
-    if (!manager) manager = check_and_cast<TraCIScenarioManager *>(getModuleByPath(par("TraCIScenarioManagerModule")));
+TraCIScenarioManager* TraCIMobility::getManager() const {
+    if (!manager) manager = check_and_cast<TraCIScenarioManager *>(const_cast<TraCIMobility*>(this)->getModuleByPath(par("traciScenarioManagerModule"))); //TODO: getModuleByPath is not const
     return manager;
 }
 

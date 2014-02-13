@@ -28,7 +28,7 @@ simple LinkStateRouting
     parameters:
         string interfaceTableModule = default("^.interfaceTable");   // The path to the InterfaceTable module
         string routingTableModule = default("^.routingTable");
-        string TEDModule = default("^.ted");
+        string tedModule = default("^.ted");
         string peers;
         @display("i=block/network2");
     gates:

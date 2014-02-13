@@ -115,8 +115,8 @@ void LDP::initialize(int stage)
 
         ift = check_and_cast<IInterfaceTable *>(getModuleByPath(par("interfaceTableModule")));
         rt = check_and_cast<IIPv4RoutingTable *>(getModuleByPath(par("routingTableModule")));
-        lt = check_and_cast<LIBTable *>(getModuleByPath(par("LIBTableModule")));
-        tedmod = check_and_cast<TED *>(getModuleByPath(par("TEDModule")));
+        lt = check_and_cast<LIBTable *>(getModuleByPath(par("libTableModule")));
+        tedmod = check_and_cast<TED *>(getModuleByPath(par("tedModule")));
 
         WATCH_VECTOR(myPeers);
         WATCH_VECTOR(fecUp);

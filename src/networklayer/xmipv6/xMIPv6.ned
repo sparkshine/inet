@@ -30,10 +30,10 @@ simple xMIPv6
 {
     parameters:
         string interfaceTableModule = default("^.^.^.interfaceTable");   // The path to the InterfaceTable module
-        string IPv6TunnelingModule = default("^.^.iptunneling");
-        string IPv6NeighbourDiscoveryModule = default("^.^.neighbourDiscovery");
-        string BindingUpdateListModule = default("^.buList");
-        string BindingCacheModule = default("^.bindingCache");
+        string ipv6TunnelingModule = default("^.^.iptunneling");
+        string ipv6NeighbourDiscoveryModule = default("^.^.neighbourDiscovery");
+        string bindingUpdateListModule = default("^.buList");
+        string bindingCacheModule = default("^.bindingCache");
         bool isHomeAgent;
         bool isMobileNode;
         @display("i=block/classifier2");

@@ -55,11 +55,11 @@ void RSVP::initialize(int stage)
 
     if (stage == INITSTAGE_ROUTING_PROTOCOLS)
     {
-        tedmod = check_and_cast<TED *>(getModuleByPath(par("TEDModule")));
+        tedmod = check_and_cast<TED *>(getModuleByPath(par("tedModule")));
         rt = check_and_cast<IIPv4RoutingTable *>(getModuleByPath(par("routingTableModule")));
         ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule")));
         routerId = rt->getRouterId();
-        lt = check_and_cast<LIBTable *>(getModuleByPath(par("LIBTableModule")));
+        lt = check_and_cast<LIBTable *>(getModuleByPath(par("libTableModule")));
 
         rpct = check_and_cast<IRSVPClassifier*>(getParentModule()->getSubmodule("classifier"));
 

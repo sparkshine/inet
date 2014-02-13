@@ -53,7 +53,7 @@ simple MPLS
 {
     parameters:
         string interfaceTableModule = default("^.interfaceTable");   // The path to the InterfaceTable module
-        string LIBTableModule = default("^.libTable");
+        string libTableModule = default("^.libTable");
         string classifier; // a module which implements the IClassifier C++ interface
         @display("i=block/switch");
     gates:

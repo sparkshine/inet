@@ -53,9 +53,9 @@ void IPv6::initialize(int stage)
 
         ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule")));
         rt = check_and_cast<IPv6RoutingTable *>(getModuleByPath(par("routingTableModule")));
-        nd = check_and_cast<IPv6NeighbourDiscovery *>(getModuleByPath(par("IPv6NeighbourDiscoveryModule")));
-        icmp = check_and_cast<ICMPv6 *>(getModuleByPath(par("ICMPv6Module")));
-        tunneling = check_and_cast<IPv6Tunneling *>(getModuleByPath(par("IPv6TunnelingModule")));
+        nd = check_and_cast<IPv6NeighbourDiscovery *>(getModuleByPath(par("ipv6NeighbourDiscoveryModule")));
+        icmp = check_and_cast<ICMPv6 *>(getModuleByPath(par("icmpv6Module")));
+        tunneling = check_and_cast<IPv6Tunneling *>(getModuleByPath(par("ipv6TunnelingModule")));
 
         curFragmentId = 0;
         lastCheckTime = SIMTIME_ZERO;

@@ -38,43 +38,15 @@ MACAddress GenericARP::resolveMACAddress(const Address& address, const Interface
 void GenericARP::initialize(int stage)
 {
     cSimpleModule::initialize(stage);
-
-    if (stage == INITSTAGE_LOCAL)
-    {
-        ift = InterfaceTableAccess().get();
-        nicOutBaseGateId = gateSize("nicOut")==0 ? -1 : gate("nicOut", 0)->getId();
-    }
 }
 
 void GenericARP::handleMessage(cMessage *msg)
 {
-    GenericRoutingDecision *controlInfo = check_and_cast<GenericRoutingDecision*>(msg->removeControlInfo());
-    Address nextHop = controlInfo->getNextHop();
-    InterfaceEntry *ie = ift->getInterfaceById(controlInfo->getInterfaceId());
-    delete controlInfo;
+    if (msg->isSelfMessage())
+        throw cRuntimeError("This module doesn't accept any self message");
 
-    // if output interface is not broadcast, don't bother with ARP
-    if (!ie->isBroadcast())
-    {
-        EV << "output interface " << ie->getName() << " is not broadcast, skipping ARP\n";
-        send(msg, nicOutBaseGateId + ie->getNetworkLayerGateIndex());
-        return;
-    }
-
-    // determine what address to look up in ARP cache
-    if (nextHop.isUnspecified())
-        throw cRuntimeError("No next hop");
-
-    if (nextHop.isMulticast())
-    {
-        MACAddress macAddr = mapMulticastAddress(nextHop);
-        EV << "destination address is multicast, sending packet to MAC address " << macAddr << "\n";
-        sendPacketToNIC(msg, ie, macAddr, ETHERTYPE_IPv4); // TODO:
-        return;
-    }
-
-    // valid ARP cache entry found, flag msg with MAC address and send it out
-    sendPacketToNIC(msg, ie, mapUnicastAddress(nextHop), ETHERTYPE_IPv4); // TODO:
+    EV << "received a " << msg << " message, dropped\n";
+    delete msg;
 }
 
 MACAddress GenericARP::mapUnicastAddress(Address addr)
@@ -112,14 +84,3 @@ MACAddress GenericARP::mapMulticastAddress(Address addr)
     return macAddr;
 }
 
-void GenericARP::sendPacketToNIC(cMessage *msg, InterfaceEntry *ie, const MACAddress& macAddress, int etherType)
-{
-    // add control info with MAC address
-    Ieee802Ctrl *controlInfo = new Ieee802Ctrl();
-    controlInfo->setDest(macAddress);
-    controlInfo->setEtherType(etherType);
-    msg->setControlInfo(controlInfo);
-
-    // send out
-    send(msg, nicOutBaseGateId + ie->getNetworkLayerGateIndex());
-}

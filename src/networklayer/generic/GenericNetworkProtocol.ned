@@ -33,6 +33,8 @@ simple GenericNetworkProtocol
     gates:
         input transportIn[] @labels(GenericNetworkProtocolControlInfo/down,TCPSegment,UDPPacket);
         output transportOut[] @labels(GenericNetworkProtocolControlInfo/up,TCPSegment,UDPPacket);
+        input arpIn;
+        output arpOut;
         input queueIn[] @labels(GenericDatagram);
-        output queueOut @labels(GenericDatagram);
+        output queueOut[] @labels(GenericDatagram);
 }

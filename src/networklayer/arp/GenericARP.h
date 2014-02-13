@@ -37,10 +37,6 @@ class IInterfaceTable;
  */
 class INET_API GenericARP : public cSimpleModule, public IARP
 {
-  private:
-    IInterfaceTable *ift;
-    int nicOutBaseGateId;  // id of the nicOut[0] gate
-
   public:
     GenericARP() { }
     virtual ~GenericARP() { }

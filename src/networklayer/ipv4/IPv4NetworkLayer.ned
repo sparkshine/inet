@@ -18,7 +18,7 @@
 
 package inet.networklayer.ipv4;
 
-import inet.networklayer.arp.ARP;
+import inet.networklayer.arp.IARP;
 import inet.networklayer.autorouting.ipv4.IPv4NodeConfigurator;
 import inet.networklayer.contract.INetworkLayer;
 import inet.networklayer.ipv4.ErrorHandling;
@@ -37,7 +37,10 @@ module IPv4NetworkLayer like INetworkLayer
     parameters:
         bool proxyARP = default(true);
         string igmpType = default("IGMPv2");
+        string arpType = default("ARP");
         *.routingTableModule = default("^.^.routingTable");
+        arp.respondToProxyARP = proxyARP;
+
         @display("i=block/fork");
     gates:
         input ifIn[] @labels(INetworkDatagram);
@@ -61,9 +64,8 @@ module IPv4NetworkLayer like INetworkLayer
                 queueIn[sizeof(ifIn)];
                 queueOut[sizeof(ifOut)];
         }
-        arp: ARP {
+        arp: <arpType> like IARP {
             parameters:
-                respondToProxyARP = proxyARP;
                 @display("p=165,120;q=pendingQueue;is=s");
         }
         icmp: ICMP {

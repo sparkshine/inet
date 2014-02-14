@@ -19,7 +19,8 @@
 #include "OSPFRoutingTableEntry.h"
 
 
-OSPF::RoutingTableEntry::RoutingTableEntry() :
+OSPF::RoutingTableEntry::RoutingTableEntry(IInterfaceTable *_ift) :
+    ift(_ift),
     IPv4Route(),
     destinationType(OSPF::RoutingTableEntry::NETWORK_DESTINATION),
     area(OSPF::BACKBONE_AREAID),
@@ -83,7 +84,7 @@ void OSPF::RoutingTableEntry::setType2Cost(Metric pathCost)
     }
 }
 
-void OSPF::RoutingTableEntry::addNextHop(IInterfaceTable* ift, OSPF::NextHop hop)
+void OSPF::RoutingTableEntry::addNextHop(OSPF::NextHop hop)
 {
     if (nextHops.size() == 0) {
         InterfaceEntry*    routingInterface = ift->getInterfaceById(hop.ifIndex);

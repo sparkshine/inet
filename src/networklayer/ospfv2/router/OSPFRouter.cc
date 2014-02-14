@@ -643,7 +643,7 @@ OSPF::RoutingTableEntry* OSPF::Router::lookup(IPv4Address destination, std::vect
                     (entry->getPathType() == OSPF::RoutingTableEntry::INTRAAREA))
                 {
                     // active area address range
-                    OSPF::RoutingTableEntry* discardEntry = new OSPF::RoutingTableEntry;
+                    OSPF::RoutingTableEntry* discardEntry = new OSPF::RoutingTableEntry(ift);
                     discardEntry->setDestination(range.address);
                     discardEntry->setNetmask(range.mask);
                     discardEntry->setDestinationType(OSPF::RoutingTableEntry::NETWORK_DESTINATION);
@@ -948,7 +948,7 @@ void OSPF::Router::calculateASExternalRoutes(std::vector<OSPF::RoutingTableEntry
         if (destinationEntry == NULL) {
             bool type2ExternalMetric = currentLSA->getContents().getE_ExternalMetricType();
             unsigned int nextHopCount = preferredEntry->getNextHopCount();
-            OSPF::RoutingTableEntry* newEntry = new OSPF::RoutingTableEntry;
+            OSPF::RoutingTableEntry* newEntry = new OSPF::RoutingTableEntry(ift);
 
             newEntry->setDestination(destination);
             newEntry->setNetmask(currentLSA->getContents().getNetworkMask());
@@ -968,7 +968,7 @@ void OSPF::Router::calculateASExternalRoutes(std::vector<OSPF::RoutingTableEntry
                 NextHop nextHop = preferredEntry->getNextHop(j);
 
                 nextHop.advertisingRouter = originatingRouter;
-                newEntry->addNextHop(ift, nextHop);
+                newEntry->addNextHop(nextHop);
             }
 
             newRoutingTable.push_back(newEntry);
@@ -1026,7 +1026,7 @@ void OSPF::Router::calculateASExternalRoutes(std::vector<OSPF::RoutingTableEntry
                     NextHop nextHop = preferredEntry->getNextHop(j);
 
                     nextHop.advertisingRouter = originatingRouter;
-                    destinationEntry->addNextHop(ift, nextHop);
+                    destinationEntry->addNextHop(nextHop);
                 }
                 continue;
             }
@@ -1048,7 +1048,7 @@ void OSPF::Router::calculateASExternalRoutes(std::vector<OSPF::RoutingTableEntry
                 NextHop nextHop = preferredEntry->getNextHop(j);
 
                 nextHop.advertisingRouter = originatingRouter;
-                destinationEntry->addNextHop(ift, nextHop);
+                destinationEntry->addNextHop(nextHop);
             }
         }
     }

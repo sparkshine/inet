@@ -302,7 +302,7 @@ void OSPFConfigReader::loadExternalRoute(const cXMLElement& externalRouteConfig)
     int ifIndex = ie->getInterfaceId();
 
     OSPFASExternalLSAContents asExternalRoute;
-    OSPF::RoutingTableEntry externalRoutingEntry; // only used here to keep the path cost calculation in one place
+    //OSPF::RoutingTableEntry externalRoutingEntry; // only used here to keep the path cost calculation in one place
     OSPF::IPv4AddressRange networkAddress;
 
     EV << "        loading ExternalInterface " << ie->getName() << " ifIndex[" << ifIndex << "]\n";
@@ -320,12 +320,12 @@ void OSPFConfigReader::loadExternalRoute(const cXMLElement& externalRouteConfig)
     std::string metricType = getStrAttrOrPar(externalRouteConfig, "externalInterfaceOutputType");
     if (metricType == "Type2") {
         asExternalRoute.setE_ExternalMetricType(true);
-        externalRoutingEntry.setType2Cost(routeCost);
-        externalRoutingEntry.setPathType(OSPF::RoutingTableEntry::TYPE2_EXTERNAL);
+        //externalRoutingEntry.setType2Cost(routeCost);
+        //externalRoutingEntry.setPathType(OSPF::RoutingTableEntry::TYPE2_EXTERNAL);
     } else if (metricType == "Type1") {
         asExternalRoute.setE_ExternalMetricType(false);
-        externalRoutingEntry.setCost(routeCost);
-        externalRoutingEntry.setPathType(OSPF::RoutingTableEntry::TYPE1_EXTERNAL);
+        //externalRoutingEntry.setCost(routeCost);
+        //externalRoutingEntry.setPathType(OSPF::RoutingTableEntry::TYPE1_EXTERNAL);
     } else {
         throw cRuntimeError("Invalid 'externalInterfaceOutputType' at interface '%s' at ", ie->getName(), externalRouteConfig.getSourceLocation());
     }

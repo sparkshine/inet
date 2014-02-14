@@ -49,6 +49,7 @@ public:
     static const unsigned char AS_BOUNDARY_ROUTER_DESTINATION = 2;
 
 private:
+    IInterfaceTable*        ift;
     RoutingDestinationType  destinationType;
     OSPFOptions             optionalCapabilities;
     AreaID                  area;
@@ -61,7 +62,7 @@ private:
     // IPv4Route::gateway is nextHops[0].hopAddress
 
 public:
-    RoutingTableEntry();
+    RoutingTableEntry(IInterfaceTable *ift);
     RoutingTableEntry(const RoutingTableEntry& entry);
     virtual ~RoutingTableEntry() {}
 
@@ -82,7 +83,7 @@ public:
     Metric                 getType2Cost() const  { return type2Cost; }
     void                   setLinkStateOrigin(const OSPFLSA* lsa)  { linkStateOrigin = lsa; }
     const OSPFLSA*         getLinkStateOrigin() const  { return linkStateOrigin; }
-    void                   addNextHop(IInterfaceTable* ift, NextHop hop);
+    void                   addNextHop(NextHop hop);
     void                   clearNextHops()  { nextHops.clear(); }
     unsigned int           getNextHopCount() const  { return nextHops.size(); }
     NextHop                getNextHop(unsigned int index) const  { return nextHops[index]; }

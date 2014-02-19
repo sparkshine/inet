@@ -402,7 +402,8 @@ void RTP::createProfile(const char *profileName)
 void RTP::createSocket()
 {
     _udpSocket.bind(_port);
-    _udpSocket.joinLocalMulticastGroups(check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule")))); //TODO make it parameter-dependent
+    MulticastGroupList mgl = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule"))) -> collectMulticastGroups();
+    _udpSocket.joinLocalMulticastGroups(mgl); //TODO make it parameter-dependent
     connectRet();
 }
 

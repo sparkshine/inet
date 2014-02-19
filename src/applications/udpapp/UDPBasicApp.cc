@@ -93,7 +93,10 @@ void UDPBasicApp::setSocketOptions()
 
     bool joinLocalMulticastGroups = par("joinLocalMulticastGroups");
     if (joinLocalMulticastGroups)
-        socket.joinLocalMulticastGroups(check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule"))));
+    {
+        MulticastGroupList mgl = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule"))) -> collectMulticastGroups();
+        socket.joinLocalMulticastGroups(mgl);
+    }
 }
 
 Address UDPBasicApp::chooseDestAddr()

@@ -91,7 +91,8 @@ bool UDPEchoApp::startApp(IDoneCallback *doneCallback)
     socket.setOutputGate(gate("udpOut"));
     int localPort = par("localPort");
     socket.bind(localPort);
-    socket.joinLocalMulticastGroups(check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule"))));
+    MulticastGroupList mgl = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule"))) -> collectMulticastGroups();
+    socket.joinLocalMulticastGroups(mgl);
     return true;
 }
 

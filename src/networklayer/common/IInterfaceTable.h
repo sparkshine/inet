@@ -164,6 +164,9 @@ class INET_API IInterfaceTable
      */
     virtual InterfaceEntry *getFirstMulticastInterface() = 0;
 
+    /**
+     * Returns all multicast group address, with it's interfaceId
+     */
     virtual MulticastGroupList collectMulticastGroups() = 0;
 };
 

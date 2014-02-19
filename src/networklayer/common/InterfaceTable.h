@@ -229,6 +229,9 @@ class INET_API InterfaceTable : public cSimpleModule, public IInterfaceTable, pr
      */
     virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback);
 
+    /**
+     * Returns all multicast group address, with it's interfaceId
+     */
     virtual MulticastGroupList collectMulticastGroups();
 };
 

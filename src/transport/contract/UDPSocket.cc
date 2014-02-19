@@ -17,6 +17,7 @@
 
 #include "UDPSocket.h"
 #include "UDPControlInfo.h"
+#include "InterfaceTable.h"
 #ifdef WITH_IPv4
 #include "IPv4InterfaceData.h"
 #endif
@@ -185,45 +186,19 @@ void UDPSocket::joinMulticastGroup(const Address& multicastAddr, int interfaceId
 
 void UDPSocket::joinLocalMulticastGroups(IInterfaceTable *ift)
 {
-    unsigned int numOfAddresses = 0;
-    for (int i = 0; i < ift->getNumInterfaces(); ++i)
-    {
-        InterfaceEntry *ie = ift->getInterface(i);
-#ifdef WITH_IPv4
-        if (ie->ipv4Data())
-            numOfAddresses += ie->ipv4Data()->getJoinedMulticastGroups().size();
-#endif
-#ifdef WITH_IPv6
-        // TODO
-#endif
-    }
+    MulticastGroupList mgl = ift->collectMulticastGroups();
 
-    if (numOfAddresses > 0)
+    if (mgl.size() > 0)
     {
         UDPJoinMulticastGroupsCommand *ctrl = new UDPJoinMulticastGroupsCommand();
         ctrl->setSockId(sockId);
-        ctrl->setMulticastAddrArraySize(numOfAddresses);
-        ctrl->setInterfaceIdArraySize(numOfAddresses);
+        ctrl->setMulticastAddrArraySize(mgl.size());
+        ctrl->setInterfaceIdArraySize(mgl.size());
 
-        unsigned int k = 0;
-        for (int i=0; i<ift->getNumInterfaces(); ++i)
+        for (unsigned int j = 0; j < mgl.size(); ++j)
         {
-            InterfaceEntry *ie = ift->getInterface(i);
-            int interfaceId = ie->getInterfaceId();
-#ifdef WITH_IPv4
-            if (ie->ipv4Data())
-            {
-                const IPv4InterfaceData::IPv4AddressVector &addresses = ie->ipv4Data()->getJoinedMulticastGroups();
-                for (unsigned int j = 0; j < addresses.size(); ++j, ++k)
-                {
-                    ctrl->setMulticastAddr(k, addresses[j]);
-                    ctrl->setInterfaceId(k, interfaceId);
-                }
-            }
-#endif
-#ifdef WITH_IPv6
-            // TODO
-#endif
+            ctrl->setMulticastAddr(j, mgl[j].multicastAddr);
+            ctrl->setInterfaceId(j, mgl[j].interfaceId);
         }
 
         cMessage *msg = new cMessage("JoinMulticastGroups", UDP_C_SETOPTION);

@@ -23,6 +23,15 @@
 #include "Address.h"
 #include "InterfaceEntry.h"  // not strictly required, but clients will need it anyway
 
+struct MulticastGroup
+    {
+        Address multicastAddr;
+        int interfaceId;
+
+        MulticastGroup(Address multicastAddr, int interfaceId) : multicastAddr(multicastAddr), interfaceId(interfaceId) {}
+    };
+
+typedef std::vector<MulticastGroup> MulticastGroupList;
 
 /**
  * A C++ interface to abstract the functionality of InterfaceTable.
@@ -154,6 +163,8 @@ class INET_API IInterfaceTable
      * If there is no such interface, then returns NULL.
      */
     virtual InterfaceEntry *getFirstMulticastInterface() = 0;
+
+    virtual MulticastGroupList collectMulticastGroups() = 0;
 };
 
 #endif

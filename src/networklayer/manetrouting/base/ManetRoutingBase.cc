@@ -83,9 +83,7 @@ void ManetRoutingBase::registerRoutingModule()
     /* Set host parameters */
     isRegistered = true;
     int  num_80211 = 0;
-    inet_rt = NULL;
-    if (getModuleByPath(par("routingTableModule")))
-        inet_rt = check_and_cast<IIPv4RoutingTable *>(getModuleByPath(par("routingTableModule")));
+    inet_rt = findModuleByPath<IIPv4RoutingTable>(par("routingTableModule"));
     inet_ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule")));
     hostModule = getContainingNode(this);
 
@@ -94,9 +92,7 @@ void ManetRoutingBase::registerRoutingModule()
 
     if (par("useICMP"))
     {
-        icmpModule = NULL;
-        if (getModuleByPath(par("icmpModule")))
-            icmpModule = check_and_cast<ICMP *>(getModuleByPath(par("icmpModule")));
+        icmpModule = findModuleByPath<ICMP>(par("icmpModule"));
     }
     sendToICMP = false;
 

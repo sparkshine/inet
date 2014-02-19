@@ -18,6 +18,7 @@
 
 #include "TokenBucketMeter.h"
 #include "DiffservUtil.h"
+#include "ModuleAccess.h"
 
 using namespace DiffservUtil;
 
@@ -42,9 +43,7 @@ void TokenBucketMeter::initialize(int stage)
     else if (stage == INITSTAGE_NETWORK_LAYER)
     {
         const char *cirStr = par("cir");
-        IInterfaceTable *ift = NULL;
-        if (getModuleByPath(par("interfaceTableModule")))
-            ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule")));
+        IInterfaceTable *ift = findModuleByPath<IInterfaceTable>(par("interfaceTableModule"));
         CIR = parseInformationRate(cirStr, "cir", ift, *this, 0);
         lastUpdateTime = simTime();
     }

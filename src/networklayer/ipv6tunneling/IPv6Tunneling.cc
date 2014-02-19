@@ -554,13 +554,9 @@ void IPv6Tunneling::decapsulateDatagram(IPv6Datagram* dgram)
             && (dgram->getTransportProtocol() != IP_PROT_IPv6EXT_MOB))
     {
         EV << "Checking Route Optimization for: " << dgram->getSrcAddress() << endl;
-        xMIPv6* mipv6 = NULL;
-        if (getModuleByPath(par("xmipv6Module")))
-            mipv6 = check_and_cast<xMIPv6 *>(getModuleByPath(par("xmipv6Module")));
-        else
-            return;
-
-        mipv6->triggerRouteOptimization(dgram->getSrcAddress(), ie->ipv6Data()->getMNHomeAddress(), ie);
+        xMIPv6* mipv6 = findModuleByPath<xMIPv6>(par("xmipv6Module"));
+        if(mipv6)
+            mipv6->triggerRouteOptimization(dgram->getSrcAddress(), ie->ipv6Data()->getMNHomeAddress(), ie);
     }
 #endif
 }

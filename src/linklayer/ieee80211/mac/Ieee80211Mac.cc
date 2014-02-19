@@ -26,6 +26,7 @@
 #include "Ieee80211eClassifier.h"
 #include "Ieee80211DataRate.h"
 #include "opp_utils.h"
+#include "ModuleAccess.h"
 
 // TODO: 9.3.2.1, If there are buffered multicast or broadcast frames, the PC shall transmit these prior to any unicast frames.
 // TODO: control frames must send before
@@ -2770,9 +2771,7 @@ const MACAddress & Ieee80211Mac::isInterfaceRegistered()
     if (!par("multiMac").boolValue())
         return MACAddress::UNSPECIFIED_ADDRESS;
 
-    IInterfaceTable *ift = NULL;
-    if (getModuleByPath(par("interfaceTableModule")))
-        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule")));
+    IInterfaceTable *ift = findModuleByPath<IInterfaceTable>(par("interfaceTableModule"));
     if (!ift)
         return MACAddress::UNSPECIFIED_ADDRESS;
     std::string interfaceName = OPP_Global::stripnonalnum(getParentModule()->getFullName());

@@ -113,9 +113,9 @@ void Radio::initialize(int stage)
         WATCH(noiseLevel);
         WATCH(rs);
 
-        if (getModuleByPath(par("obstacleControlModule")))
+        obstacles = findModuleByPath<ObstacleControl>(par("obstacleControlModule"));
+        if (obstacles)
         {
-            obstacles = check_and_cast<ObstacleControl *>(getModuleByPath(par("obstacleControlModule")));
             EV << "Found ObstacleControl" << endl;
         }
 
@@ -954,9 +954,9 @@ void Radio::updateSensitivity(double rate)
 
 void Radio::registerBattery()
 {
-    if (getModuleByPath(par("batteryModule")))
+    BasicBattery *bat = findModuleByPath<BasicBattery>(par("batteryModule"));
+    if (bat)
     {
-        BasicBattery *bat = check_and_cast<BasicBattery *>(getModuleByPath(par("batteryModule")));
         //int id,double mUsageRadioIdle,double mUsageRadioRecv,double mUsageRadioSend,double mUsageRadioSleep)=0;
         // read parameters
         double mUsageRadioIdle = par("usage_radio_idle");

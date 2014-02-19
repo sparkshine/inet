@@ -111,9 +111,7 @@ void MACBase::updateOperationalFlag(bool isNodeUp)
 void MACBase::registerInterface()  //XXX registerInterfaceIfInterfaceTableExists() ???
 {
     ASSERT(interfaceEntry == NULL);
-    IInterfaceTable *ift = NULL;
-    if (getModuleByPath(par("interfaceTableModule")))
-        ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule")));
+    IInterfaceTable *ift = findModuleByPath<IInterfaceTable>(par("interfaceTableModule"));
     if (ift) {
         interfaceEntry = createInterfaceEntry();
         ift->addInterface(interfaceEntry);

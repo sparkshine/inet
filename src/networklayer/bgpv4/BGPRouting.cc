@@ -361,9 +361,7 @@ unsigned char BGPRouting::decisionProcess(const BGPUpdateMessage& msg, BGP::Rout
             OSPF::IPv4AddressRange  OSPFnetAddr;
             OSPFnetAddr.address = entry->getDestination();
             OSPFnetAddr.mask = entry->getNetmask();
-            OSPFRouting* ospf = NULL;
-            if (getModuleByPath(par("ospfRoutingModule")))
-                ospf = check_and_cast<OSPFRouting *>(getModuleByPath(par("ospfRoutingModule")));
+            OSPFRouting* ospf = findModuleByPath<OSPFRouting>(par("ospfRoutingModule"));
             InterfaceEntry *ie = entry->getInterface();
             if (!ie)
                 throw cRuntimeError("Model error: interface entry is NULL");
@@ -467,9 +465,7 @@ bool BGPRouting::checkExternalRoute(const IPv4Route* route)
 {
     IPv4Address OSPFRoute;
     OSPFRoute = route->getDestination();
-    OSPFRouting* ospf = NULL;
-    if (getModuleByPath(par("ospfRoutingModule")))
-        ospf = check_and_cast<OSPFRouting *>(getModuleByPath(par("ospfRoutingModule")));
+    OSPFRouting* ospf = findModuleByPath<OSPFRouting>(par("ospfRoutingModule"));
     bool returnValue = ospf->checkExternalRoute(OSPFRoute);
     simulation.setContext(this);
     return returnValue;

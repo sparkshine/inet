@@ -83,7 +83,7 @@ void ManetRoutingBase::registerRoutingModule()
     /* Set host parameters */
     isRegistered = true;
     int  num_80211 = 0;
-    inet_rt = findModuleByPath<IIPv4RoutingTable>(par("routingTableModule"));
+    inet_rt = findModuleByPath<IIPv4RoutingTable>(par("routingTableModule"), this);
     inet_ift = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule")));
     hostModule = getContainingNode(this);
 

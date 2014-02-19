@@ -75,10 +75,9 @@ INET_API cModule *findModuleUnderContainingNode(cModule *from);
  * Returns NULL if the module was not found.
  */
 template <typename T>
-INET_API T *findModuleByPath(const char *path)
+INET_API T *findModuleByPath(const char *path, cModule *base)
 {
-    cModule *module;
-    module = module->getModuleByPath(path);
+    cModule *module = base->getModuleByPath(path);
     return module ? check_and_cast<T*>(module) : NULL;
 }
 

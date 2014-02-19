@@ -92,7 +92,7 @@ void ManetRoutingBase::registerRoutingModule()
 
     if (par("useICMP"))
     {
-        icmpModule = findModuleByPath<ICMP>(par("icmpModule"));
+        icmpModule = findModuleByPath<ICMP>(par("icmpModule"), this);
     }
     sendToICMP = false;
 

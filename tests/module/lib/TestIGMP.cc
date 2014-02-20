@@ -230,7 +230,9 @@ void TestIGMP::processCommand(const cXMLElement &node)
     }
     else if (!strcmp(what, "listeners"))
     {
-        const IPv4AddressVector &reportedGroups = ie->ipv4Data()->getReportedMulticastGroups();
+        IPv4AddressVector reportedGroups;
+        for (int i = 0; i < ie->ipv4Data()->getNumOfReportedMulticastGroups(); i++)
+            reportedGroups.push_back(ie->ipv4Data()->getReportedMulticastGroup(i));
         dumpMulticastGroups("listeners", ifname, reportedGroups);
     }
   }

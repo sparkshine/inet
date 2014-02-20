@@ -111,7 +111,7 @@ class INET_API AODVRouting : public cSimpleModule, public ILifecycle, public INe
         void updateRoutingTable(IRoute * route, const Address& nextHop, unsigned int hopCount, bool hasValidDestNum, unsigned int destSeqNum, bool isActive, simtime_t lifeTime);
         IRoute * createRoute(const Address& destAddr, const Address& nextHop, unsigned int hopCount, bool hasValidDestNum, unsigned int destSeqNum, bool isActive, simtime_t lifeTime);
 
-        AODVRREQ * createRREQ(const Address& destAddr, unsigned int timeToLive);
+        AODVRREQ * createRREQ(const Address& destAddr);
         AODVRREP * createRREP(AODVRREQ * rreq, IRoute * route, const Address& sourceAddr);
         AODVRREP * createGratuitousRREP(AODVRREQ * rreq, IRoute * route); // FIXME
         AODVRERR * createRERR(const std::vector<Address>& unreachableNeighbors, const std::vector<unsigned int>& unreachableNeighborsDestSeqNum);
@@ -119,8 +119,10 @@ class INET_API AODVRouting : public cSimpleModule, public ILifecycle, public INe
         void handleRREP(AODVRREP* rrep, const Address& sourceAddr);
         void handleRREQ(AODVRREQ* rreq, const Address& sourceAddr, unsigned int timeToLive);
         void handleRERR(AODVRERR* rerr, const Address& sourceAddr);
-        void sendAODVPacket(AODVControlPacket * packet, const Address& destAddr, unsigned int timeToLive);
+        void sendAODVPacket(AODVControlPacket * packet, const Address& destAddr, unsigned int timeToLive,bool forwardingRREQ=false);
         virtual bool handleOperationStage(LifecycleOperation * operation, int stage, IDoneCallback * doneCallback);
+
+        void handleWaitForRREP(WaitForRREP * rrepTimer);
 
         // notification
         virtual void receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj);

@@ -20,6 +20,10 @@
 
 #include "IMobility.h"
 #include "IPhysicalLayer.h"
+#include "IRadioSignalSource.h"
+#include "IRadioAntenna.h"
+#include "IRadioDecider.h"
+#include "IRadioFrame.h"
 
 /**
  * This purely virtual interface provides an abstraction for different radios.
@@ -33,7 +37,7 @@
 // TODO: rename *Changed signals to *Change signals and emit them just before overwriting
 //       the current state, and thus allowing listeners to use the current value
 // TODO: make enums global or remove prefix or abbreviate prefix or maybe keep as it is?
-class INET_API IRadio : IPhysicalLayer
+class INET_API IRadio : public IRadioSignalSource, public IPhysicalLayer
 {
   public:
     /**
@@ -46,13 +50,13 @@ class INET_API IRadio : IPhysicalLayer
      * This signal is emitted every time the radio reception state changes.
      * The signal value is the new radio reception state.
      */
-    static simsignal_t radioReceptionStateChangedSignal;
+    static simsignal_t receptionStateChangedSignal;
 
     /**
      * This signal is emitted every time the radio transmission state changes.
      * The signal value is the new radio transmission state.
      */
-    static simsignal_t radioTransmissionStateChangedSignal;
+    static simsignal_t transmissionStateChangedSignal;
 
     /**
      * This signal is emitted every time the radio channel changes.
@@ -109,63 +113,63 @@ class INET_API IRadio : IPhysicalLayer
      * This enumeration specifies the reception state of the radio. This also
      * determines the state of the radio channel.
      */
-    enum RadioReceptionState
+    enum ReceptionState
     {
         /**
          * The radio channel state is unknown, reception state is meaningless,
          * signal detection is not possible. (e.g. the radio mode is off, sleep
          * or transmitter)
          */
-        RADIO_RECEPTION_STATE_UNDEFINED,
+        RECEPTION_STATE_UNDEFINED,
 
         /**
          * The radio channel is free, no signal is detected. (e.g. the RSSI is
          * below the energy detection threshold)
          */
-        RADIO_RECEPTION_STATE_IDLE,
+        RECEPTION_STATE_IDLE,
 
         /**
          * The radio channel is busy, a signal is detected but it is not strong
          * enough to receive. (e.g. the RSSI is above the energy detection
          * threshold but below the reception threshold)
          */
-        RADIO_RECEPTION_STATE_BUSY,
+        RECEPTION_STATE_BUSY,
 
         /**
          * The radio channel is busy, a signal strong enough to evaluate is detected,
          * whether the signal is noise or not is not yet decided. (e.g. the RSSI is
          * above the reception threshold but the SNR is not yet evaluated)
          */
-        RADIO_RECEPTION_STATE_SYNCHRONIZING,
+        RECEPTION_STATE_SYNCHRONIZING,
 
         /**
          * The radio channel is busy, a signal strong enough to receive is detected.
          * (e.g. the SNR was above the reception threshold during synchronize)
          */
-        RADIO_RECEPTION_STATE_RECEIVING
+        RECEPTION_STATE_RECEIVING
     };
 
     /**
      * This enumeration specifies the transmission state of the radio.
      */
-    enum RadioTransmissionState
+    enum TransmissionState
     {
         /**
          * The transmission state is undefined or meaningless. (e.g. the radio
          * mode is off, sleep or receiver)
          */
-        RADIO_TRANSMISSION_STATE_UNDEFINED,
+        TRANSMISSION_STATE_UNDEFINED,
 
         /**
          * The radio is not transmitting a signal on the radio channel. (e.g. the
          * last transmission has been completed)
          */
-        RADIO_TRANSMISSION_STATE_IDLE,
+        TRANSMISSION_STATE_IDLE,
 
         /**
          * The radio channel is busy, the radio is currently transmitting a signal.
          */
-        RADIO_TRANSMISSION_STATE_TRANSMITTING,
+        TRANSMISSION_STATE_TRANSMITTING,
     };
 
     /**
@@ -176,12 +180,12 @@ class INET_API IRadio : IPhysicalLayer
     /**
      * The enumeration registered for radio reception state.
      */
-    static cEnum *radioReceptionStateEnum;
+    static cEnum *receptionStateEnum;
 
     /**
      * The enumeration registered for radio transmission state.
      */
-    static cEnum *radioTransmissionStateEnum;
+    static cEnum *transmissionStateEnum;
 
   public:
     virtual ~IRadio() { }
@@ -189,6 +193,7 @@ class INET_API IRadio : IPhysicalLayer
     /**
      * Returns the mobility of the radio.
      */
+    // TODO: obsolete
     virtual IMobility *getMobility() const = 0;
 
     /**
@@ -201,6 +206,7 @@ class INET_API IRadio : IPhysicalLayer
      * with the last radioModeChangedSignal.
      */
     virtual RadioMode getRadioMode() const = 0;
+
     /**
      * Changes the current radio mode. The actual change may take zero or more time.
      * The new radio mode will be emitted with a radioModeChangedSignal.
@@ -209,26 +215,28 @@ class INET_API IRadio : IPhysicalLayer
 
     /**
      * Returns the current radio reception state. This is the same state as the one emitted
-     * with the last radioReceptionStateChangedSignal
+     * with the last receptionStateChangedSignal
      */
-    virtual RadioReceptionState getRadioReceptionState() const = 0;
+    virtual ReceptionState getReceptionState() const = 0;
 
     /**
      * Returns the current radio transmission state. This is the same state as the one emitted
-     * with the last radioTransmissionStateChangedSignal
+     * with the last transmissionStateChangedSignal
      */
-    virtual RadioTransmissionState getRadioTransmissionState() const = 0;
+    virtual TransmissionState getTransmissionState() const = 0;
 
     /**
      * Returns the current radio channel. This is the same channel as the one emitted
      * with the last radioChannelChangedSignal.
      */
+    // TODO: obsolete
     virtual int getRadioChannel() const = 0;
 
     /**
      * Changes the current radio channel. The actual change may take zero or more time.
      * The new radio channel will be published with emitting a radioChannelChangedSignal.
      */
+    // TODO: obsolete
     virtual void setRadioChannel(int radioChannel) = 0;
 
   public:
@@ -240,12 +248,32 @@ class INET_API IRadio : IPhysicalLayer
     /**
      * Returns the name of the provided radio reception state.
      */
-    static const char *getRadioReceptionStateName(RadioReceptionState radioReceptionState);
+    static const char *getRadioReceptionStateName(ReceptionState receptionState);
 
     /**
      * Returns the name of the provided radio transmission state.
      */
-    static const char *getRadioTransmissionStateName(RadioTransmissionState radioTransmissionState);
+    static const char *getRadioTransmissionStateName(TransmissionState transmissionState);
+};
+
+class XIRadioChannel;
+
+// TODO: merge with IRadio
+// TODO: extract radio signal producer
+class INET_API XIRadio : public IRadioSignalSource
+{
+    public:
+        virtual ~XIRadio() {}
+
+        virtual unsigned int getId() const = 0;
+
+        // TODO: separate receiver and transmitter antenna
+        virtual const IRadioAntenna *getAntenna() const = 0;
+        virtual const IRadioDecider *getDecider() const = 0;
+        virtual const XIRadioChannel *getXRadioChannel() const = 0;
+
+        virtual XIRadioFrame *transmitPacket(cPacket *packet, simtime_t startTime) = 0;
+        virtual cPacket *receivePacket(XIRadioFrame *frame) = 0;
 };
 
 #endif

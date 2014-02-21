@@ -360,10 +360,10 @@ void Ieee80211MgmtSTA::receiveSignal(cComponent *source, simsignal_t signalID, l
 {
     Enter_Method_Silent();
     // Note that we are only subscribed during scanning!
-    if (signalID == IRadio::radioReceptionStateChangedSignal)
+    if (signalID == IRadio::receptionStateChangedSignal)
     {
-        IRadio::RadioReceptionState newRadioReceptionState = (IRadio::RadioReceptionState)value;
-        if (newRadioReceptionState != IRadio::RADIO_RECEPTION_STATE_UNDEFINED && newRadioReceptionState != IRadio::RADIO_RECEPTION_STATE_IDLE)
+        IRadio::ReceptionState newReceptionState = (IRadio::ReceptionState)value;
+        if (newReceptionState != IRadio::RECEPTION_STATE_UNDEFINED && newReceptionState != IRadio::RECEPTION_STATE_IDLE)
         {
             EV << "busy radio channel detected during scanning\n";
             scanning.busyChannelDetected = true;
@@ -434,7 +434,7 @@ void Ieee80211MgmtSTA::processScanCommand(Ieee80211Prim_ScanRequest *ctrl)
 
     // start scanning
     if (scanning.activeScan)
-        host->subscribe(IRadio::radioReceptionStateChangedSignal, this);
+        host->subscribe(IRadio::receptionStateChangedSignal, this);
     scanning.currentChannelIndex = -1; // so we'll start with index==0
     isScanning = true;
     scanNextChannel();
@@ -447,7 +447,7 @@ bool Ieee80211MgmtSTA::scanNextChannel()
     {
         EV << "Finished scanning last channel\n";
         if (scanning.activeScan)
-            host->unsubscribe(IRadio::radioReceptionStateChangedSignal, this);
+            host->unsubscribe(IRadio::receptionStateChangedSignal, this);
         isScanning = false;
         return true; // we're done
     }

@@ -22,7 +22,7 @@
 					<folderInfo id="org.omnetpp.cdt.gnu.config.debug.229043752." name="/" resourcePath="">
 						<toolChain id="org.omnetpp.cdt.gnu.toolchain.debug.268477749" name="GCC for OMNeT++" superClass="org.omnetpp.cdt.gnu.toolchain.debug">
 							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.MachO64;org.eclipse.cdt.core.PE" id="org.omnetpp.cdt.targetPlatform.946608572" isAbstract="false" name="Windows, Linux, Mac" osList="win32,linux,macosx" superClass="org.omnetpp.cdt.targetPlatform"/>
-							<builder id="org.omnetpp.cdt.gnu.builder.debug.859740860" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="OMNeT++ Make Builder (opp_makemake)" superClass="org.omnetpp.cdt.gnu.builder.debug">
+							<builder arguments="make MODE=debug CONFIGNAME=${ConfigName}" command="distcc-pump" id="org.omnetpp.cdt.gnu.builder.debug.859740860" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="OMNeT++ Make Builder (opp_makemake)" parallelBuildOn="true" parallelizationNumber="optimal" superClass="org.omnetpp.cdt.gnu.builder.debug">
 								<outputEntries>
 									<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name=""/>
 								</outputEntries>
@@ -47,6 +47,9 @@
 									<listOptionValue builtIn="false" value="WITH_BGPv4"/>
 									<listOptionValue builtIn="false" value="WITH_MANET"/>
 									<listOptionValue builtIn="false" value="WITH_TRACI"/>
+									<listOptionValue builtIn="false" value="WITH_TCP_LWIP"/>
+									<listOptionValue builtIn="false" value="WITH_TCP_NSC"/>
+									<listOptionValue builtIn="false" value="WITH_VOIPSTREAM"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1163034331" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
@@ -69,11 +72,20 @@
 									<listOptionValue builtIn="false" value="WITH_BGPv4"/>
 									<listOptionValue builtIn="false" value="WITH_MANET"/>
 									<listOptionValue builtIn="false" value="WITH_TRACI"/>
+									<listOptionValue builtIn="false" value="WITH_TCP_LWIP"/>
+									<listOptionValue builtIn="false" value="WITH_TCP_NSC"/>
+									<listOptionValue builtIn="false" value="WITH_VOIPSTREAM"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1458844290" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.base.1169210834" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.base"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.base.1065738287" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.base">
+								<option id="gnu.cpp.link.option.paths.1960807482" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
+									<listOptionValue builtIn="false" value="/usr/local/cuda-5.5/lib64"/>
+								</option>
+								<option id="gnu.cpp.link.option.libs.1831106557" superClass="gnu.cpp.link.option.libs" valueType="libs">
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="/usr/local/cuda-5.5/lib64/libcudart.so"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1326537913" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -107,6 +119,9 @@
 									<listOptionValue builtIn="false" value="WITH_BGPv4"/>
 									<listOptionValue builtIn="false" value="WITH_MANET"/>
 									<listOptionValue builtIn="false" value="WITH_TRACI"/>
+									<listOptionValue builtIn="false" value="WITH_TCP_LWIP"/>
+									<listOptionValue builtIn="false" value="WITH_TCP_NSC"/>
+									<listOptionValue builtIn="false" value="WITH_VOIPSTREAM"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.986287674" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
@@ -129,6 +144,9 @@
 									<listOptionValue builtIn="false" value="WITH_BGPv4"/>
 									<listOptionValue builtIn="false" value="WITH_MANET"/>
 									<listOptionValue builtIn="false" value="WITH_TRACI"/>
+									<listOptionValue builtIn="false" value="WITH_TCP_LWIP"/>
+									<listOptionValue builtIn="false" value="WITH_TCP_NSC"/>
+									<listOptionValue builtIn="false" value="WITH_VOIPSTREAM"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.2067298919" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -140,7 +158,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="applications/voipstream|transport/tcp_nsc|transport/tcp_lwip" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -165,7 +183,7 @@
 					<folderInfo id="org.omnetpp.cdt.gnu.config.release.1746235823." name="/" resourcePath="">
 						<toolChain id="org.omnetpp.cdt.gnu.toolchain.release.1498166216" name="GCC for OMNeT++" superClass="org.omnetpp.cdt.gnu.toolchain.release">
 							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.MachO64;org.eclipse.cdt.core.PE" id="org.omnetpp.cdt.targetPlatform.1049800537" isAbstract="false" name="Windows, Linux, Mac" osList="win32,linux,macosx" superClass="org.omnetpp.cdt.targetPlatform"/>
-							<builder id="org.omnetpp.cdt.gnu.builder.release.1176677325" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="OMNeT++ Make Builder (opp_makemake)" superClass="org.omnetpp.cdt.gnu.builder.release"/>
+							<builder arguments="make MODE=release CONFIGNAME=${ConfigName}" command="distcc-pump" id="org.omnetpp.cdt.gnu.builder.release.1176677325" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="OMNeT++ Make Builder (opp_makemake)" parallelBuildOn="true" parallelizationNumber="optimal" superClass="org.omnetpp.cdt.gnu.builder.release"/>
 							<tool id="cdt.managedbuild.tool.gnu.archiver.base.1643927787" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.base.1039888888" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.base">
 								<option id="gnu.cpp.compiler.option.preprocessor.def.655304152" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
@@ -186,6 +204,9 @@
 									<listOptionValue builtIn="false" value="WITH_BGPv4"/>
 									<listOptionValue builtIn="false" value="WITH_MANET"/>
 									<listOptionValue builtIn="false" value="WITH_TRACI"/>
+									<listOptionValue builtIn="false" value="WITH_TCP_LWIP"/>
+									<listOptionValue builtIn="false" value="WITH_TCP_NSC"/>
+									<listOptionValue builtIn="false" value="WITH_VOIPSTREAM"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.958073850" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
@@ -208,6 +229,9 @@
 									<listOptionValue builtIn="false" value="WITH_BGPv4"/>
 									<listOptionValue builtIn="false" value="WITH_MANET"/>
 									<listOptionValue builtIn="false" value="WITH_TRACI"/>
+									<listOptionValue builtIn="false" value="WITH_TCP_LWIP"/>
+									<listOptionValue builtIn="false" value="WITH_TCP_NSC"/>
+									<listOptionValue builtIn="false" value="WITH_VOIPSTREAM"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.406690453" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -246,6 +270,9 @@
 									<listOptionValue builtIn="false" value="WITH_BGPv4"/>
 									<listOptionValue builtIn="false" value="WITH_MANET"/>
 									<listOptionValue builtIn="false" value="WITH_TRACI"/>
+									<listOptionValue builtIn="false" value="WITH_TCP_LWIP"/>
+									<listOptionValue builtIn="false" value="WITH_TCP_NSC"/>
+									<listOptionValue builtIn="false" value="WITH_VOIPSTREAM"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1307550561" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
@@ -268,6 +295,9 @@
 									<listOptionValue builtIn="false" value="WITH_BGPv4"/>
 									<listOptionValue builtIn="false" value="WITH_MANET"/>
 									<listOptionValue builtIn="false" value="WITH_TRACI"/>
+									<listOptionValue builtIn="false" value="WITH_TCP_LWIP"/>
+									<listOptionValue builtIn="false" value="WITH_TCP_NSC"/>
+									<listOptionValue builtIn="false" value="WITH_VOIPSTREAM"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.18906227" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -279,7 +309,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="applications/voipstream|transport/tcp_nsc|transport/tcp_lwip" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -504,5 +534,13 @@
 		</scannerConfigBuildInfo>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
-	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="gcc-release">
+			<resource resourceType="PROJECT" workspacePath="/inet"/>
+		</configuration>
+		<configuration configurationName="gcc-debug">
+			<resource resourceType="PROJECT" workspacePath="/inet"/>
+		</configuration>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>

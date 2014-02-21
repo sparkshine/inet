@@ -358,8 +358,8 @@ void Ieee80211Mac::initialize(int stage)
 
         cModule *radioModule = gate("lowerLayerOut")->getNextGate()->getOwnerModule();
         radioModule->subscribe(IRadio::radioModeChangedSignal, this);
-        radioModule->subscribe(IRadio::radioReceptionStateChangedSignal, this);
-        radioModule->subscribe(IRadio::radioTransmissionStateChangedSignal, this);
+        radioModule->subscribe(IRadio::receptionStateChangedSignal, this);
+        radioModule->subscribe(IRadio::transmissionStateChangedSignal, this);
         radio = check_and_cast<IRadio *>(radioModule);
     }
     else if (stage == INITSTAGE_LINK_LAYER)
@@ -819,15 +819,15 @@ void Ieee80211Mac::handleLowerPacket(cPacket *msg)
 void Ieee80211Mac::receiveSignal(cComponent *source, simsignal_t signalID, long value)
 {
     Enter_Method_Silent();
-    if (signalID == IRadio::radioReceptionStateChangedSignal)
+    if (signalID == IRadio::receptionStateChangedSignal)
         handleWithFSM(mediumStateChange);
-    else if (signalID == IRadio::radioTransmissionStateChangedSignal)
+    else if (signalID == IRadio::transmissionStateChangedSignal)
     {
         handleWithFSM(mediumStateChange);
-        IRadio::RadioTransmissionState newRadioTransmissionState = (IRadio::RadioTransmissionState)value;
-        if (radioTransmissionState == IRadio::RADIO_TRANSMISSION_STATE_TRANSMITTING && newRadioTransmissionState == IRadio::RADIO_TRANSMISSION_STATE_IDLE)
+        IRadio::TransmissionState newRadioTransmissionState = (IRadio::TransmissionState)value;
+        if (transmissionState == IRadio::TRANSMISSION_STATE_TRANSMITTING && newRadioTransmissionState == IRadio::TRANSMISSION_STATE_IDLE)
             radio->setRadioMode(IRadio::RADIO_MODE_RECEIVER);
-        radioTransmissionState = newRadioTransmissionState;
+        transmissionState = newRadioTransmissionState;
     }
 }
 
@@ -1697,7 +1697,7 @@ void Ieee80211Mac::scheduleReservePeriod(Ieee80211Frame *frame)
             reserve = std::max(reserve, oldReserve);
             cancelEvent(endReserve);
         }
-        else if (radio->getRadioReceptionState() == IRadio::RADIO_RECEPTION_STATE_IDLE)
+        else if (radio->getReceptionState() == IRadio::RECEPTION_STATE_IDLE)
         {
             // NAV: the channel just became virtually busy according to the spec
             scheduleAt(simTime(), mediumStateChange);
@@ -2063,12 +2063,12 @@ void Ieee80211Mac::resetStateVariables()
 
 bool Ieee80211Mac::isMediumStateChange(cMessage *msg)
 {
-    return msg == mediumStateChange || (msg == endReserve && radio->getRadioReceptionState() == IRadio::RADIO_RECEPTION_STATE_IDLE);
+    return msg == mediumStateChange || (msg == endReserve && radio->getReceptionState() == IRadio::RECEPTION_STATE_IDLE);
 }
 
 bool Ieee80211Mac::isMediumFree()
 {
-    return !endReserve->isScheduled() && radio->getRadioReceptionState() == IRadio::RADIO_RECEPTION_STATE_IDLE;
+    return !endReserve->isScheduled() && radio->getReceptionState() == IRadio::RECEPTION_STATE_IDLE;
 }
 
 bool Ieee80211Mac::isMulticast(Ieee80211Frame *frame)
@@ -2198,8 +2198,8 @@ void Ieee80211Mac::logState()
     for (int i=0; i<numCategs; i++)
         EV << " " << edcCAF[i].retryCounter;
     EV << ", radioMode = " << radio->getRadioMode()
-       << ", radioReceptionState = " << radio->getRadioReceptionState()
-       << ", radioTransmissionState = " << radio->getRadioTransmissionState()
+       << ", receptionState = " << radio->getReceptionState()
+       << ", transmissionState = " << radio->getTransmissionState()
        << ", nav = " << nav <<  ", txop is "<< txop << "\n";
     EV << "#queue size 0.." << numCategs << " =";
     for (int i=0; i<numCategs; i++)

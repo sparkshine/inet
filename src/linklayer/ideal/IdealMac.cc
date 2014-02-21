@@ -73,9 +73,9 @@ void IdealMac::initialize(int stage)
         fullDuplex = par("fullDuplex");
 
         cModule *radioModule = gate("lowerLayerOut")->getPathEndGate()->getOwnerModule();
-        radioModule->subscribe(IRadio::radioTransmissionStateChangedSignal, this);
+        radioModule->subscribe(IRadio::transmissionStateChangedSignal, this);
         radio = check_and_cast<IRadio *>(radioModule);
-        radioTransmissionState = IRadio::RADIO_TRANSMISSION_STATE_UNDEFINED;
+        transmissionState = IRadio::TRANSMISSION_STATE_UNDEFINED;
 
         // find queueModule
         cGate *queueOut = gate("upperLayerIn")->getPathStartGate();
@@ -139,15 +139,15 @@ InterfaceEntry *IdealMac::createInterfaceEntry()
 void IdealMac::receiveSignal(cComponent *source, simsignal_t signalID, long value)
 {
     Enter_Method_Silent();
-    if (signalID == IRadio::radioTransmissionStateChangedSignal)
+    if (signalID == IRadio::transmissionStateChangedSignal)
     {
-        IRadio::RadioTransmissionState newRadioTransmissionState = (IRadio::RadioTransmissionState)value;
-        if (radioTransmissionState == IRadio::RADIO_TRANSMISSION_STATE_TRANSMITTING && newRadioTransmissionState == IRadio::RADIO_TRANSMISSION_STATE_IDLE)
+        IRadio::TransmissionState newRadioTransmissionState = (IRadio::TransmissionState)value;
+        if (transmissionState == IRadio::TRANSMISSION_STATE_TRANSMITTING && newRadioTransmissionState == IRadio::TRANSMISSION_STATE_IDLE)
         {
             radio->setRadioMode(fullDuplex ? IRadio::RADIO_MODE_TRANSCEIVER : IRadio::RADIO_MODE_RECEIVER);
             getNextMsgFromHL();
         }
-        radioTransmissionState = newRadioTransmissionState;
+        transmissionState = newRadioTransmissionState;
     }
 }
 
@@ -176,7 +176,7 @@ void IdealMac::getNextMsgFromHL()
 void IdealMac::handleUpperPacket(cPacket *msg)
 {
     outStandingRequests--;
-    if (radio->getRadioTransmissionState() == IRadio::RADIO_TRANSMISSION_STATE_TRANSMITTING)
+    if (radio->getTransmissionState() == IRadio::TRANSMISSION_STATE_TRANSMITTING)
     {
         // Logic error: we do not request packet from the external queue when radio is transmitting
         error("Received msg for transmission but transmitter is busy");

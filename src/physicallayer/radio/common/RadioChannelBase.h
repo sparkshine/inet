@@ -32,6 +32,7 @@ class INET_API RadioChannelBase : public cSimpleModule, public IRadioChannel
 
   public:
     RadioChannelBase();
+    virtual ~RadioChannelBase() {}
 
     virtual int getNumChannels() { return numChannels; }
 

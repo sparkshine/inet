@@ -20,6 +20,7 @@
 
 #include "IRadio.h"
 #include "IRadioFrame.h"
+#include "IRadioDecision.h"
 
 /**
  * This purely virtual interface provides an abstraction for different radio channels.
@@ -33,27 +34,26 @@ class INET_API IRadioChannel
      * Returns the number of available radio channels.
      */
     virtual int getNumChannels() = 0;
+};
 
-//    /**
-//     * Adds a new radio to the radio channel and returns its id.
-//     */
-//    virtual int addRadio(IRadio *radio) = 0;
+// TODO: merge with IRadioChannel
+class INET_API XIRadioChannel
+{
+    public:
+        virtual ~XIRadioChannel() {}
 
-//    /**
-//     * Removes a previously added radio from the radio channel.
-//     */
-//    virtual void removeRadio(int id) = 0;
+        virtual double getPropagationSpeed() const = 0;
+        virtual simtime_t computeTransmissionStartArrivalTime(const IRadioSignalTransmission *transmission, IMobility *mobility) const = 0;
+        virtual simtime_t computeTransmissionEndArrivalTime(const IRadioSignalTransmission *transmission, IMobility *mobility) const = 0;
 
-//    /**
-//     * Transmits a radio frame through the radio channel to all radios within
-//     * interference distance.
-//     */
-//    virtual void transmitRadioFrame(int id, IRadioFrame *radioFrame) = 0;
+        virtual void addRadio(const XIRadio *radio) = 0;
+        virtual void removeRadio(const XIRadio *radio) = 0;
 
-//    /**
-//     * Returns the radio frames of all ongoing transmissions for the provided channel.
-//     */
-//    virtual std::vector<IRadioFrame *>& getOngoingTransmissions(int radioChannel) = 0;
+        virtual void transmitSignal(const XIRadio *radio, const IRadioSignalTransmission *transmission) = 0;
+        virtual const IRadioDecision *receiveSignal(const XIRadio *radio, const IRadioSignalTransmission *transmission) const = 0;
+        virtual bool isPotentialReceiver(const XIRadio *radio, const IRadioSignalTransmission *transmission) const = 0;
+
+        virtual void sendRadioFrame(XIRadio *radio, XIRadioFrame *frame) = 0;
 };
 
 #endif

@@ -58,7 +58,7 @@ void BMacLayer::initialize(int stage)
 
         cModule *radioModule = getParentModule()->getSubmodule("radio");
         radioModule->subscribe(IRadio::radioModeChangedSignal, this);
-        radioModule->subscribe(IRadio::radioTransmissionStateChangedSignal, this);
+        radioModule->subscribe(IRadio::transmissionStateChangedSignal, this);
         radio = check_and_cast<IRadio *>(radioModule);
 
 		// init the dropped packet info
@@ -577,7 +577,7 @@ void BMacLayer::handleSelfMessage(cMessage *msg)
 		break;
 	}
 	opp_error("Undefined event of type %d in state %d (radio mode %, radio reception state %d, radio transmission state %d)!",
-			  msg->getKind(), macState, radio->getRadioMode(), radio->getRadioReceptionState(), radio->getRadioTransmissionState());
+			  msg->getKind(), macState, radio->getRadioMode(), radio->getReceptionState(), radio->getTransmissionState());
 }
 
 
@@ -627,17 +627,17 @@ void BMacLayer::receiveSignal(cComponent *source, simsignal_t signalID, long val
         }
     }
     // Transmission of one packet is over
-    else if (signalID == IRadio::radioTransmissionStateChangedSignal)
+    else if (signalID == IRadio::transmissionStateChangedSignal)
     {
-        IRadio::RadioTransmissionState newRadioTransmissionState = (IRadio::RadioTransmissionState)value;
-        if (radioTransmissionState == IRadio::RADIO_TRANSMISSION_STATE_TRANSMITTING && newRadioTransmissionState == IRadio::RADIO_TRANSMISSION_STATE_IDLE)
+        IRadio::TransmissionState newRadioTransmissionState = (IRadio::TransmissionState)value;
+        if (transmissionState == IRadio::TRANSMISSION_STATE_TRANSMITTING && newRadioTransmissionState == IRadio::TRANSMISSION_STATE_IDLE)
         {
             if (macState == WAIT_TX_DATA_OVER)
                 scheduleAt(simTime(), data_tx_over);
             else if (macState == WAIT_ACK_TX)
                 scheduleAt(simTime(), ack_tx_over);
         }
-        radioTransmissionState = newRadioTransmissionState;
+        transmissionState = newRadioTransmissionState;
     }
 }
 

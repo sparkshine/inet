@@ -20,6 +20,7 @@
 
 #include "IPhysicalLayerFrame.h"
 #include "IRadioSignal.h"
+#include "IRadioSignalTransmission.h"
 
 /**
  * This purely virtual interface provides an abstraction for different radio frames.
@@ -30,6 +31,15 @@ class INET_API IRadioFrame : public IPhysicalLayerFrame
     virtual ~IRadioFrame() { }
 
     virtual IRadioSignal *getRadioSignal() = 0;
+};
+
+// TODO: merge with IRadioFrame
+class INET_API XIRadioFrame
+{
+    public:
+        virtual ~XIRadioFrame() {}
+
+        virtual const IRadioSignalTransmission *getTransmission() const = 0;
 };
 
 #endif

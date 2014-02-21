@@ -1,0 +1,269 @@
+INET radio model
+================
+
+The current state
+-----------------
+
+The current state can be found in the integration branch of the INET repository.
+Currently there are 3 different and completely separate radio implementations.
+They don't share any code except that they implement the same generic radio
+interface to provide a useful abstraction for the higher layers. These radios
+are tested with all INET MAC protocols including some new ones ported from
+MiXiM.
+
+1. Ideal radio
+
+This is a very simple full-duplex, collision-free and interference-free radio
+implementation. This radio supports simultaneous reception and transmission
+in transceiver mode.
+
+2. Simplified radio
+
+This is the old INET radio model that uses scalar values to describe radio
+signals. A radio signal's transmission power, attenuation, reception power,
+bitrate, etc. are expressed as scalar values independent of time, frequency,
+antenna, etc. The corresponding radio channel maintains a maximum interference
+distance to optimize the computation of the set of potential receivers.
+
+3. Detailed radio
+
+This is the ported MiXiM radio model that uses multidimensional values to
+describe radio signals. Transmission power, attenuation, reception power,
+bitrate, etc. are expressed as dimensional values over time, frequency, antenna,
+etc. This radio also provides parameters to control the amount of time needed
+to switch between radio modes. The corresponding radio channel classifies the
+radios into a grid based on their position. This helps to optimize computation
+of the set of potential receivers. This radio channel also supports torus
+geometry while determining the receivers.
+
+Requirements
+------------
+
+Most of the computation related to radio signal transmission and reception
+should be done within a central location, probably the radio channel. This 
+will allow us to use optimistic parallelism to utilize multiple cores.
+
+It must be possible to skip sending a radio frame to a radio that is not able to
+receive the frame successfully. This will reduce the contention in the FES while
+the radio channel can still make sure that the interference for these radio
+signals is accounted for.
+
+The model should be scalable in terms of level of detail:
+ - unit disk signal
+ - scalar radio signal
+ - multidimensional radio signal
+ - waveform/trace signal
+
+Orthogonal features such radio mode switch delay, power consumption model,
+propagation time model, etc. should be extracted and supported at all level of
+details.
+
+Some higher level protocols require physical layer indications such as RSSI,
+BER, etc. that should be available.
+
+Various attenuation models should be generally configurable and pluggable
+independently of the radio signal's level of detail. Avoid the unfortunate
+situation where one parameter is set in NED or XML (or called differently)
+depending on the radio signal's level of detail.
+
+Some parameters (e.g. carrierSignal) is set in multiple places (e.g. in the
+analogueModels and the decider elements in XML and also in NED!) but express
+the same thing.
+
+The radio interface
+-------------------
+
+1. Radio
+
+This class models the whole physical device that communicates with other radios
+by transmitting radio signals. The radio receives frames to be transmitted from
+the upper layer, and it also sends received frames to the upper layer.
+
+The radio mode specifies the requested operational mode of the radio:
+ - Off
+   The radio is turned off, frame reception or transmission is not possible,
+   power consumption is zero, radio mode switching is slow.
+
+ - Sleep
+   The radio is sleeping, frame reception or transmission is not possible, power
+   consumption is minimal, radio mode switching is fast.
+
+ - Receiver
+   The radio is prepared for frame reception, frame transmission is not
+   possible, power consumption is low when receiver is idle and medium when
+   receiving.
+
+ - Transmitter
+   The radio is prepared for frame transmission, frame reception is not
+   possible, power consumption is low when transmitter is idle and high when
+   transmitting.
+
+ - Transceiver
+   The radio is prepared for simultaneous frame reception and transmission,
+   power consumption is low when transceiver is idle, medium when receiving and
+   high when transmitting.
+
+ - Switching
+   The radio is switching from one mode to another, frame reception or
+   transmission is not possible, power consumption is minimal.
+ 
+The reception state specifies the state of the receiver:
+ - Undefined
+   The radio channel state is unknown, reception state is meaningless, signal
+   detection is not possible. (e.g. the radio mode is off, sleep or transmitter)
+
+ - Idle
+   The radio channel is free, no signal is detected. (e.g. the RSSI is below the
+   energy detection threshold)
+
+ - Busy
+   The radio channel is busy, a signal is detected but it is not strong enough
+   to receive. (e.g. the RSSI is above the energy detection threshold but below
+   the reception threshold)
+
+ - Synchronizing
+   The radio channel is busy, a signal strong enough to evaluate is detected,
+   whether the signal is noise or not is not yet decided. (e.g. the RSSI is
+   above the reception threshold but the SNR is not yet evaluated)
+
+ - Receiving
+   The radio channel is busy, a signal strong enough to receive is detected.
+   (e.g. the SNR was above the reception threshold during synchronize)
+ 
+The transmission state specifies the state of the transmitter:
+ - Undefined
+   The transmission state is undefined or meaningless. (e.g. the radio mode is
+   off, sleep or receiver)
+
+ - Idle
+   The radio is not transmitting a signal on the radio channel. (e.g. the last
+   transmission has been completed)
+
+ - Transmitting
+   The radio channel is busy, the radio is currently transmitting a signal.
+
+The radio provides the following services:
+ - transmit a packet
+   If the radio receives a packet from the upper layer in transmitter or
+   transceiver mode, then it immediately starts transmitting the packet on the
+   radio channel. In all other radio modes it throws an error.
+
+ - receive a packet
+   If the radio receives a packet from the radio channel in receiver or
+   transceiver mode, then it starts a packet reception by publishing the
+   receiving reception state. When the reception is finished a packet is sent
+   towards the upper layer. In case of a collision or bit error the packet 
+   represents the unsuccessful reception.
+
+ - get current position/angle
+
+ - get current radio mode
+ - change radio mode
+   Changes the current radio mode. The actual change may take zero or more
+   simulation time. The new radio mode will be emitted with a signal.
+ 
+ - get current reception state
+ - get current transmission state
+
+ - get current radio channel number
+ - change radio channel number
+
+ - publishes radio mode changes
+ - publishes reception state changes
+ - publishes transmission state changes 
+
+2. Antenna
+
+This class models a physical device that converts electric power into radio
+waves, and vice versa.
+
+The antenna provides the following services:
+ - get current position/angle
+ - get gain
+ - etc.
+
+3. Radio channel (or radio medium?)
+
+This class models the physical medium used by radio signals. It keeps track of
+the potential transmitter and receiver radios and also all ongoing and interfering transmissions.
+
+The radio channel provides the following services:
+ - get the list of ongoing transmissions
+ - etc.
+
+4. Radio frame
+
+This class models the potential reception of a transmitted radio signal as
+an omnetpp packet. The packet is sent from the transmitter radio to the receiver
+radio and arrives with the very beginning of the radio signal. Most of the time
+there are multiple potential receivers for a single radio signal, so the
+transmitted packet is cloned and the clones are sent to all potential receivers.
+Contrary to this cloning mechanism the radio signal is shared among all radio
+frames.
+
+5. Radio signal
+
+This class models the transmission of a radio signal independently of any
+receiver.
+
+TODO: the following seems to be too specific and too constrained in terms of
+scalability with respect to the level of detail
+
+The radio signal provides the following services:
+ - get the transmission start time
+ - get the transmission end time
+
+ - get the antenna
+ - get the start time antenna position/angle
+ - get the end time antenna position/angle
+
+ - get the transmission power
+ - get the carrier frequency
+ - get the bandwidth
+ - get the modulation
+
+=============================
+
+Keywords
+--------
+
+ radio band
+ modulation type
+ maximum interference range
+ maximum transmission range
+ ongoing transmissions
+ interfering transmissions
+ attenuation
+ obstacle
+ decider
+ synchronization
+ receiving preamble
+ bit error rate
+ error correction
+ collision
+ radio
+ channel
+ medium
+ frame
+ signal
+ antenna
+ switching radio mode may take non-zero simulation time
+ attenuation
+ channel state
+ rssi
+ snr
+ snir
+ parallel execution
+ carrier frequency
+ bandwidth
+ NED/XML configuration
+ thermal noise
+ background noise
+ sensitivity
+ reception threshold
+ decider
+ flat/torus playground
+ samples/waveform
+ gnu radio
+ carrier + bandwidth (band)
+ channel number

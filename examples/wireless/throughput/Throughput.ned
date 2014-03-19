@@ -19,8 +19,9 @@
 
 package inet.examples.wireless.throughput;
 
+import inet.mobility.models.LinearMobility;
 import inet.world.radio.ChannelControl;
-import inet.mobility.models.StationaryMobility;
+//import inet.mobility.models.StationaryMobility;
 import inet.linklayer.ieee80211.Ieee80211Nic;
 import inet.base.NotificationBoard;
 import inet.applications.ethernet.EtherAppCli;
@@ -49,9 +50,10 @@ module ThroughputClient
                 @display("p=112,134;q=queue");
                 mgmtType = default("Ieee80211MgmtSTASimplified");
         }
-        mobility: StationaryMobility {
+        mobility: LinearMobility {
             parameters:
                 @display("p=50,141");
+                constraintAreaMinX = default(-1m);
         }
     connections allowunconnected:
         wlan.radioIn <-- radioIn;
@@ -62,15 +64,15 @@ network Throughput
 {
     parameters:
         int numCli;
-        @display("b=297,203");
+        @display("b=297,203;bgb=961,248");
     submodules:
         cliHost[numCli]: ThroughputClient {
             parameters:
-                @display("r=,,#707070");
+                @display("r=200,,#707070;p=535,104,,5");
         }
         ap: WirelessAPWithSink {
             parameters:
-                @display("p=200,200;r=,,#707070");
+                @display("p=482,210;r=,,#707070");
         }
         channelControl: ChannelControl {
             parameters:

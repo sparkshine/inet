@@ -26,7 +26,7 @@ import inet.base.Sink;
 import inet.base.NotificationBoard;
 
 
-//
+// 
 // Well, this models a 802.11 Access Point with a Sink.
 //
 module WirelessAPWithSink

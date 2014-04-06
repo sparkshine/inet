@@ -19,7 +19,7 @@
 
 package inet.examples.wireless.throughput;
 
-import inet.mobility.models.LinearMobility;
+import inet.mobility.single.LinearMobility;
 import inet.world.radio.ChannelControl;
 //import inet.mobility.models.StationaryMobility;
 import inet.linklayer.ieee80211.Ieee80211Nic;
@@ -64,15 +64,15 @@ network Throughput
 {
     parameters:
         int numCli;
-        @display("b=297,203;bgb=961,248");
+        @display("b=297,203;bgb=321,248");
     submodules:
         cliHost[numCli]: ThroughputClient {
             parameters:
-                @display("r=200,,#707070;p=535,104,,5");
+                @display("r=200,,#707070;p=172,104,,5");
         }
         ap: WirelessAPWithSink {
             parameters:
-                @display("p=482,210;r=,,#707070");
+                @display("p=172,208;r=,,#707070");
         }
         channelControl: ChannelControl {
             parameters:

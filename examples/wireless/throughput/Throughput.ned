@@ -68,11 +68,11 @@ network Throughput
     submodules:
         cliHost[numCli]: ThroughputClient {
             parameters:
-                @display("r=200,,#707070;p=172,104,,5");
+                @display("r=200,,#707070;p=172,88,,5");
         }
         ap: WirelessAPWithSink {
             parameters:
-                @display("p=172,208;r=,,#707070");
+                @display("p=172,209;r=,,#707070");
         }
         channelControl: ChannelControl {
             parameters:
